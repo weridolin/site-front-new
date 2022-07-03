@@ -1,0 +1,315 @@
+:root {
+    /* 主题色 */
+    --main-1: #fff3f0;
+    --main-2: #ffd4cc;
+    --main-3: #ffafa3;
+    --main-4: #ff887a;
+    /* 网站颜色搭配 */
+    --main-5: #f56c6c;
+    --main-6: #51cacc;
+    --main-7: #E0C3FC;
+    --main-8: rgb(94, 234, 209);
+    --main-9: #efefee;
+    --main-10: #606266;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    /* font-family: lucida grande, lucida sans unicode, lucida, helvetica, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif!important; */
+    /* color: var(--mid-10);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.8rem;
+    letter-spacing: 0;
+    margin: 0; */
+    line-height: 1.42857;
+    color: #404040;
+    background-color: #efefee;
+    font-family: -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif; */
+    font-feature-settings: "tnum";
+    font-variant: tabular-nums;
+    /* overflow-x: hidden; */
+}
+
+::selection {
+    color: #FFFFFF;
+    background-color: var(--main-8);
+    text-shadow: none;
+}
+
+::-moz-selection {
+    color: #FFFFFF;
+    background-color: var(--main-8);
+    text-shadow: none;
+}
+
+
+/* 背景遮挡 */
+
+.content-bg8 {
+    background-color: rgba(255, 255, 255, 0.85);
+}
+
+.content-bg95 {
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+a {
+    color: var(--main-6);
+    font-weight: 500;
+    /* padding: 0 2px; */
+    text-decoration: none;
+    transition: all .6s;
+    position: relative;
+    transition: all .6s ease-in-out;
+}
+
+.a-tag a:hover {
+    background-image: linear-gradient(90deg, var(--main-3), var(--main-5));
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    box-decoration-break: clone;
+}
+
+.a-tag a:hover:after {
+    left: 0;
+    width: 100%;
+}
+
+.a-tag a:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    height: 1px;
+    width: 0;
+    background-color: var(--main-6);
+    background-image: linear-gradient(270deg, var(--main-5), var(--main-3));
+    transition: all .2s ease-in-out;
+}
+
+
+/* 按钮 */
+
+.blog-btn {
+    color: #fff;
+    font-weight: 700;
+    background-color: linear-gradient(90deg, var(--main-6), var(--main-8));
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    line-height: 1.4;
+    cursor: text;
+}
+
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+h5:hover a.anchor,
+h6:hover a.anchor {
+    text-decoration: none;
+}
+
+h1 tt,
+h1 code,
+h2 tt,
+h2 code,
+h3 tt,
+h3 code,
+h4 tt,
+h4 code,
+h5 tt,
+h5 code,
+h6 tt,
+h6 code {
+    font-size: inherit !important;
+}
+
+h2 a,
+h3 a {
+    color: var(--mid-9);
+}
+
+h1 {
+    text-align: center;
+    padding-bottom: 0.3em;
+    font-size: 2em;
+    line-height: 1.2;
+    margin: 1.2em auto 1.2em;
+}
+
+h1:after {
+    content: '';
+    display: block;
+    margin: 0.2em auto 0;
+    width: 100px;
+    height: 2px;
+    border-bottom: 2px dashed var(--main-6);
+}
+
+h2 {
+    margin: 2em auto 1.4em;
+    padding-left: 6px;
+    line-height: 1.4;
+    font-size: 1.6em;
+    /* border-left: 6px solid var(--main-6); */
+}
+
+h3 {
+    margin: 1.6em auto 1.2em;
+    font-size: 1.35em;
+    line-height: 1.43;
+}
+
+
+/*--- 三级标题左边的小圆点 ---*/
+
+h3:before {
+    /* content: '#'; */
+    color: var(--main-5);
+    margin-bottom: 0.18em;
+    margin-right: 6px;
+}
+
+h4 {
+    margin-top: 1.4em;
+    font-size: 1.2em;
+}
+
+
+/*--- 四级标题左边的小短线 ---*/
+
+h4:before {
+    background-color: var(--main-4);
+    content: '';
+    width: 6px;
+    display: inline-block;
+    height: 2px;
+    vertical-align: middle;
+    margin-bottom: 0.18em;
+    margin-right: 8px;
+}
+
+h5 {
+    font-size: 1em;
+}
+
+h6 {
+    font-size: 1em;
+    color: var(--mid-7);
+}
+
+hr {
+    width: 100%;
+    height: 1px;
+    padding: 0;
+    margin: 12px auto 12px;
+    background-color: var(--main-6);
+    border: 0;
+    overflow: hidden;
+    box-sizing: content-box;
+}
+
+body>h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+body>h1:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+body>h1:first-child+h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+body>h3:first-child,
+body>h4:first-child,
+body>h5:first-child,
+body>h6:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+a:first-child h1,
+a:first-child h2,
+a:first-child h3,
+a:first-child h4,
+a:first-child h5,
+a:first-child h6 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+h1 p,
+h2 p,
+h3 p,
+h4 p,
+h5 p,
+h6 p {
+    margin-top: 0;
+}
+
+@media print {
+    html {
+        font-size: 13px;
+    }
+    table,
+    pre {
+        page-break-inside: avoid;
+    }
+    pre {
+        word-wrap: break-word;
+    }
+}
+
+.container {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 576px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 768px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 992px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1200px;
+    }
+}
+
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1920px;
+    }
+}

@@ -1,0 +1,258 @@
+/* 代码区 */
+
+.write {
+    margin: 0 auto;
+	color: #636b6f;
+    /* max-width: 100vw; */
+}
+
+.write table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+}
+
+.write table thead th {
+   background-color: #eff3f5;
+    text-align: center;
+    padding: 6px 13px;
+    border: 1px solid #dfe2e5;
+}
+
+.write table tbody td {
+    text-align: center;
+    padding: 6px 13px;
+    border: 1px solid #dfe2e5;
+}
+.write table tr:nth-child(2n) {
+    background-color: #f7f7f7;
+}
+.write table thead th {
+    font-weight: 600;
+	
+}
+
+.write del {
+    padding: 1px 2px;
+}
+
+.write strong {
+    padding: 0 1px;
+    font-weight: bold;
+}
+
+.write em {
+    padding: 0 5px 0 2px;
+    font-style: italic
+}
+
+.write .CodeMirror-gutters {
+    border-right: none;
+}
+
+.write img {
+    cursor: pointer;
+    max-width: 100%;
+    margin: 3px 0 12px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.write p {
+    line-height: 30px;
+    word-spacing: 0.05rem;
+}
+
+.write ul {
+    line-height: 2rem;
+}
+
+.write ol li {
+    text-indent: 0.5rem;
+}
+
+.write>ul:first-child,
+.write>ol:first-child {
+    margin-top: 30px;
+}
+
+
+/* 链接 */
+
+.write a {
+    border-bottom: 1px solid var(--main-6);
+    color: var(--main-6);
+    text-decoration: none;
+}
+
+.write a:hover {
+    border-bottom: 1px solid var(--main-5);
+    color: var(--main-5);
+}
+
+.write code {
+    background: #ecf0f1;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin: 0 3px;
+    color: var(--main-5);
+}
+.write code::-webkit-scrollbar {
+	height: 8px;
+	border-radius: 4px;
+}
+.write code::-webkit-scrollbar-thumb {
+	height: 8px;
+	border-radius: 8px;
+	background-color: #dadada;
+}
+
+
+.write ul li:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    height: 8px;
+    width: 8px;
+    background-color: #dddddd;
+    border-radius: 50%;
+}
+
+.write ul li {
+    padding-left: 15px;
+    margin-left: 15px;
+    position: relative;
+}
+
+.write .hljs {
+    display: block;
+    overflow-x: auto;
+    background: #fefefe;
+    color: #545454;
+    padding: .5em;
+}
+
+
+/* 三级四级标题点击后左边的提示图标 */
+
+.write>h3.md-focus:before,
+.write>h4.md-focus:before {
+    width: auto;
+    height: auto;
+    background-color: var(--main-5);
+    color: var(--mid-1);
+}
+
+.code-block {
+    position: relative;
+    padding: 0 !important;
+    margin: 10px 0;
+    min-height: 36px;
+}
+
+.code-block:before {
+    content: ' ';
+    position: absolute;
+    ;
+    -webkit-border-radis: 50%;
+    border-radius: 50%;
+    background: #ff6058;
+    width: 12px;
+    height: 12px;
+    left: 15px;
+    margin-top: 10px;
+    box-shadow: 20px 0 #ffbd2b, 40px 0 #3cef57;
+    z-index: 2;
+}
+
+.code-block .code-language {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    line-height: 32px;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--main-6);
+    transform: translateX(-50%);
+}
+
+.write pre {
+    border-top: 32px solid #ecf5ff;
+    border-radius: 6px;
+	box-shadow: .5px .5px 4px 0px #0000002e;
+	margin:5px;
+}
+
+.write .copy-code {
+    position: absolute;
+    z-index: 10;
+    top: 5px;
+    right: 15px;
+    font-size: 12px;
+    line-height: 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: all .3s;
+    opacity: 0;
+    color: #ccc
+}
+
+.write .code-block:hover .copy-code {
+    opacity: 1;
+    color: var(--main-6)
+}
+
+.write .preview-img {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999999;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, .5);
+    display: none;
+    opacity: 0;
+    transition: opacity .3s .1s;
+    justify-content: center;
+    align-items: center;
+}
+
+.write .preview-img .close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: var(--main-6);
+    padding: 10px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.write .preview-img img {
+    display: block;
+    /* &.vertical {
+        height: 80%;
+        width: auto;
+    }
+
+    &.horizontal {
+        width: 80%;
+        height: auto;
+    } */
+}
+
+.write .active {
+    display: flex;
+    opacity: 1;
+}
+
+.write blockquote {
+    padding: 4px 1em;
+    color: #6a737d;
+    border-left: .25em solid #dfe2e5;
+    margin: 5px 0
+}
+
+.write del {
+    padding: 1px 2px;
+}
