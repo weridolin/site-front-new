@@ -68,7 +68,7 @@ export type BackGroundMusicResponse = {
 
 
 // 友链
-export type FriendsLinkResponse ={
+export type FriendsLink ={
     site:string,
     title:string
     intro:string,
@@ -78,9 +78,14 @@ export type FriendsLinkResponse ={
     is_show:boolean
 }
 
+export type FriendsLinkResponse ={
+    data:FriendsLink[]
+}
+
 // 更新日志
 
-export interface updateLogResponse {
+export interface updateLog {
+    id:number,
     update_content:string,
     is_finish:boolean,
     author:User,
@@ -163,7 +168,7 @@ export class Api extends ApiBase {
          *  获取更新日志列表
          */
         getUpdateLogList:(params: RequestParams = {}) =>
-            this.get<updateLogResponse>(
+            this.get<Array<updateLog>>(
                 {
                     url:"/api/v1/home/updatelog",
                     ...params

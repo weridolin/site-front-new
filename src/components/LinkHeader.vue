@@ -8,32 +8,30 @@
         <!-- <learning class="load-text blog-animation"></learning> -->
       </div>
     </el-row>
-    <span @click="next('#next')" class="screen-next iconfont">
+    <!-- <span @click="next('#next')" class="screen-next iconfont">
       &#xe623;
-    </span>
+    </span> -->
   </div>
 </template>
-<script>
-import Learning from "./Learning";
-export default {
-  name: "LinkHeader",
-  components: {
-    Learning,
-  },
-  methods:{
-    next(target){
-        let toElement = document.querySelector(target);
-          toElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-          inline: 'nearest'
-        })
-    }
+<script setup lang="ts">
+  // import Learning from "src/components/Learning.vue";
+  function next(target:string){
+      let toElement = document.querySelector(target);
+      if( toElement!=null){
+        toElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      })
+      }
   }
-};
+
 </script>
+
+
+
 <style lang="stylus" scoped>
-@import '~@/assets/style/home.styl';
+
 
 .link-top {
   min-height 450px
@@ -42,7 +40,7 @@ export default {
   position: relative;
   // overflow: hidden;
   // background: url('https://p.pstatp.com/origin/1375f0001fa65da54c5eb'); // p.pstatp.com/origin/1375f0001fa65da54c5eb
-  background: url('~@/assets/link_bg2.jpg');
+  background: url('src/assets/link_bg2.jpg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

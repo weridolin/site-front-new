@@ -19,6 +19,7 @@
     "generate:api": "sta -p https://raw.githubusercontent.com/gothinkster/realworld/main/api/openapi.yml -o ./src/services -n api.ts"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.6",
     "@types/nprogress": "^0.2.0",
     "@types/scrollreveal": "^0.0.8",
     "axios": "^0.27.2",

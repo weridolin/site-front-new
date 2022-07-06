@@ -99,7 +99,7 @@ export const routes: RouteRecordRaw[] = [
         name: 'Link',
         component: ()=>import('./pages/Link.vue'),
         meta: {
-            keepAlive: true, // 需要被缓存
+            keepAlive: false, // 需要被缓存
             title: '友情链接-' + name,
             nav: nav,
             footer:true,

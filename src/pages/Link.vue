@@ -14,6 +14,30 @@
         <link-friends-new :friends="friends" ></link-friends-new>
     </div>
 </template>
+
+<script setup lang="ts">
+    import LinkHeader from 'src/components/LinkHeader.vue'
+    import LinkFriendsNew from 'src/components/LinkFriendsNew.vue'
+
+    import {
+        getFriends,
+        friends
+    } from "src/pages/Link"
+        
+    const initFriendLinks = async () => {
+        await getFriends()
+        console.log("获取友链列表",friends.value)
+        return friends.value
+    }
+
+    initFriendLinks()
+
+
+
+
+</script>
+
+<!-- 
 <script>
 import LinkHeader from '../components/LinkHeader'
 import LinkFriends from '../components/LinkFriends'
@@ -51,7 +75,7 @@ export default {
         this.getFriends()
     }
 }
-</script>
+</script> -->
 <style lang="stylus" scoped>
     .link
         background-color #fff

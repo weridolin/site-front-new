@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="face face1">
                     <div class="content">
-                        <img :src="require('../../../assets/fileUpload.png')" alt="picture">
+                        <img :src="fileUploadImg" alt="picture">
                         <h3>文件中转站</h3>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="face face1">
                     <div class="content">
-                        <img :src="require('../../../assets/dataBase.png')" alt="picture">
+                        <img :src="dataBaseImg" alt="picture">
                         <h3>数据生成器</h3>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
             <div class="card">
                 <div class="face face1">
                     <div class="content">
-                        <img :src="require('../../../assets/drug.png')" alt="picture">
+                        <img :src="DrugImg" alt="picture">
                         <h3>毒</h3>
                     </div>
                 </div>
@@ -51,6 +51,16 @@
     
 </div>
 </template>
+
+<script setup lang="ts">
+    import { ref } from 'vue';
+    const fileUploadImg =ref("src/assets/fileUpload.png")
+    const dataBaseImg =ref("src/assets/dataBase.png")
+    const DrugImg =ref("src/assets/drug.png")
+
+</script>
+
+
 <style>
     body{
         margin: 0;
@@ -61,6 +71,15 @@
         justify-content: center;
         align-items: center;
         font-family: consolas;
+    }
+
+    .card {
+        position: relative;
+        display: block;
+        margin-bottom: 0.75rem;
+        background: #333;
+        border-radius: 0.25rem;
+        box-shadow: inset 0 0 0 0px rgba(0, 0, 0, 0.125);
     }
 
     @media screen and (min-width:1200px) {
@@ -122,7 +141,7 @@
         max-width: 100px;
     }
 
-    .container .card .face.face1 .content h3{
+    .container .card .face.face1 .content h3 {
         margin: 10px 0 0;
         padding: 0;
         color: #fff;
@@ -167,19 +186,3 @@
     }
 </style>
 
-
-<script>
-
-
-export default {
-    name: "alinLab",
-    components:{
-  
-    },
-    data(){
-        return {
-            
-        }
-    }
-}
-</script>

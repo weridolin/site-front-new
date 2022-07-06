@@ -32,39 +32,34 @@
     </el-row> 
   </div>
 </template>
+<script setup lang="ts">
+  import { ref,reactive,computed } from 'vue';
+  import {HomeApi} from 'src/services/apis/home'
+  import type {updateLog} from 'src/services/apis/home'
 
-<script>
 
-export default {
-  name: "GrowthRoute",
-  components: {
-  },
-  data() {
-    return {
-      list: [],
-      card: document.body.clientWidth > 885 ? "card" : "",
-      carousel: [],
-      src:'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'
-    };
-  },
-  methods: {
-    get_list(){
-      let that = this;
-        this.$get("/api/v1/home/updatelog")
-        // this.$get("http://127.0.0.1:8000/api/v1/blogs/bglist")
-        .then(function (res) {
-            console.log(">>> get route updatelog",res)
-            that.list = res;
-        })
-        .catch(function (error) {})
-        
+
+  const list =ref<updateLog[]>()
+  const card = ref(document.body.clientWidth > 885 ? "card" : "")
+  // carousel: [],
+  const src = ref('https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg')
+
+
+  async function get_list(){
+      let res= await HomeApi.updateLog.getUpdateLogList()
+      console.log("获取更新日志列表",res)
+      list.value = res
     }
-  },
-  created() {
-    this.get_list()
-  },
-};
+
+    const initUpdateLog = async () => {
+        await get_list()
+    }
+
+    initUpdateLog()
+
 </script>
+
+
 <style lang="scss">
   .route-timeline .el-timeline-item__timestamp {
       color: #f1f1f7;
@@ -86,7 +81,7 @@ p {
   position: relative;
   padding: 50px 10px;
   box-sizing: border-box;
-  background: url('~@/assets/route-bg.jpg');
+  background: url('src/assets/route-bg.jpg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -103,7 +98,7 @@ p {
 
 .el-card {
   // background: radial-gradient(#99e8cc, #88d7cf);
-  background: url('~@/assets/card-bg1.jpg');
+  background: url('src/assets/card-bg1.jpg');
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   transition: 0.3s;
   width: 50%;
@@ -125,7 +120,7 @@ p {
 
     .el-card {
       // background: radial-gradient(#99e8cc, #88d7cf);
-      background: url('~@/assets/card-bg1.jpg');
+      background: url('src/assets/card-bg1.jpg');
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
       transition: 0.3s;
       width: 90%;

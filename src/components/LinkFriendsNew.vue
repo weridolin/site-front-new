@@ -11,12 +11,12 @@
 <template>
   <div class="container link-frie">
     <h1 class="mess-title" id="next">
-      <i class="el-icon-connection"></i>优秀的小伙伴们！
+      <el-icon><Link /></el-icon>优秀的小伙伴们！
     </h1>
     <el-row>
       <el-col
         :xs="24"
-        :span="4"
+        :span="6"
         class="link-cat"
         v-for="(item,index) in friends"
         :key="item.id"
@@ -78,8 +78,15 @@ export default {
 };
 </script>
 <style lang="stylus" scoped>
-@import '~@/assets/style/home.styl';
-
+  
+  h1 {
+      text-align: center;
+      padding-bottom: .3em;
+      font-size: 2em;
+      line-height: 1.2;
+      margin: 1.2em auto 1.2em;
+      font-weight: 700
+  }
   .time {
     font-size: 13px;
     color: #999;
@@ -197,7 +204,7 @@ export default {
     position: relative;
     padding: 10px 0;
     background: #eaf1f51f;
-    background-image :url('~@/assets/link_bg.jpg');
+    background-image :url('src/assets/link_bg.jpg');
 
   &:hover {
     .mess-title {
