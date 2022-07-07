@@ -22,6 +22,14 @@ export enum ContentType {
     UrlEncoded = "application/x-www-form-urlencoded",
 }
 
+export interface BaseResponse {
+    message: string,
+    code: number,
+    app_code: number,
+    status: number,
+    data:any
+}
+
 
 // 定义 AXIOS 拦截器
 interface InterceptorHooks {

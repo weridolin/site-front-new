@@ -9,47 +9,70 @@
     class="zone2"
   >
 
-    <el-upload
+    <!-- <el-upload
       class="upload"
       :multiple ="false"
       :auto-upload="false"
       :drag="true"
-      :on-change="upChange"
+      :on-change="fileCheck"
       enctype="multipart/form-data"
-      :file-list="fileList"
-      :action="uploadUrl"
+      :file-list="fileState.fileList"
+      :action="fileState.uploadUrl"
       :show-file-list ="false"
       >
       <i class="el-icon-upload"></i>
       <div class="el-upload__text">将文件拖到此处，或<em>点击选择文件</em></div>
       <div class="el-upload__text" id="selectFile" >请先选择文件</div>
-      <div class="el-upload__tip" slot="tip">由于服务器网速的原因,不建议上传太大文件🤣</div>
+      <div class="el-upload__tip" >由于服务器网速的原因,不建议上传太大文件🤣</div>
+    </el-upload> -->
+    <el-upload
+      class="upload"
+      drag="true"
+      :action="fileState.uploadUrl"
+      :on-change="fileCheck"
+      :multiple ="false"
+      :auto-upload="false"
+      :file-list="fileState.fileList"
+      :show-file-list ="false"
+    >
+      <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+      <div class="el-upload__text">
+        将文件拖到此处，或<em>点击选择文件</em>
+      </div>
+      <div class="el-upload__text" id="selectFile" >请先选择文件</div>
+      <template #tip>
+        <div class="el-upload__tip">
+          由于服务器网速的原因,不建议上传太大文件🤣
+        </div>
+      </template>
     </el-upload>
-    <el-button style="margin-left: 10px;" size="small" type="success" @click="uploadFile" id="uploadButton" class="uploadButton">上传到服务器</el-button>
-    <el-button style="margin-left: 10px;" size="small"  @click="drawer = true" type="primary" id="downButton" class="downButton">下载文件</el-button>
+
+
+    <el-button style="margin-left: 10px;" size="small" type="success" @click="fileUpload" id="uploadButton" class="uploadButton">上传到服务器</el-button>
+    <el-button style="margin-left: 10px;" size="small"  @click="isShowDrawer=true" type="primary" id="downButton" class="downButton">下载文件</el-button>
 
     <div class="down-code" id="down-code">
       <el-input
         placeholder="下载授权码"
-        v-model="down_code"
+        v-model="fileState.downCode"
         class="down_code"
         id="down_code"
         >
-        <i slot="suffix" class="el-icon-document-copy" id="downCode"  @click="copyDownCode"></i>
+        <i  class="el-icon-document-copy" id="downCode"  @click="copyDownCode"></i>
       </el-input>
     </div>
     <el-progress :text-inside="true" :stroke-width="26" v-if="!isNaN(percent)" :percentage="percent" id="uploadProgress" class="uploadProgress"></el-progress>
 
     <el-drawer
       title="文件下载"
-      :visible.sync="drawer"
+      v-model="isShowDrawer"
       :direction="direction"
       :size ="drawerSize"
       @open="openDrawer">
         <div class="demo-drawer__content">
           <el-form :model="downForm">
             <el-form-item label="文件下载码" :label-width="formLabelWidth">
-              <el-input v-model="downForm.down_code" autocomplete="off" @input="getFileInfoByDownCode"></el-input>
+              <el-input v-model="downForm.downCode" autocomplete="off" @input="getFileInfoByDownCode"></el-input>
             </el-form-item>
             <el-form-item label="已上传文件" :label-width="formLabelWidth">
               <el-tag size="small" class="downFile" closable></el-tag>
@@ -80,22 +103,29 @@ body {
   font-family: "Exo 2";
 }
 
+.el-upload-list__item.is-ready,
+.el-upload-list__item.is-uploading {
+  display: none !important;
+}
+
 .bg {
   position: absolute;
   top: 0; left: 0; bottom: 0; right: 0;
   margin: auto;
   position: absolute;
-  background: url('~@/assets/card-bg1.jpg') ;
+  background: url('src/assets/card-bg1.jpg') ;
   background-size: 100% 100%;
 }
 
 #selectFile {
   margin-top:1rem;
+  font-weight: bolder;
 }
 .upload{
   margin-top:2rem;
   margin-bottom: 2rem;
 }
+
 
 .down-code{
   margin-top:1rem;
@@ -121,7 +151,7 @@ body {
   -o-opacity: 0.5;   */
   /* opacity: 0.5; */
   position: absolute;
-  background: url('~@/assets/card-bg1.jpg') ;
+  background: url('src/assets/card-bg1.jpg') ;
   background-size: 100% 100%;
 
 }
@@ -149,7 +179,54 @@ body {
 
 </style>
 
-<script>
+<script setup lang="ts">
+  import {
+    remainChunks,
+    isStop,
+    isShowDrawer,
+    percent,
+    uploadedChunkSize,
+    chunkSize,
+    fileState,
+    downForm,
+    formLabelWidth,
+    direction,
+    loading,
+    loadingText,
+    drawerSize,
+    isUploading,
+    init,
+    beforeunloadHandler,
+    fileUpload,
+    downFile,
+    fileUploadSetup,
+    sendChunk,
+    sendRequest,
+    fileCheck,
+    openDrawer,
+    cancelForm,
+    copyDownCode,
+    closeDrawer,
+    getFileInfoByDownCode
+  } from 'src/pages/fileBroker'
+
+  import {onMounted,onUnmounted} from  "vue"
+
+
+  onMounted(() => {
+    window.addEventListener('beforeunload', e => beforeunloadHandler(e))
+  })
+
+  onUnmounted(
+    () => {
+    window.removeEventListener('beforeunload', e => beforeunloadHandler(e))
+  })
+
+
+</script>
+
+
+<!-- <script>
 import SparkMD5 from 'spark-md5'
 
 export default {
@@ -404,7 +481,7 @@ export default {
       formdata.append("md5", item.hash)
       formdata.append("file_name", item.name)
 
-
+      
       return this.$http({
         url: "/api/v1/fileBroker",
         method: "put",
@@ -551,4 +628,4 @@ export default {
     window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
   },
 };
-</script>
+</script> -->

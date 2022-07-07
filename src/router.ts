@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteParams, RouteRecordRaw } from 'vue-router'
-import { isAuthorized } from './store/user'
+// import { isAuthorized } from './store/user'
 
 export type AppRouteNames =
     | 'Index'
