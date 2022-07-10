@@ -1,6 +1,6 @@
 <template>
 
-    <div >
+    <div class ="alinLab" >
         <div class="container">
             <div class="card">
                 <div class="face face1">
@@ -60,17 +60,20 @@
 
 </script>
 
+<!-- <style scoped>
 
-<style>
-    body{
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        background: #333;
-        display: flex;
-        justify-content: center;
+</style>> -->
+<style scoped>
+
+    .alinLab {
+        margin: 0 ;
+        padding: 0 ;
+        min-height: 100vh ;
+        background: #333 ;
+        display: flex ;
+        justify-content: center ;
         align-items: center;
-        font-family: consolas;
+        font-family: consolas ;
     }
 
     .card {
