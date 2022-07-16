@@ -9,9 +9,10 @@ import registerGlobalComponents from './plugins/global-components'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-
+import Particles from "particles.vue3";
 const app = createApp(App)
 
+app.use(Particles)
 app.use(router)
 app.use(ElementPlus)
 

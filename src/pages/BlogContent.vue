@@ -164,10 +164,10 @@
   </div>
 </template>
 <script>
-import NewLoading from "./../../../components/NewLoading.vue";
-import MessCard from "./../components/MessCard";
-import NewComment from "./../components/NewComment";
-import MyMarked from './../components/MyMarked'
+import NewLoading from "src/components/NewLoading.vue";
+import MessCard from "src/components/MessCard.vue";
+import NewComment from "src/components/NewComment.vue";
+import MyMarked from 'src/components/MyMarked.vue'
 // import {mavonEditor} from 'mavon-editor'
 // import 'mavon-editor/dist/css/index.css'
 import ClipboardJS from 'clipboard'

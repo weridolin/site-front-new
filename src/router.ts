@@ -120,7 +120,7 @@ export const routes: RouteRecordRaw[] = [
     {
         path: '/alinLab',
         name: 'alinLab',
-        component: ()=>import('./pages/alinLab.vue'),
+        component: ()=>import('./pages/alinlab.vue'),
         meta: {
             title: 'alin-lab',
             nav: nav,

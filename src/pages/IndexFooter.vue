@@ -70,7 +70,7 @@
   </footer>
 </template>
 <script>
-import  XRouteLink from "../components/XRouteLink.vue"
+import  XRouteLink from "src/components/XRouteLink.vue"
 export default {
   name: "IndexFooter",
   components:{

@@ -7,7 +7,7 @@
     >
       <div class="article-inner">
 <!--        文章详情链接-->
-     <router-link class="article-more-a article-title"  :to="'/blog/'+item.id">
+    <router-link class="article-more-a article-title"  :to="'/blog/'+item.id">
 
         <header class="article-header">
             <div style="margin-right:7.6923%">
@@ -29,7 +29,7 @@
               class="article-img"
               :src="item.cover"
               >
-              <div slot="error" class="image-slot">
+              <div  class="image-slot">
                 <!-- <i class="el-icon-picture-outline">加载失败</i> -->
                 <img style="object-f:cover;width:100%" src="https://p.pstatp.com/origin/1379300008dada52a7875"/>
               </div>
@@ -66,6 +66,12 @@
     </article>
   </div>
 </template>
+
+<!-- <script setyuplang="ts">
+
+</script> -->
+
+
 <script>
 export default {
   name: "BlogList",

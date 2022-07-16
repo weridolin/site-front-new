@@ -72,7 +72,7 @@
                 </li>
                 <div class="tag-group">
                   <el-tag
-                    v-for="item in this.classList"
+                    v-for="item in classList"
                     :key="item.id"
                     :type="getRandomTagType()"
                     @click="clickTag(item.name)"
@@ -96,16 +96,8 @@
           </nav>
           <nav
             class="blog-animation"
-            style="margin: 10px auto; color: var(--main-6); font-weight: bold">总文章数({{ this.count }})
+            style="margin: 10px auto; color: var(--main-6); font-weight: bold">总文章数({{ count }})
           </nav>
-          <!--        <nav class="header-smart-menu blog-animation">-->
-          <!--          <router-link to="/index">主页</router-link>-->
-
-          <!--          <router-link to="/message">留言</router-link>-->
-
-          <!--          <router-link to="/link">友链</router-link>-->
-          <!--          <router-link to="/route">成长</router-link>-->
-          <!--        </nav>-->
           <nav class="header-nav blog-animation">
             <div class="social">
               <a href="https://github.com/weridolin" target="_blank">
@@ -113,11 +105,6 @@
                   <i class="iconfont icongithub"></i>
                 </span>
               </a>
-              <!--              <a class="qq-social">-->
-              <!--                <span class="qq"  v-on:click="imgViewDialog_show('qq')">-->
-              <!--                    <i title="QQ" class="iconfont iconQQ1"></i>-->
-              <!--                </span>-->
-              <!--              </a>-->
               <el-popover class="qq" placement="top" width="50" trigger="hover">
                 <img
                   style="width: 200px; height: 200px; margin: 0 auto"
@@ -125,7 +112,6 @@
                 />
                 <i
                   title="qq"
-                  slot="reference"
                   class="iconfont iconQQ1"
                   @click="openWindow('contact_qq')"
                 ></i>
@@ -143,46 +129,22 @@
                 />
                 <i
                   title="微信"
-                  slot="reference"
                   class="iconfont iconweixin1"
                   @click="openWindow('contact_weixin')"
                 ></i>
               </el-popover>
-              <!-- <div class="top_contact_us">
-              <i title="qq" slot="reference" class="iconfont iconQQ1" @click="openWindow('contact_qq')"></i> 
-              <i title="微信" slot="reference" class="iconfont iconweixin1"  @click="openWindow('contact_weixin')"></i> -->
-              <!-- <div class="top_weixin"><a href="#" id="contact_weixin" onclick="openWindow(this)">微信公众号</a></div>   -->
-              <!-- <div class="top_qq"><a href="#" id="contact_qq" onclick="openWindow(this)"></a></div>   -->
-              <!-- </div> -->
+              <i title="qq" class="iconfont iconQQ1" @click="openWindow('contact_qq')"></i> 
+              <i title="微信" class="iconfont iconweixin1"  @click="openWindow('contact_weixin')"></i> -->
 
-              <!-- <div id="light_qq" class="white_content"> 
-                <img v-bind:src=qq_img_url />  -->
-              <!-- <i title="qq" slot="reference" class="iconfont iconQQ1"></i>  -->
-              <!-- </div> -->
-              <!-- <i title="qq" slot="reference" class="iconfont iconQQ1"></i>  -->
-              <!-- <div id="light_weixin" class="white_content">  
-                <img v-bind:src=wechat_img_url />   -->
-              <!-- <i title="微信" slot="reference" class="iconfont iconweixin1"></i> -->
-              <!-- </div> -->
-              <!-- <i title="微信" slot="reference" class="iconfont iconweixin1"></i> -->
-              <!-- <div id="fade" class="black_overlay"  onClick="closeWindow()">
-            </div> -->
-              <!--            <span class="weibo" title="微博">-->
-              <!--              <i class="iconfont icontubiaozhizuo-"></i>-->
-              <!--            </span>-->
             </div>
 
-            <!-- <div class="hidden-sm-and-down">
-            <labels class="reveal-bottom"></labels>
-          </div> -->
 
             <img
               class="blog-animation"
               style="
                 width: 100%;
                 margin: 10px 0;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-              "
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);"
               v-bind:src="blog_animation_url"
             />
           </nav>
@@ -191,51 +153,36 @@
     </el-scrollbar>
   </div>
 </template>
-<script>
-// import "element-ui/lib/theme-chalk/display.css";
-// import Labels from "./Labels";
-export default {
-  name: "BlogLeft",
-  components: {
-    // Labels,
-  },
-  props:{
-      count:Number,
-  },
-  data() {
-    return {
-      classList: [], //文章类型列表
-      searchList: [], //文章标签类别
-      isLoading: true, //是否
-      searchInfoShow: false, //搜索结果栏是否显示,
-      search: "",
-      // count: 0,
-      loading: false,
-      mine_img: require("@/assets/mine.jpg"),
-      wechat_img_url: require("@/assets/wechat.png"),
-      qq_img_url: require("@/assets/qq.jpg"),
-      blog_animation_url: require("@/assets/fight.jpg"),
-      imgViewDialogVisible: false, // 控制dialog显示隐藏
-      // imgViewDialog_imgSrc: , // 控制图片src
 
+<script setup lang="ts">
+  import { ref,reactive } from 'vue'
+  import { useRouter } from 'vue-router'
+  import {ArticlesApis} from "src/services/apis/articles"
+  import type {Article,ArticleType} from "src/services/apis/articles"
 
-    };
-  },
-  mounted() {
+  const classList = ref<ArticleType[]>([]) //文章类型列表
+  const searchList=ref<Article[]>([]) //文章标签类别
+  const isLoading=ref(true) //是否
+  const searchInfoShow =ref(false)//搜索结果栏是否显示,
+  const search=ref("")
+  const loading=ref(false)
+  const mine_img="src/assets/mine.jpg"
+  const wechat_img_url="src/assets/wechat.png"
+  const qq_img_url="src/assets/qq.jpg"
+  const blog_animation_url="src/assets/fight.jpg"
+  const imgViewDialogVisible=ref(false)// 控制dialog显示隐藏
+  const imgViewDialog_imgSrc = ref("")
+  const router = useRouter()
+  const count = ref(0) //文章总数
 
-  },
-  computed: {
-
-  },
-  methods: {
-    getRandomTagType:function(){
+  function getRandomTagType(){
       var items = ['success','info','danger','warning',''];
       console.log("types",items[Math.floor(Math.random()*items.length)])
       return items[Math.floor(Math.random()*items.length)];
-      
-    },
-    openWindow(obj) {
-      var qq_or_weixin = "light_qq";
+    }
+
+  function openWindow(obj:string) {
+      let qq_or_weixin = "light_qq";
       switch (obj) {
         case "contact_weixin":
           qq_or_weixin = "light_weixin";
@@ -245,134 +192,90 @@ export default {
           qq_or_weixin = "light_qq";
           break;
       }
-      document.getElementById(qq_or_weixin).style.display = "block";
-      document.getElementById("fade").style.display = "block";
-    },
-    // closeWindow(){
-    //     document.getElementById('light_weixin').style.display='none';
-    //     document.getElementById('light_qq').style.display='none';
-    //     document.getElementById('fade').style.display='none';
-    // },
+      let qq_or_weixin_ele = document.getElementById(qq_or_weixin)
+      if (qq_or_weixin_ele)
+        {qq_or_weixin_ele.style.display = "block"}
+      let fade_ele = document.getElementById("fade")
+      if (fade_ele){
+        fade_ele.style.display = "block";
+      }
+  }
+
     // 搜索栏失去焦点一秒钟后隐藏
-    closeSearchInfo() {
-      let that = this;
+  function  closeSearchInfo() {
       setTimeout(function () {
-        that.searchInfoShow = false;
+        searchInfoShow.value = false;
       }, 500);
-    },
-    clickTag(tagName){
+    }
+
+  function clickTag(tagName:string){
       if (tagName) {
-        this.$router.push({
+        router.push({
           path: "/blog",
           query: {
             type: tagName,
           },
         });
       }
-    },
-    // 点击搜索
-    searchBtn() {
-      if (this.search.length > 0 && this.$route.query.search != this.search) {
-        this.$router.push({
-          path: "/blog",
-          query: {
-            title: this.search,
+    }
+  // 点击搜索
+
+  function  searchBtn() {
+      if (search.value.length > 0 && router.currentRoute.value.query.sreach != search.value) {
+          router.push({
+            path: "/blog",
+            query: {
+              title:search.value,
           },
         })
 
       }else{
-        this.$router.push({
+        router.push({
           path: "/blog",
           query: {
-        
           },
         })
       }
-    },
+    }
+
     // 搜索栏实时结果显示
-    searchInfo() {
-      let that = this;
-      if (this.search.length > 0) {
-        that
-          .$get("/api/v1/blogs/search?title=" + that.search)
-          .then(function (res) {
-            console.log(res);
-            that.searchList = res;
-          })
-          .catch(function (error) {});
-      }
-    },
+  function searchInfo() {
+      ArticlesApis.search({
+        params:{
+          "title":search.value
+        }
+      }).then(function(res){
+        console.log(">>> search article",res)
+        searchList.value=res.data
+      }).catch(function(error){
+        console.log(">>> search error",error)
+      })
+    }
     // 获取文章类型
-    getClass() {
-      let that = this;
-      that
-        .$get("/api/v1/blogs/types")
-        .then(function (res) {
-          console.log(">>> tags", res);
-          that.classList = res;
-          console.log("list", that.classList);
-          if (that.$route.query.class) {
-            for (let i = 0; i < that.classList.length; i++) {
-              console.log(i);
-              if (that.$route.query.class == that.classList[i].classty) {
-                that.classItemTop = that.classItem = (i + 1) * 41;
-                break;
-              }
-            }
-          }
-        })
-        .catch(function (error) {});
-    },
-    // getInfo() {
-    //   let that = this;
-    //   this.loading = true;
-    //   that
-    //     .$get("/api/v1/blogs/articleCount")
-    //     // $get("http://127.0.0.1:8000/api/v1/blogs/articleCount")
-    //     .then(function (res) {
-    //       console.log(res);
-    //       that.count = res.count;
-    //       console.log(">>>>articles-count", res.data);
-    //       that.loading = false;
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //       that.loading = false;
-    //     });
-    // },
+  function getClass() {
+      ArticlesApis.getArticleTags({
+        }
+      ).then(function(res){
+        classList.value = res.data
+        // if (router.)
+      }).catch(function(err){
+        console.log(">>> 获取文章类型出错",err)
+      })
+  }
 
-    imgViewDialog_show: function (type) {
-      this.imgViewDialogVisible = true;
-      switch (type) {
-        case "qq":
-          this.imgViewDialog_imgSrc = require("@/assets/qq.jpg");
-          break;
-        case "wechat":
-          this.imgViewDialog_imgSrc = require("@/assets/wechat.png");
-          break;
-      }
-    },
-    /**
-     * 图片dialog_关闭
-     */
-    imgViewDialog_close: function () {
-      this.imgViewDialogVisible = false;
-      var self = this;
-      setTimeout(function () {
-        self.imgViewDialog_imgSrc = "";
-      }, 100);
-    },
-  },
-  created() {
-    // this.getInfo();
-    this.getClass();
- 
-  },
+  // created 时运行
+  getClass()
 
-};
+  // 获取文章总数
+  ArticlesApis.getArticleCount({}).then(function(res){
+    count.value = res.data.count
+  }).catch(function(err){
+    console.log(">>> get articles error",err)
+  })
+
 </script>
+
 <style lang="stylus" scoped>
-@import '~@/assets/style/home.styl'
 
 .el-tag {
   margin-left: 10px;

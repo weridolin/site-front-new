@@ -27,12 +27,11 @@
   </div>
 </template>
 <script>
-import BlogInfo from "./../components/BlogInfo";
-import BlogList from "./../components/BlogList";
-import IndexFooter from ".//IndexFooter";
-import { Notification } from 'element-ui';
-// ??
-import NewLoading from "./../../../components/NewLoading.vue";
+import BlogInfo from "src/components/BlogInfo.vue";
+import BlogList from "src/components/BlogList.vue";
+import IndexFooter from "src/pages/IndexFooter.vue";
+import {ElNotification} from 'element-plus';
+import NewLoading from "src/components/NewLoading.vue";
 export default {
   name: "NewHome",
   components: {
@@ -107,7 +106,7 @@ export default {
         type = "&title=" + this.$route.query.title;
       }
       this.loading = true;
-      that
+      that  
         .$get("/api/v1/blogs/articles?page=" + that.current_page + type)
         .then(function (res) {  
           if (res.data.length != 0) {
@@ -120,7 +119,7 @@ export default {
             console.info("now page ",that.current_page,"last_page",that.last_page)
 
           } else {
-            Notification.error({
+            ElNotification.error({
                     title: '错误提示 ',
                     message: '未检索到对应文章',
                 });
@@ -130,7 +129,7 @@ export default {
         })
         .catch(function (error) {
           console.log("get articles error::", error.message);
-          Notification.error({
+          ElNotification.error({
                     title: '请求错误 ',
                     message: error.message,
           })

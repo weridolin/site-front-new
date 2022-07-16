@@ -1,41 +1,105 @@
 <template>
+  <div id="app">
 
+        <Particles
+                id="tsparticles"
+                :particlesInit="particlesInit"
+                :particlesLoaded="particlesLoaded"
+                :options="{
+                    background: {
+                        color: {
+                            value: '#0d47a1'
+                        }
+                    },
+                    fpsLimit: 120,
+                    interactivity: {
+                        events: {
+                            onClick: {
+                                enable: true,
+                                mode: 'push'
+                            },
+                            onHover: {
+                                enable: true,
+                                mode: 'repulse'
+                            },
+                            resize: true
+                        },
+                        modes: {
+                            bubble: {
+                                distance: 400,
+                                duration: 2,
+                                opacity: 0.8,
+                                size: 40
+                            },
+                            push: {
+                                quantity: 4
+                            },
+                            repulse: {
+                                distance: 200,
+                                duration: 0.4
+                            }
+                        }
+                    },
+                    particles: {
+                        color: {
+                            value: '#ffffff'
+                        },
+                        links: {
+                            color: '#ffffff',
+                            distance: 150,
+                            enable: true,
+                            opacity: 0.5,
+                            width: 1
+                        },
+                        collisions: {
+                            enable: true
+                        },
+                        move: {
+                            direction: 'none',
+                            enable: true,
+                            outModes: {
+                                default: 'bounce'
+                            },
+                            random: false,
+                            speed: 6,
+                            straight: false
+                        },
+                        number: {
+                            density: {
+                                enable: true,
+                                area: 800
+                            },
+                            value: 80
+                        },
+                        opacity: {
+                            value: 0.5
+                        },
+                        shape: {
+                            type: 'circle'
+                        },
+                        size: {
+                            value: { min: 1, max: 5 },
+                        }
+                    },
+                    detectRetina: true
+                }"
+        />
   <div class="drug-screen">
-    <vue-particles
-      color="#dedede"
-      :particleOpacity="0.7"
-      :particlesNumber="80"
-      shapeType="circle"
-      :particleSize="4"
-      linesColor="#dedede"
-      :linesWidth="1"
-      :lineLinked="true"
-      :lineOpacity="0.4"
-      :linesDistance="150"
-      :moveSpeed="3"
-      :hoverEffect="true"
-      hoverMode="grab"
-      :clickEffect="true"
-      clickMode="push"
-    >
-    </vue-particles>
     <el-row  class="el-row-one">
     </el-row>
     <el-row class="drug-top" >
       <div class="drug-info container">
         <!-- <h1 class="mess-title blog-animation"> -->
         <i class="drug-word"
-          >{{this.word.content}}</i
-        >
-
+          >{{word}}</i>
       </div>
     </el-row>
 
     <el-row>
       <el-col :xs="22" :sm="22" :md="24" :lg="23" :xl="23">
         <div class="drug-button-group" style="text-align: right">
-          <a href="#" class="drug-button"  @click="copy()" >点我复制</a>
-          <a href="#" class="drug-button" @click="next()">再来一条</a>
+          <a class="drug-button"  @click="copy()" >点我复制</a>
+          <a class="drug-button" @click="next()">再来一条</a>
         </div>
       </el-col>
       <el-col :xs="2" :sm="2" :md="0" :lg="1" :xl="1">
@@ -43,28 +107,33 @@
       </el-col>
     </el-row>
   </div>
+</div> 
 </template>
-<script>
-import { Notification } from 'element-ui';
-export default {
-  name: "Drug",
-  components: {},
-  data() {
-    return {
-      src: "~@/assets/drug-bg.jpg",
-      word:"",
-    };
-  },
-  created() {
-      this.next()
-  },
-  methods: {
-    copy(){
+
+<script setup lang="ts">
+  // import Particles from "particles.vue3";
+  import {ref,reactive} from 'vue'
+  import {ElNotification } from "element-plus"
+  import {DrugApis} from 'src/services/apis/drug'
+  // import Particles from 'src/components/Particles.vue'
+  import { loadFull } from "tsparticles";
+
+  const word=ref("")
+  const last_id =  ref(1)
+
+  function  copy(){
         // 创建一个虚拟的input来实现
-        var word = document.querySelector(".drug-word").textContent;  
+
+        let _word = document.querySelector(".drug-word")
+        if (_word!=null){
+          let value = _word.textContent
+          if (value){
+            word.value =value
+          }
+        } 
         let newInput = document.createElement("input");
         // 讲存储的数据赋值给input的value值
-        newInput.value = word;
+        newInput.value = word.value;
         // appendChild() 方法向节点添加最后一个子节点。
         document.body.appendChild(newInput);
         // 选中input元素中的文本
@@ -72,25 +141,35 @@ export default {
         newInput.select();
         document.execCommand("Copy");   // 执行复制操
         newInput.remove() 
-        this.$message({
+        ElNotification({
           message: '复制成功',
           type: 'success'
         });
-    },
-    next() {
-        let that = this;
-        this.$get("/api/v1/drug/words/random?last_id="+this.word.id)
-        // this.$get("http://127.0.0.1:8000/api/v1/blogs/bglist")
-        .then(function (res) {
+    }
+
+  function next() {
+        let res = DrugApis.getDrugWord(last_id.value)
+        res.then(function (res) {
             console.log(">>> get random drug word",res)
-            that.word = res;
+            word.value =res.data.content
+            last_id.value = res.data.id
         })
-        .catch(function (error) {});
-        
-    },
-  },
-};
+        .catch(function (error) {
+            console.log(">>> get random drug word",error)
+        })   
+    }
+
+  const particlesInit = async (engine) => {
+      await loadFull(engine);
+  }
+
+  const particlesLoaded = async (container) => {
+      console.log("Particles container loaded", container);
+  }
+
+  next()
 </script>
+
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css?family=Lato:300');
 
@@ -126,7 +205,7 @@ export default {
 }
 </style>
 <style lang="stylus" scoped>
-@import '~@/assets/style/home.styl';
+
 
 #particles-js {
   width: 100%;
@@ -154,7 +233,8 @@ export default {
   left: 0;
   background-color: black;
   overflow: hidden;
-  background-image: url('~@/assets/drug-bg.jpg');
+  background-repeat:no-repeat;
+  background-image: url('src/assets/drug-bg.jpg');
 }
 
 .el-row {

@@ -168,10 +168,10 @@
 </template>
 <script>
 // import VueMarkdown from 'vue-markdown'
-import NewComment from "./NewComment";
+import NewComment from "src/components/NewComment.vue";
 // import {mavonEditor} from 'mavon-editor'
 // import 'mavon-editor/dist/css/index.css'
-import MyMarked from './MyMarked'
+import MyMarked from 'src/components/MyMarked.vue'
 
 export default {
   name: "MessCard",
@@ -450,7 +450,7 @@ export default {
 };
 </script>
 <style lang="stylus" scoped>
-@import '~@/assets/style/home.styl';
+
 
 .mess-item {
   position: relative;

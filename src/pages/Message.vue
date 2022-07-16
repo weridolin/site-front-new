@@ -28,7 +28,7 @@
 <script setup lang="ts">
   import AddMessage from 'src/components/AddMessage.vue'
   import MessageList from 'src/components/MessageList.vue'
-  import { reactive, ref,onBeforeMount } from 'vue';
+  // import { reactive, ref,onBeforeMount } from 'vue';
 
   import {
       list,
