@@ -7,17 +7,18 @@
     >
       <div class="article-inner">
 <!--        文章详情链接-->
-    <router-link class="article-more-a article-title"  :to="'/blog/'+item.id">
+      <router-link class="article-more-a article-title"  :to="'/blog/'+item.id">
 
         <header class="article-header">
             <div style="margin-right:7.6923%">
               <h3 class="title">
                 {{item.title}}
-              <i class="el-icon-thumb"></i>
+               <el-icon ><Pointer /></el-icon>
+              <!-- <i> <el-icon><Pointer /></el-icon></i> -->
               </h3>
               <span class="archive-article-date">
                 <a href="javascritp:;" style="color:#bebebe;font-size:16px">
-                  <i class="iconfont iconriqi"></i> {{item.created}}
+                  <el-icon ><Calendar /></el-icon> {{item.created}}
                 </a>
               </span>
             </div>
@@ -34,14 +35,14 @@
                 <img style="object-f:cover;width:100%" src="https://p.pstatp.com/origin/1379300008dada52a7875"/>
               </div>
             </el-image>
-            <div class="cont-desc" v-html="item.desc"></div>
+            <div class="cont-desc" v-html="item.summary"></div>
         </div>
      </router-link>
         <div class="article-info article-info-index">
           <div class="blog-info">
-            <router-link style="color:var(--main-5)" :to="'/blog/'+item.id"><i class="icon iconfont iconzuanshi" style="color:var(--main-5)"></i>{{item.total_views}}</router-link>
+            <router-link style="color:var(--main-5)" :to="'/blog/'+item.id"><el-icon><View /></el-icon> {{item.total_views}}</router-link>
             <!-- <router-link :to="'/blog/'+item.id"><i class="icon iconfont iconcomment"></i>{{item.message_count}}</router-link> -->
-            <router-link  :to="'/blog/'+item.id+'#comment'"><i class="iconfont iconaixin"></i>{{item.comment_count}}</router-link>
+            <router-link  :to="'/blog/'+item.id+'#comment'"><el-icon><Star /></el-icon>{{item.likes}}</router-link>
           </div>
           <div class="article-group" style="display:flex">
               <div class="article-category tagcloud" >
@@ -82,6 +83,10 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
+.el-icon {
+  vertical-align: middle;
+}
 .article {
   margin: 10px;
   position: relative;
@@ -209,9 +214,10 @@ export default {
 
 }
 .article-header .title{
-  font-size:16px
+  font-size:20px
   display: inline;
-  margin 0
+  margin 0;
+  font-weight: bold;
 
 }
 .article-header .title:before{

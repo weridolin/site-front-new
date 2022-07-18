@@ -26,133 +26,114 @@
     </div>
   </div>
 </template>
-<script>
-import BlogInfo from "src/components/BlogInfo.vue";
-import BlogList from "src/components/BlogList.vue";
-import IndexFooter from "src/pages/IndexFooter.vue";
-import {ElNotification} from 'element-plus';
-import NewLoading from "src/components/NewLoading.vue";
-export default {
-  name: "NewHome",
-  components: {
-    BlogInfo,
-    BlogList,
-    IndexFooter,
-    NewLoading,
-  },
-  data() {
-    return {
-      current_page: 1, //当前页
-      last_page: 1, //最后一页
-      list: [], //文章数据
-      loading: true,
-      count:0, //文章总数
-    };
-  },
-  methods: {
-    // 标签点击查询跳转
-    change(item) {
-      console.log(item);
-      this.current_page = 1;
-      this.$router.push({
-        path: "/blog",
-        query: {
-          label: item,
-        },
-      });
-    },
+<script setup lang="ts">
+  import BlogInfo from "src/components/BlogInfo.vue";
+  import BlogList from "src/components/BlogList.vue";
+  import IndexFooter from "src/pages/IndexFooter.vue";
+  import {ElNotification} from 'element-plus';
+  import NewLoading from "src/components/NewLoading.vue";
+  import {ref,watch} from "vue"
+  import { useRouter } from 'vue-router'
+  import {ArticlesApis} from "src/services/apis/articles"
+  import type {Article} from "src/services/apis/articles"
+
+  const  current_page=ref(1) //当前页
+  const  last_page=ref(1) //最后一页
+  const  list=ref<Article[]>([]) //文章数据
+  const  loading=ref(true)
+  const  count=ref(0) //文章总数
+  const  router = useRouter()
+
+
+
+      // 标签点击查询跳转
+  function change(item:string) {
+        console.log(item);
+        current_page.value = 1;
+        router.push({
+          path: "/blog",
+          query: {
+            label: item,
+          },
+        });
+      }
+  
     // 分页获取，防止刷新丢失
-    getList(page) {
+  function  getList(page:number) {
       console.log(page);
-      this.current_page = page;
+      current_page.value = page;
       let type = {};
-      if (this.$route.query.label) {
+      if (router.currentRoute.value.query.label) {
         type = {
           page: page,
-          label: this.$route.query.label,
+          label: router.currentRoute.value.query.label,
         };
-      } else if (this.$route.query.type) {
+      } else if (router.currentRoute.value.query.type) {
         type = {
           page: page,
-          type: this.$route.query.type,
+          type: router.currentRoute.value.query.type,
         };
-      } else if (this.$route.query.title) {
+      } else if (router.currentRoute.value.query.title) {
         type = {
           page: page,
-          title: this.$route.query.title,
+          title: router.currentRoute.value.query.title,
         };
       } else {
         type = {
           page: page,
         };
       }
-      this.$router.push({
+      console.log(">>> push router",type)
+      router.push({
         query: type,
       });
-    },
-    // 共有访问，根据地址栏参数，获取文章，
-    async getArticle() {
-      this.current_page = this.$route.query.page
-        ? parseInt(this.$route.query.page)
-        : 1;
-      // this.isLoading=true
-      let that = this;
-      let type = "";
-      if (this.$route.query.label) {
-        type = "&label=" + this.$route.query.label;
-      } else if (this.$route.query.type) {
-        type = "&type=" + this.$route.query.type;
-      } else if (this.$route.query.title) {
-        type = "&title=" + this.$route.query.title;
-      }
-      this.loading = true;
-      that  
-        .$get("/api/v1/blogs/articles?page=" + that.current_page + type)
-        .then(function (res) {  
-          if (res.data.length != 0) {
-            console.log(" >>> get articles list",res.data)
-            that.list = res.data;
-            that.loading = false;
-            // that.current_page = res.data.current_page;
-            that.last_page = res.last_page;
-            that.count = res.count
-            console.info("now page ",that.current_page,"last_page",that.last_page)
+  }
 
-          } else {
-            ElNotification.error({
-                    title: '错误提示 ',
-                    message: '未检索到对应文章',
-                });
-            // window.location.reload();
-            console.log('未检索到文章！');     
-          }
+
+  function getArticle() {
+      current_page.value = router.currentRoute.value.query.page? parseInt(router.currentRoute.value.query.page.toString()): 1;
+      let type = {};
+      if (router.currentRoute.value.query.label) {
+        type = {"label":router.currentRoute.value.query.label};
+      } else if (router.currentRoute.value.query.type) {
+        type = {"type" :router.currentRoute.value.query.type};
+      } else if (router.currentRoute.value.query.title) {
+        type = {"title" : router.currentRoute.value.query.title};
+      }
+      loading.value = true;
+      ArticlesApis.getArticles({
+        params:{
+          page:current_page.value,
+          ...type
+        }
+      }).then(function(res){
+          list.value = res.results
+          loading.value= false
+          last_page.value=res.last_page
+          count.value = res.count
+      }).catch(function(err){
+        console.log(">>> get articles error",err)
+        ElNotification.error({
+                      title: '请求错误 ',
+                      message: err.message,
         })
-        .catch(function (error) {
-          console.log("get articles error::", error.message);
-          ElNotification.error({
-                    title: '请求错误 ',
-                    message: error.message,
-          })
-        });
-    },
-  },
+      })
+  }
 
-  created() {
-    this.getArticle();
-  },
-  watch: {
-    $route(to, from) {
-      // 对路由变化作出响应...
-      if (to.name == "NewHome") {
-        console.log(to.name);
-        this.getArticle();
-      }
-    },
-  },
-};
+    watch(() => router.currentRoute.value.path,(toPath) => {
+            //要执行的方法
+            console.log(toPath,"toPath");
+          if (toPath=="NewHome") {
+            getArticle();
+          }
+    },{immediate: true,deep: true})
+
+    getArticle()
 </script>
+
+
 <style lang="stylus" scoped>
-.home-blog>>> {
+.home-blog {
   .nav-top {
     color: #515151 !important;
   }
@@ -165,7 +146,7 @@ export default {
   }
 }
 
-.home>>> {
+.home {
   .el-pagination.is-background .el-pager li:not(.disabled).active {
     background-color: var(--main-4);
   }

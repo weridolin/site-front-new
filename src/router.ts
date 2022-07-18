@@ -65,7 +65,7 @@ export const routes: RouteRecordRaw[] = [
         name: 'NewHome',
         component: ()=>import('./pages/NewHome.vue'),
         meta: {
-            keepAlive: true, // 需要被缓存
+            keepAlive: false, // 需要被缓存
             title: '文章-' + name,
             nav: nav1,
             footer:false,
@@ -89,6 +89,7 @@ export const routes: RouteRecordRaw[] = [
         name: 'BlogContent',
         component: ()=>import('./pages/BlogContent.vue'),
         meta: {
+            keepAlive: false, // 需要被缓存
             nav: nav1,
             footer:false,
             header:true
@@ -178,17 +179,17 @@ export const routes: RouteRecordRaw[] = [
     }, 
 ]
 export const router = createRouter({
-  history: createWebHashHistory(),
-  routes,
+    history: createWebHashHistory(),
+    routes,
 })
 
 export function routerPush (name: AppRouteNames, params?: RouteParams): ReturnType<typeof router.push> {
-  if (params !== undefined) {
-    return router.push({
-      name,
-      params,
-    })
-  } else {
-    return router.push({ name })
+    if (params !== undefined) {
+        return router.push({
+            name,
+            params,
+        })
+    } else {
+        return router.push({ name })
   }
 }

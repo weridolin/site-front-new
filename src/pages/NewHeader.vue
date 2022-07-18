@@ -48,7 +48,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import  XRouteLink from "../components/XRouteLink.vue"
+import  XRouteLink from "src/components/XRouteLink.vue"
 
 export default {
   name: "NewHeader",

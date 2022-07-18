@@ -1,27 +1,30 @@
 <template>
+
+  <el-dialog v-model="wechatVisible" width="10%" title="打开微信扫一扫😁">
+    <el-image :src="wechat_img_url" fit="cover"></el-image>
+  </el-dialog>
+    <el-dialog v-model="qqVisible" width="10%" title="打开QQ扫一扫😁">
+      <el-image :src="qq_img_url" fit="cover"></el-image>
+  </el-dialog>
   <div class="left-col">
-    <!-- <div id="fade" class="black_overlay"  @click="closeWindow()"> -->
-    <!-- </div> -->
-    <!-- <el-dialog customClass="customWidth" title :visible.sync="imgViewDialogVisible" :modal="false">
-    <div class="main">
-      <img class="img"  :src="imgViewDialog_imgSrc" />
-      </div>
-  </el-dialog> -->
     <el-scrollbar style="height: 100%">
+
       <div class="intrude-less">
         <header id="header" class="inner">
-          <a href="javascript:;" class="profilepic blog-animation">
-            <img v-bind:src="mine_img" alt="Werido" class="js-avatar" />
-          </a>
+          <div class="avatar">
+              <!-- <img v-bind:src="mine_img" alt="Werido" class="js-avatar" /> -->
+            <el-avatar :src="mine_img" size='large'/>
+          </div>
           <hgroup>
             <h1 class="header-author blog-animation">
               <a href="javascript:;"
                 ><span
-                  style=" color: transparent;
-            -webkit-text-stroke: 1px var(--main-6);
-            letter-spacing: 0.04em;
-            font-weight bold"
-                  >Werido</span
+                  style="
+                  -webkit-text-stroke: 1px #51cacc;
+                  font-size: 20px;
+                  letter-spacing: 0.04em;
+                  font-weight bold"
+                  >林叔叔是个怪蜀黍</span
                 ></a
               >
             </h1>
@@ -30,19 +33,15 @@
             <div class="class-search blog-animation">
               <el-form>
                 <div class="search-wrap">
-                  <input
-                    class="search-ipt"
-                    v-model="search"
-                    type="text"
-                    placeholder="find something…"
-                    @focus="searchInfoShow = true"
-                    @blur="closeSearchInfo"
-                    @input="searchInfo"
-                  />
-                  <i
-                    class="icon-search icon el-icon-search"
-                    @click="searchBtn"
-                  ></i>
+                    <el-input
+                      v-model="search"
+                      class="w-50 m-2"
+                      placeholder="输入标题搜索文章..."
+                      :suffix-icon="Search"
+                      @focus="searchInfoShow = true"
+                      @blur="closeSearchInfo"
+                      @input="searchInfo"
+                    />
                 </div>
               </el-form>
               <!-- 结果列表 -->
@@ -67,8 +66,9 @@
                 style="padding: 0; margin: 0"
                 ref="class"
               >
-                <li class="blog-animation">
-                  <router-link to="/blog">文章分类</router-link>
+                <li class="blog-animation" style="list-style:none">
+                    <el-divider >文章分类</el-divider>
+                  <!-- <router-link to="/blog">文章分类</router-link> -->
                 </li>
                 <div class="tag-group">
                   <el-tag
@@ -76,6 +76,7 @@
                     :key="item.id"
                     :type="getRandomTagType()"
                     @click="clickTag(item.name)"
+                    round
                     effect="plain">
                     {{ item.name }}
                   </el-tag>
@@ -94,56 +95,21 @@
               </ul>
             </div>
           </nav>
-          <nav
-            class="blog-animation"
-            style="margin: 10px auto; color: var(--main-6); font-weight: bold">总文章数({{ count }})
+          <nav >
+            <el-row class="society" align="middle">
+
+              <el-button type="info"  class="iconfont icongithub" circle @click="openWindow('https://github.com/weridolin')"/>
+        
+              <el-button type="success" class="iconfont iconweixin1" circle @click="wechatVisible=true" />
+              <el-button type="primary" class="iconfont iconQQ1"  circle  @click="qqVisible=true" />
+            </el-row>
           </nav>
           <nav class="header-nav blog-animation">
-            <div class="social">
-              <a href="https://github.com/weridolin" target="_blank">
-                <span class="github" title="github">
-                  <i class="iconfont icongithub"></i>
-                </span>
-              </a>
-              <el-popover class="qq" placement="top" width="50" trigger="hover">
-                <img
-                  style="width: 200px; height: 200px; margin: 0 auto"
-                  v-bind:src="qq_img_url"
-                />
-                <i
-                  title="qq"
-                  class="iconfont iconQQ1"
-                  @click="openWindow('contact_qq')"
-                ></i>
-              </el-popover>
-
-              <el-popover
-                class="weixin"
-                placement="top"
-                width="50"
-                trigger="hover"
-              >
-                <img
-                  style="width: auto; height: auto; margin: 0 auto"
-                  v-bind:src="wechat_img_url"
-                />
-                <i
-                  title="微信"
-                  class="iconfont iconweixin1"
-                  @click="openWindow('contact_weixin')"
-                ></i>
-              </el-popover>
-              <i title="qq" class="iconfont iconQQ1" @click="openWindow('contact_qq')"></i> 
-              <i title="微信" class="iconfont iconweixin1"  @click="openWindow('contact_weixin')"></i> -->
-
-            </div>
-
-
             <img
               class="blog-animation"
               style="
                 width: 100%;
-                margin: 10px 0;
+                /* margin: 10px 0; */
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);"
               v-bind:src="blog_animation_url"
             />
@@ -154,11 +120,15 @@
   </div>
 </template>
 
+
+
 <script setup lang="ts">
   import { ref,reactive } from 'vue'
   import { useRouter } from 'vue-router'
   import {ArticlesApis} from "src/services/apis/articles"
   import type {Article,ArticleType} from "src/services/apis/articles"
+  import { Search} from '@element-plus/icons-vue'
+
 
   const classList = ref<ArticleType[]>([]) //文章类型列表
   const searchList=ref<Article[]>([]) //文章标签类别
@@ -166,7 +136,7 @@
   const searchInfoShow =ref(false)//搜索结果栏是否显示,
   const search=ref("")
   const loading=ref(false)
-  const mine_img="src/assets/mine.jpg"
+  const mine_img="src/assets/mine.png"
   const wechat_img_url="src/assets/wechat.png"
   const qq_img_url="src/assets/qq.jpg"
   const blog_animation_url="src/assets/fight.jpg"
@@ -174,32 +144,27 @@
   const imgViewDialog_imgSrc = ref("")
   const router = useRouter()
   const count = ref(0) //文章总数
+  const wechatVisible =ref(false) //是否显示微信二维码
+  const qqVisible =ref(false) //是否显示qq二维码
+
+
+  function openWindow(url:string){
+    window.open(url, '_blank')
+  }
+
+  function openSocietyDialog(_type:string){
+    if (_type=="qq"){
+
+    }else if(_type=="wechat"){
+
+    }
+  }
 
   function getRandomTagType(){
       var items = ['success','info','danger','warning',''];
       console.log("types",items[Math.floor(Math.random()*items.length)])
       return items[Math.floor(Math.random()*items.length)];
     }
-
-  function openWindow(obj:string) {
-      let qq_or_weixin = "light_qq";
-      switch (obj) {
-        case "contact_weixin":
-          qq_or_weixin = "light_weixin";
-          break;
-
-        case "contact_qq":
-          qq_or_weixin = "light_qq";
-          break;
-      }
-      let qq_or_weixin_ele = document.getElementById(qq_or_weixin)
-      if (qq_or_weixin_ele)
-        {qq_or_weixin_ele.style.display = "block"}
-      let fade_ele = document.getElementById("fade")
-      if (fade_ele){
-        fade_ele.style.display = "block";
-      }
-  }
 
     // 搜索栏失去焦点一秒钟后隐藏
   function  closeSearchInfo() {
@@ -218,6 +183,9 @@
         });
       }
     }
+
+
+
   // 点击搜索
 
   function  searchBtn() {
@@ -240,6 +208,7 @@
 
     // 搜索栏实时结果显示
   function searchInfo() {
+      console.log(">>> search articles")
       ArticlesApis.search({
         params:{
           "title":search.value
@@ -256,7 +225,8 @@
       ArticlesApis.getArticleTags({
         }
       ).then(function(res){
-        classList.value = res.data
+        classList.value = res
+        console.log(">>> get articles class",classList.value)
         // if (router.)
       }).catch(function(err){
         console.log(">>> 获取文章类型出错",err)
@@ -275,11 +245,20 @@
 
 </script>
 
+
 <style lang="stylus" scoped>
 
 .el-tag {
   margin-left: 10px;
   cursor:pointer//鼠标悬浮变"手"
+}
+.blog-animation {
+  padding-top: 5%;
+}
+.society {
+  padding-top: 10%;
+  justify-content: center;
+
 }
 
 .class-search {
@@ -393,7 +372,7 @@
   width: 76%;
   text-align: center;
   margin: 0px auto;
-  padding-top: 15px;
+  padding-top: 15%;
   position: relative;
 }
 

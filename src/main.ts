@@ -10,7 +10,11 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import Particles from "particles.vue3";
+import 'src/assets/iconfont/iconfont.css'
+
+
 const app = createApp(App)
+
 
 app.use(Particles)
 app.use(router)
@@ -34,7 +38,7 @@ NProgress.configure({ easing: 'ease', speed: 500, showSpinner: false })
 //     from：从哪个路由离开
 //     next：路由的控制参数，常用的有next(true)和next(false)
 router.beforeEach((to, from, next) => {
-    console.info("now path:",from ,"to path:",to,to.meta)
+    console.info("now path:",from ,"to path:",to,to.meta,next)
     NProgress.start()
     if (to.meta.title) { 
         document.title = to.meta.title as string

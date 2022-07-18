@@ -23,6 +23,13 @@ export interface ArticleTag {
     description:string
 }
 
+export interface NextOrPreArticle {
+    id: number,
+    title: string,
+    tags?: ArticleTag[],
+    type?: ArticleType
+}
+
 export interface Article {
     id: number,
     type: ArticleType,
@@ -30,8 +37,8 @@ export interface Article {
     author: User,
     created: string,
     updated: string,
-    next: string,
-    pre: string,
+    next: NextOrPreArticle,
+    pre: NextOrPreArticle,
     title: string,
     summary: string,
     content: string,
@@ -76,11 +83,24 @@ export interface ArticleSearchResponse extends BaseResponse {
 export class Api extends ApiBase {
 
     public getArticles(params: RequestParams = {}){
+
+        console.log(">>> get articles list")
         return this.get<ArticleResponse>({
             url:`api/v2/blogs/articles`,
             ...params
-        })
+
+    })}
+
+    public getArticle(article_id:number,params: RequestParams = {}){
+        if (article_id){
+            console.log(">>> get article",article_id)
+            return this.get<Article>({
+                url:`api/v2/blogs/articles/${article_id}`,
+                ...params
+            })
+        }
     }
+
 
     public getArticleTypes(params:RequestParams={}){
         return this.get({

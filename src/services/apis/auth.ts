@@ -19,6 +19,6 @@ export type User =  {
     username:string,
     last_name:string,
     email:string,
-    profile:Profile
+    profile?:Profile
 }
 

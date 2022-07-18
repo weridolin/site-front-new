@@ -31,7 +31,7 @@
         </div>
         </transition>
         <transition name="slide-fade">
-             <div class="toc-tag"  v-if="tocNav &&toc.length" v-show="!tocIsShow" @click="tocIsShow=true"> 
+            <div class="toc-tag"  v-if="tocNav &&toc.length" v-show="!tocIsShow" @click="tocIsShow=true"> 
                 <i></i>
                 <i></i>
                 <i></i>
@@ -297,10 +297,10 @@ export default {
             let DEMO_UID = 0
             let SHOW_UID=0
             rendererMD.code = function (code, language) {
-                 // 提取language标识为 demo 的代码块重写
-                 if(Deom){
-                     if (language === 'demo') {
-                         DEMO_UID+=2
+                    // 提取language标识为 demo 的代码块重写
+                if(Deom){
+                    if (language === 'demo') {
+                        DEMO_UID+=2
                         // 页面中可能会有很多的示例，这里增加ID标识
                         const id = 'demo-mobai-template-' + (DEMO_UID)
                         // 将代码内容保存在template标签中
@@ -320,14 +320,14 @@ export default {
                         // 返回新的HTML
                         return template + sandbox
                     }
-                 }else{
-                      if (language === 'demo') {
-                          language='html';
-                      }
-                 }
+                    }else{
+                        if (language === 'demo') {
+                            language='html';
+                        }
+                    }
                 
                  // 其他标识的代码块依然使用代码高亮显示
-                 return `<div class="code-block"><span class="code-language">${language}</span><span class="copy-code el-icon-files">${that.copyBtnText}</span><pre rel="${language}"><code class="hljs ${language}">${hljs.highlightAuto(code).value}</code></pre></div>`
+                    return `<div class="code-block"><span class="code-language">${language}</span><span class="copy-code el-icon-files">${that.copyBtnText}</span><pre rel="${language}"><code class="hljs ${language}">${hljs.highlightAuto(code).value}</code></pre></div>`
             }
             rendererMD.link = function(href,title,text){
                 return '<a href="'+href+'" title="'+text+'" target="_blank">'+text+'</a>';
@@ -354,7 +354,7 @@ export default {
             let html = marked(this.initialValue, {
                 sanitize: false,
                 renderer: rendererMD,
-               
+
                 ...this.markedOptions
             })
             this.html = html;
@@ -363,13 +363,14 @@ export default {
 				// this.srcList
 				const b=/<img([\s]+|[\s]+[^<>]+[\s]+)src=(\"([^<>"\']*)\"|\'([^<>"\']*)\')[^<>]*>/gi;
 				const s=html.match(b);
-				for(let i= 0;i<s.length;i++) 
-				{ 
-					const ss = s[i].match(b);
-					this.srcList.push(RegExp.$3+RegExp.$4)
-					console.log(RegExp.$3+RegExp.$4)
-				} 
-                this.addImageClickListener();
+                if (s!=null){
+                    for(let i= 0;i<s.length;i++)  { 
+                        const ss = s[i].match(b);
+                        this.srcList.push(RegExp.$3+RegExp.$4)
+                        console.log(RegExp.$3+RegExp.$4)
+                    } 
+                    this.addImageClickListener(); 
+                }
             }
         },
         addImageClickListener() {// 监听查看大图
@@ -404,6 +405,7 @@ export default {
     },
     watch: {
         initialValue() {
+            console.log(">>> get initiaValue")
             this.translateMarkdown();
         }
     },
