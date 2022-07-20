@@ -94,11 +94,9 @@
         <!--上一页和下一页-->
           <div class="a-tag article-prev-next">
             <router-link :to="'/blog/'+content.pre.id+''" class="prev"  v-if="content?content.pre !=null:false && content?content.id!=content.pre.id:false ">
-            <!-- <div class="prev"  v-if="content?content.pre !=null:false && content?content.id!=content.pre.id:false" > -->
               <i class="el-icon-back">
                 上一篇:{{ content.pre.title }}
               </i>
-            <!-- </div> -->
             </router-link>
 
             <div class="prev"  v-if="content.pre ==null">
@@ -107,9 +105,7 @@
             </div>  
 
             <router-link :to="'/blog/'+content.next.id+''" class="next" v-if="content.next !=null && content.id!=content.next.id">
-              <!-- <div class="next" v-if="content.next !=null && content.id!=content.next.id"> -->
                 <i class="el-icon-right">下一篇:{{ content.next.title }}</i>
-              <!-- </div>   -->
             </router-link>
             <div class="next"  v-if="content.next==null">
               <i class="el-icon-right">
@@ -154,7 +150,7 @@
   import MyMarked from 'src/components/MyMarked.vue'
   import {ref,reactive,computed,watch } from "vue"
   import {ArticlesApis} from "src/services/apis/articles"
-  import type {Article,ArticleType} from "src/services/apis/articles"
+  import type {Article,ArticleType,updateArticleStatusForm} from "src/services/apis/articles"
   import { useRouter } from 'vue-router'
   import {routerPush} from "src/router"
 
@@ -227,7 +223,7 @@
           wechatQrcodeHelper:
               "<p>微信或浏览器，扫一下</p><p>二维码便可查看本文章。</p>",
         })
-  const  FormData= reactive({
+  const FormData= reactive({
           message: "",
           article_id: router.currentRoute.value.params.id,
   })
@@ -267,7 +263,8 @@
         timeout:2*60*1000
       })
       if (res!=undefined){
-        res      .then(function (res) {
+        res.then(function (res) {
+        updateTotalViews() // 更新total_views
         content.value = res as Article;
         console.log("get detail success  ",res)
         
@@ -400,8 +397,23 @@
       }
     }
 
-
-
+    // update total views
+    function updateTotalViews(){
+        let _total_views = content.value.total_views+1
+        console.log(">>><<<",_total_views,content.value.total_views)
+        let updateParam:updateArticleStatusForm={
+            "id":content.value.id,
+            "total_views":_total_views,
+            "likes":content.value.likes
+        }
+        ArticlesApis.updateArticleStatus(updateParam,{
+          timeout:2*60*1000,
+        }).then(function(res){
+          console.log(">>> update total views success",res)
+        }).catch(function(err){
+          console.log(">>> update total views error",err)
+        })
+    }
     /******************** computed **************/
     let url = computed(()=>{
       return window.location.href;
@@ -426,6 +438,7 @@
 
     /***   create 运行方法 ****/
     getArticle()
+
 </script> 
 
 

@@ -2,7 +2,7 @@
   <div>
     <article
       class="article article-type-post article-index blog-animation"
-      v-for="(item,index) of list" :key="item.id"
+      v-for="(item,index) of props.list" :key="item.id"
       :style="{'animation-duration':(index+1)*600+'ms'}"
     >
       <div class="article-inner">
@@ -13,7 +13,7 @@
             <div style="margin-right:7.6923%">
               <h3 class="title">
                 {{item.title}}
-               <el-icon ><Pointer /></el-icon>
+                <el-icon ><Pointer /></el-icon>
               <!-- <i> <el-icon><Pointer /></el-icon></i> -->
               </h3>
               <span class="archive-article-date">
@@ -41,8 +41,7 @@
         <div class="article-info article-info-index">
           <div class="blog-info">
             <router-link style="color:var(--main-5)" :to="'/blog/'+item.id"><el-icon><View /></el-icon> {{item.total_views}}</router-link>
-            <!-- <router-link :to="'/blog/'+item.id"><i class="icon iconfont iconcomment"></i>{{item.message_count}}</router-link> -->
-            <router-link  :to="'/blog/'+item.id+'#comment'"><el-icon><Star /></el-icon>{{item.likes}}</router-link>
+            <el-icon  @click="updateStarStatus(item.id,item.likes)" ><Star  /></el-icon>{{item.likes}}
           </div>
           <div class="article-group" style="display:flex">
               <div class="article-category tagcloud" >
@@ -56,8 +55,8 @@
               <div class="article-tag tagcloud">
                 <i class="iconfont iconbiaoqian1 icon"></i>
                 <ul class="article-tag-list">
-                  <li class="article-tag-list-item"  v-for="(vlave,index) of item.label" :key="index">
-                    <router-link :to="'/blog?label='+vlave" class="js-tag article-tag-list-link color3">{{vlave}}</router-link>
+                  <li class="article-tag-list-item"  v-for="(value,index) of item.tags" :key="index">
+                    <router-link :to="'/blog?tag='+value" class="js-tag article-tag-list-link color3">{{value}}</router-link>
                   </li>
                 </ul>
               </div>
@@ -68,19 +67,39 @@
   </div>
 </template>
 
-<!-- <script setyuplang="ts">
 
-</script> -->
+<script setup lang="ts">
+  import type {Article,updateArticleStatusForm} from 'src/services/apis/articles'
+  import {ArticlesApis} from 'src/services/apis/articles'
+  // import { toRefs } from 'vue'
+  import {defineProps} from 'vue'
+
+  interface Props {
+      list:Article[]
+  }
+  // 传参必须为 interface 类型
+  const props = defineProps<Props>()
+
+  function updateStarStatus(article_id:number,like_src:number){
+      console.log(">>> update likes")
+      let dataForm:updateArticleStatusForm = {
+        id:article_id,
+        likes:like_src+=1
+      }
+      ArticlesApis.updateArticleStatus(dataForm,{
+          timeout:2*60*1000,
+      }).then(function(res){
+        console.log(">>> update total views success",res)
+      }).catch(function(err){
+        console.log(">>> update total views error",err)
+      })
 
 
-<script>
-export default {
-  name: "BlogList",
-  props:{
-      list:Array,
-  },
-};
+  }
 </script>
+
+
+
 
 <style lang="stylus" scoped>
 

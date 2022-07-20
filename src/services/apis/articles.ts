@@ -79,6 +79,12 @@ export interface ArticleSearchResponse extends BaseResponse {
 // export interface ArticleTypesResponse {
 //     ArticleType[]
 // }
+export interface updateArticleStatusForm {
+    id:number,
+    total_views?:number
+    likes?:number
+}
+
 
 export class Api extends ApiBase {
 
@@ -100,6 +106,17 @@ export class Api extends ApiBase {
             })
         }
     }
+
+    public updateArticleStatus(updateParams:updateArticleStatusForm,params: RequestParams = {}){
+        console.log(">>> update article status",updateParams)
+        return this.post<BaseResponse>({
+            url:`api/v2/blogs/articles/update_status`,
+            data:updateParams,
+            ...params
+        })
+        
+    }
+
 
 
     public getArticleTypes(params:RequestParams={}){
