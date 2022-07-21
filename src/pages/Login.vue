@@ -1,6 +1,6 @@
 <template>
   <div class="auth-page">
-    <div class="container page">
+    <!-- <div class="container page">
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">
           <h1 class="text-xs-center">
@@ -56,39 +56,45 @@
           </form>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { routerPush } from 'src/router'
-import { api } from 'src/services'
-import type { LoginUser } from 'src/services/api'
-import { useUserStore } from 'src/store/user'
-import { reactive, ref } from 'vue'
+  import { routerPush } from 'src/router'
+  import { AuthApis } from "src/services/apis/auth"
+  import { useAuthStore } from 'src/store/user'
+  import { reactive, ref } from 'vue'
+  import {ElMessage} from "element-plus"
+  import type {
+    loginForm
+  } from "src/services/apis/auth"
 
-const formRef = ref<HTMLFormElement | null>(null)
-const form: LoginUser = reactive({
-  email: '',
-  password: '',
-})
+  const isLogining=ref(false)
 
-const { updateUser } = useUserStore()
+  const {updateUserInfo,updateToken} = useAuthStore()
 
-const errors = ref()
-
-const login = async () => {
-  errors.value = {}
-
-  if (!formRef.value?.checkValidity()) return
-
-  const result = await api.users.login({ user: form })
-  if (result.ok) {
-    updateUser(result.data.user)
-    await routerPush('global-feed')
-  } else {
-    errors.value = await result.error
+  function login(loginForm:loginForm){
+      isLogining.value=true
+      AuthApis.login(loginForm,{
+        timeout:1000*2*60
+      }).then(function(res){
+        if (res.code!=-1){
+          ElMessage.success(`登录成功!`)
+          updateUserInfo({
+            profile:res.profile,
+            permissions_dict:res.permissions_dict
+          })
+          updateToken(res.access_token,res.refresh_token)
+        }else{
+          ElMessage.error(`T T 登录异常!(${res.message})`)
+        }
+        isLogining.value=false
+      }).catch(function(err){
+          ElMessage.error(`T T 登录异常!(${err})`)
+          isLogining.value=false
+      }) 
   }
-}
+
 
 </script>

@@ -1,32 +1,56 @@
-// import { defineStore } from 'pinia'
-// import { api } from 'src/services'
-// import type { User } from 'src/services/api'
-// import Storage from 'src/utils/storage'
-// import { computed, ref } from 'vue'
+import { defineStore } from 'pinia'
+import type { Profile } from 'src/services/apis/auth'
+import Storage from 'src/utils/storage'
+import { computed, ref } from 'vue'
 
-// export const userStorage = new Storage<User>('user')
+export interface userInfo {
+    profile:Profile,
+    permissions_dict?:any  
+}
 
-// export const isAuthorized = (): boolean => !!userStorage.get()
+export interface tokens {
+    accessToken:string,
+    refreshToken:string
+}
 
-// export const useUserStore = defineStore('user', () => {
-//   const user = ref(userStorage.get())
-//   const isAuthorized = computed(() => user.value !== null)
+const userInfoStorage = new Storage<userInfo>('userInfo')
+const tokenStorage = new Storage<tokens>('token')
 
-//   function updateUser (userData?: User | null) {
-//     if (userData === undefined || userData === null) {
-//       userStorage.remove()
-//       api.setSecurityData(null)
-//       user.value = null
-//     } else {
-//       userStorage.set(userData)
-//       api.setSecurityData(userData.token)
-//       user.value = userData
-//     }
-//   }
 
-//   return {
-//     user,
-//     isAuthorized,
-//     updateUser,
-//   }
-// })
+export const useAuthStore = defineStore('auth', {
+
+    state: () => {
+        return {
+            userInfo:ref(userInfoStorage.get()).value,
+            tokens:ref(tokenStorage.get()).value
+        }
+    },
+    getters: {
+        isLogin(state) {
+            return computed(() => state.userInfo!= null)
+        }
+    },
+    actions: {
+        clearAuthInfo() {
+            this.userInfo=null
+            this.tokens=null
+            userInfoStorage.remove()
+            tokenStorage.remove()
+        },
+        updateToken(accessToken:string,refreshToken:string) {
+            this.tokens={
+                "accessToken":accessToken,
+                "refreshToken":refreshToken
+            },
+            tokenStorage.set({
+                "accessToken":accessToken,
+                "refreshToken":refreshToken
+            })
+        },
+        updateUserInfo(_userInfo:userInfo){
+            this.userInfo = _userInfo
+            userInfoStorage.set(_userInfo)
+        }
+    },
+})
+

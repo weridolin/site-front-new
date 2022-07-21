@@ -37,11 +37,32 @@
             </el-image>
             <div class="cont-desc" v-html="item.summary"></div>
         </div>
-     </router-link>
+    </router-link>
         <div class="article-info article-info-index">
           <div class="blog-info">
-            <router-link style="color:var(--main-5)" :to="'/blog/'+item.id"><el-icon><View /></el-icon> {{item.total_views}}</router-link>
-            <el-icon  @click="updateStarStatus(item.id,item.likes)" ><Star  /></el-icon>{{item.likes}}
+            <!-- <router-link style="color:var(--main-5)" :to="'/blog/'+item.id"> -->
+            <!-- <el-icon class="views" tips="阅读人数">  -->
+              <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  content="阅读人数"
+                  placement="top-start"
+                >
+              <el-icon class="views" tips="阅读人数"> 
+              <View /></el-icon></el-tooltip> {{item.total_views}} 
+            
+            <span>&ensp;</span>
+            <!-- </router-link> -->
+              <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  content="点击喜欢"
+                  placement="top-start"
+              >
+            <el-icon data-tips="likes" tips="点击喜欢" v-if="!is_click_like" @click="updateStarStatus(item) " ><Star  /></el-icon>
+            <el-icon data-tips="likes" tips="点击喜欢" v-if="is_click_like"  @click="updateStarStatus(item) " ><StarFilled  /></el-icon>
+            </el-tooltip>
+            {{item.likes}}
           </div>
           <div class="article-group" style="display:flex">
               <div class="article-category tagcloud" >
@@ -71,24 +92,35 @@
 <script setup lang="ts">
   import type {Article,updateArticleStatusForm} from 'src/services/apis/articles'
   import {ArticlesApis} from 'src/services/apis/articles'
-  // import { toRefs } from 'vue'
-  import {defineProps} from 'vue'
+  import {defineProps,ref} from 'vue'
+  import { ElMessage } from 'element-plus'
 
   interface Props {
       list:Article[]
   }
   // 传参必须为 interface 类型
   const props = defineProps<Props>()
+  
+  const is_click_like = ref(false)
 
-  function updateStarStatus(article_id:number,like_src:number){
-      console.log(">>> update likes")
-      let dataForm:updateArticleStatusForm = {
-        id:article_id,
-        likes:like_src+=1
+  function updateStarStatus(article:Article){
+      if (is_click_like.value){
+          ElMessage({
+            showClose: true,
+            message: '已经点过了~~~',
+            type: 'error',
+          })
+          return
       }
+      let dataForm:updateArticleStatusForm = {
+        id:article.id,
+        likes:article.likes+=1
+      }
+      console.log(">>> update likes ")
       ArticlesApis.updateArticleStatus(dataForm,{
           timeout:2*60*1000,
       }).then(function(res){
+        is_click_like.value=true
         console.log(">>> update total views success",res)
       }).catch(function(err){
         console.log(">>> update total views error",err)
@@ -102,6 +134,7 @@
 
 
 <style lang="stylus" scoped>
+
 
 .el-icon {
   vertical-align: middle;

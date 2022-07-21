@@ -5,7 +5,10 @@ import type {
     AxiosInstance,
 } from 'axios';
 
+import { useAuthStore } from 'src/store/user'
+
 import { CONFIG } from 'src/config'
+
 
 const axiosInstance = axios.create(
     {
@@ -14,7 +17,6 @@ const axiosInstance = axios.create(
     }
 )
 
-  // FullRequestParams 去掉 "body" | "method" | "query" | "path",这些特殊指定 
 
 export enum ContentType {
     Json = "application/json",
@@ -42,12 +44,13 @@ interface InterceptorHooks {
 // 扩展 AxiosRequestConfig
 interface AxiosRequestConfigPlus extends AxiosRequestConfig {
     interceptorHooks?: InterceptorHooks;
-    showingLoading?:boolean
+    showingLoading?:boolean;
+    requiredLogin?:boolean
 }
 
 export type RequestParams = Omit<
     AxiosRequestConfigPlus, 
-    "body" | "method" | "query" | "path"
+    "body" | "method" | "query" | "path" //去掉 "body" | "method" | "query" | "path",这些特殊指定 
 >;
 
 
@@ -60,7 +63,7 @@ export class ApiBase {
 
     constructor(options:AxiosRequestConfigPlus){
         this.config = options;
-        this.setupInterceptor()
+        // this.setupInterceptor()
     }
 
     public setupInterceptor(): void {
@@ -125,38 +128,41 @@ export class ApiBase {
     }
     
 
-      // 类型参数的作用，T决定AxiosResponse实例中data的类型
-    request<T = any>(config: AxiosRequestConfig ): Promise<T> {
+    // 类型参数的作用，T决定AxiosResponse实例中data的类型
+    request<T = any>(config: AxiosRequestConfigPlus ): Promise<T> {
+        if (config.requiredLogin){
+            config.headers={"Authorization":`Bearer ${useAuthStore().tokens?.accessToken}`}
+        }
         return new Promise((resolve, reject) => {
-        this.client
-        .request<any, AxiosResponse<T>>(config)
-        .then((res) => {
-            console.log(">>> 获取请求响应",res)
-            resolve(res.data);
-        })
-        .catch((err) => {
-            console.log(">>> 获取请求响应异常",err)
-            reject(err);
-        });
+            this.client
+            .request<any, AxiosResponse<T>>(config)
+            .then((res) => {
+                console.log(">>> 获取请求响应",res)
+                resolve(res.data);
+            })
+            .catch((err) => {
+                console.log(">>> 获取请求响应异常",err)
+                reject(err);
+            });
     });
     }
 
-    get<T = any>(config: AxiosRequestConfig): Promise<T> {
+    get<T = any>(config: AxiosRequestConfigPlus): Promise<T> {
         return this.request({ method: 'GET',...config});
     }
 
-    post<T = any>(config: AxiosRequestConfig ): Promise<T> {
+    post<T = any>(config: AxiosRequestConfigPlus ): Promise<T> {
         return this.request({method: 'POST',...config });
     }
 
-    delete<T = any>(config: AxiosRequestConfig ): Promise<T> {
+    delete<T = any>(config: AxiosRequestConfigPlus ): Promise<T> {
         return this.request({ method: 'DELETE', ...config });
     }
 
-    patch<T = any>(config: AxiosRequestConfig ): Promise<T> {
+    patch<T = any>(config: AxiosRequestConfigPlus ): Promise<T> {
         return this.request({method: 'PATCH', ...config });
     }
-    put<T = any>(config: AxiosRequestConfig ): Promise<T> {
+    put<T = any>(config: AxiosRequestConfigPlus ): Promise<T> {
         return this.request({method: 'PUT' , ...config});
     }
 

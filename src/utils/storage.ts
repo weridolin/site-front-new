@@ -14,6 +14,7 @@ export default class Storage<T = unknown> {
       const value = window[this.storageType].getItem(this.key) ?? ''
       return JSON.parse(value)
     } catch (e) {
+      console.log(">>> get storage error",e)
       return null
     }
   }

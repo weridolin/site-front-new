@@ -144,6 +144,7 @@ export class Api extends ApiBase {
                 {
                     url:"/api/v1/home/comments",
                     data:data,
+                    requiredLogin:true,
                     ...params
                 }
             ),
