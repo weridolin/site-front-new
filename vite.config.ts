@@ -14,4 +14,7 @@ export default defineConfig({
     vue(),
     analyzer({ summaryOnly: true }),
   ],
+  optimizeDeps: {
+    include: ['vue3-beautiful-chat'],
+  },
 })

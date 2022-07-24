@@ -7,3 +7,4 @@ declare module '*.vue' {
 declare module 'vue-baberrage'
 declare module 'spark-md5'
 declare module "particles.vue3";
+declare module 'vue3-beautiful-chat'

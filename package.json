@@ -27,6 +27,7 @@
     "element-plus": "^2.2.6",
     "insane": "^2.6.2",
     "marked": "^4.0.17",
+    "msgdown": "^1.0.2",
     "nprogress": "^0.2.0",
     "particles.vue3": "^1.22.0",
     "pinia": "^2.0.14",
@@ -45,6 +46,7 @@
     "vue-baidu-map": "^0.21.22",
     "vue-particles": "^1.0.9",
     "vue-router": "^4.0.15",
+    "vue3-beautiful-chat": "^3.2.0",
     "vuex": "^4.0.2",
     "yarn": "^1.22.19"
   },

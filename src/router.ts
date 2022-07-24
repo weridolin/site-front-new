@@ -73,6 +73,18 @@ export const routes: RouteRecordRaw[] = [
         }
     },
     {
+        path: '/login',
+        name: 'login',
+        component: ()=>import('./pages/Login.vue'),
+        meta: {
+            keepAlive: false, // 需要被缓存
+            title: '登录',
+            nav: nav1,
+            footer:true,
+            header:false
+        }
+    },
+    {
         path: '/oauth',
         name: 'oauth',
         component: ()=>import('./pages/oauth.vue'),

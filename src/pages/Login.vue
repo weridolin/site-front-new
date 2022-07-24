@@ -1,25 +1,25 @@
 <template>
   <div class="auth-page">
-    <!-- <div class="container page">
+    <div class="container page">
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">
           <h1 class="text-xs-center">
-            Sign in
+            登录
           </h1>
-          <p class="text-xs-center">
+          <!-- <p class="text-xs-center">
             <AppLink name="register">
               Need an account?
             </AppLink>
-          </p>
+          </p> -->
 
-          <ul class="error-messages">
+          <!-- <ul class="error-messages">
             <li
               v-for="(error, field) in errors"
               :key="field"
             >
               {{ field }} {{ error ? error[0] : '' }}
             </li>
-          </ul>
+          </ul> -->
 
           <form
             ref="formRef"
@@ -30,11 +30,10 @@
               aria-required="true"
             >
               <input
-                v-model="form.email"
+                v-model="form.username"
                 class="form-control form-control-lg"
-                type="email"
                 required
-                placeholder="Email"
+                placeholder="username"
               >
             </fieldset>
             <fieldset class=" form-group">
@@ -48,15 +47,15 @@
             </fieldset>
             <button
               class="btn btn-lg btn-primary pull-xs-right"
-              :disabled="!form.email || !form.password"
+              :disabled="!form.username || !form.password"
               type="submit"
             >
-              Sign in
+              登录
             </button>
           </form>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -71,6 +70,12 @@
   } from "src/services/apis/auth"
 
   const isLogining=ref(false)
+  const form = reactive<loginForm>({
+    username:"",
+    password:"",
+    telephone:"",
+    email:"",
+  })
 
   const {updateUserInfo,updateToken} = useAuthStore()
 
@@ -81,6 +86,7 @@
       }).then(function(res){
         if (res.code!=-1){
           ElMessage.success(`登录成功!`)
+          console.log(">>> 登录成功",res)
           updateUserInfo({
             profile:res.profile,
             permissions_dict:res.permissions_dict
@@ -91,7 +97,7 @@
         }
         isLogining.value=false
       }).catch(function(err){
-          ElMessage.error(`T T 登录异常!(${err})`)
+          ElMessage.error(`T T ${err.response.data.message}!`)
           isLogining.value=false
       }) 
   }

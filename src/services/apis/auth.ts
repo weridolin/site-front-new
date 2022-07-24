@@ -42,6 +42,7 @@ export interface loginResponse extends BaseResponse {
 export class Apis extends ApiBase {
 
     public login(loginForm:loginForm,params: RequestParams = {}){
+        console.log(">>> 账户登录",loginForm)
         return this.post<loginResponse>({           
             url:`api/v1/auth/login`,
             data:loginForm,

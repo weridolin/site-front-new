@@ -92,7 +92,12 @@ export interface updateLog {
     finish_time:string
 }
 
-//
+// 对话框消息
+export interface ChatMessage {
+    type:"sender"|"receiver", //sender在右边(客户端发送) receiver在左边（服务端响应）
+    content:string
+}
+
 
 export class Api extends ApiBase {
 
