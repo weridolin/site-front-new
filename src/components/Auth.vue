@@ -37,7 +37,7 @@
         <el-tooltip
                 class="box-item"
                 effect="dark"
-                content="登录"
+                :content="getloginInfo()"
                 placement="left"
                 v-if="expandAuthMenu"
               >
@@ -61,6 +61,7 @@
             :icon="InfoFilled"
             icon-color="#626AEF"
             title="是否确定注销？"
+            @confirm = "logout"
           >
             <template #reference>
                 <div class="toolbar-item " style="transform: translateY(-320px);">
@@ -71,28 +72,36 @@
       </el-tooltip>
     </div>
   </el-affix>
-  <ChatWindow v-if="showChatWindows" @closeChatWindows="closeChatWindows" :messages="messageList" :onUserInputSubmit="onUserInputSubmit"></ChatWindow>
+  <ChatWindow 
+    v-if="showChatWindows" 
+    @closeChatWindows="closeChatWindows" 
+    :messages="messageList" 
+    :onUserInputSubmit="onUserInputSubmit"
+    @remove = "removeMessage">
+  </ChatWindow>
 </template>
 
 
 <script setup lang="ts">
 
   import { InfoFilled } from '@element-plus/icons-vue'
-  import { ref,unref } from 'vue'
+  import { ref } from 'vue'
   import {useAuthStore} from 'src/store/user'
   import ChatWindow from 'src/components/ChatWindow.vue'
   import type {chatMessage} from 'src/services/apis/chat'
+  import {ElMessageBox,ElMessage} from 'element-plus'
+  import {AuthApis} from 'src/services/apis/auth'
   // import {ChatWindow} from 'src/components/chat/ChatWindow.vue'
 
 
-  const authMenu = ref()
+  // const authMenu = ref()
   const isOnline = ref(false)
   const expandAuthMenu = ref(false)
   const isCheckingToken = ref(false) //每次打开校验token 
   const showLogout = ref(false) // 是否显示注销对话框
   const showChatWindows = ref(false)
 
-  const {isLogin,userInfo} = useAuthStore()
+  const {isLogin,userInfo,clearAuthInfo} = useAuthStore()
   const affixContent = ref<string>("未登录")
   
   function showAuthMenu() {
@@ -105,10 +114,24 @@
     return `联系我${isOnline.value?"(在线)":"(不在线)"}` 
     }
 
-  function getAffixContent (){
-    // console.log(">>>",isLogin)
+  function getloginInfo(){
     if (isLogin.value){
-      return `👦:${userInfo?.profile.user.username}`
+      if (userInfo){
+        return `当前已经登录:${userInfo.profile.user.username}`
+      }
+    }else{
+      return `👦:未登录`
+    }
+  } 
+
+
+  function getAffixContent (){
+    if (isLogin.value){
+      console.log(">>>",userInfo)
+      if (userInfo){
+        return `👦:${userInfo.profile.user.username}`
+      }
+      return `👦:未登录`
     }else{
       return `👦:未登录`
     }
@@ -125,15 +148,55 @@
 
   // ################ 聊天列表 #####################################
   const messageList = ref<chatMessage[]>([
-        { type: 'text', author: `bot`, data: { text: `现在是离线机器人,您可以输入对应的关键词,我会尽量回答的😊` } },
-        { type: 'system', author: `bot`, data: { text: `[system]:已经为您建立聊天通道` } },
+        {id:0, type: 'text', author: `bot`, data: { text: `现在是离线机器人,您可以输入对应的关键词,我会尽量回答的😊` } },
+        {id:1, type: 'system', author: `bot`, data: { text: `[system]:已经为您建立聊天通道` } },
   ])
 
   function onUserInputSubmit(message:chatMessage){
-    let tem_replay = { type: 'text', author: `bot`, data: { text: `离线自动回复还在搭建中...😊` } }
+    let tem_replay = { id:messageList.value.length-1 ,type: 'text', author: `bot`, data: { text: `离线自动回复还在搭建中...😊` } }
     messageList.value = [ ...messageList.value, message,tem_replay]
-    return console.log(">>> 新增聊天记录")
+    return console.log(">>> 新增聊天记录",messageList.value)
 
+  }
+
+  function removeMessage(message:chatMessage){
+    let index = messageList.value.indexOf(message, 0);
+    if (index>-1){
+        ElMessageBox.confirm(
+          '删除记录后将不可回复,是否继续?',
+          'Warning',
+          {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        )
+          .then(() => {
+          console.log(">>>remove message",message)
+            messageList.value.splice(index, 1)
+            ElMessage({
+              type: 'success',
+              message: '删除成功~',
+            })
+          })
+      }
+    }
+
+  // ############################## 登出 ######################
+  function logout(){
+    if (!isLogin.value){
+      ElMessage.error("当前未登录")
+    }else{
+      AuthApis.logout()
+      .then(function(res){
+        console.log(">>> 用户登出",res)
+        clearAuthInfo()
+        ElMessage.success("登出成功!")
+      }).catch(function(err){
+        console.log(">>> 用户登出失败",err)
+        ElMessage.error("登出失败!")
+      })
+    }
   }
 
 

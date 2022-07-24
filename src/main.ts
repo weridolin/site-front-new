@@ -45,6 +45,11 @@ router.beforeEach((to, from, next) => {
     if (to.meta.title) { 
         document.title = to.meta.title as string
     }
+    if (to.path == '/login') {
+    	//
+        console.log(">>> 登录页,登陆前",router.currentRoute.value.fullPath)
+        localStorage.setItem("preRoute", router.currentRoute.value.fullPath)
+    }
     next()
     const route = document.getElementsByClassName('route-content')[0]
     if (route) {

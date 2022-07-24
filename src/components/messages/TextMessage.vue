@@ -1,21 +1,14 @@
 <template>
   <div class="sc-message--text" :style="messageColors">
     <div class="sc-message--toolbox" :style="{background: messageColors.backgroundColor}">
-      <button v-if="showEdition && me && message.id" :disabled="isEditing" @click="edit">
+      <!-- <button v-if="showEdition && me && message.id" :disabled="isEditing" @click="edit">
         <IconBase :color="isEditing ? 'black' : messageColors.color" width="10" icon-name="edit">
           <IconEdit />
         </IconBase>
-      </button>
-      <div v-if="showDeletion">
+      </button> -->
+      <div >
         <button
-          v-if="me && message.id != null && message.id != undefined"
-          @click="
-            ifelse(
-              showConfirmationDeletion,
-              withConfirm(confirmationDeletionMessage, () => $emit('remove')),
-              () => $emit('remove')
-            )()
-          "
+          @click="$emit('remove')"
         >
           <IconBase :color="messageColors.color" width="10" icon-name="remove">
             <IconCross />

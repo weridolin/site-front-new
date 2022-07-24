@@ -126,20 +126,6 @@ function  getSuggestions() {
       return ["QQ是多少?","微信是多少?","邮箱是多少?","这个网站是什么?","怎么联系?"]
 }
 
-// function onUserInputSubmit(message:chatMessage){
-//   let tem_replay = { type: 'text', author: `bot`, data: { text: `离线自动回复还在搭建中...😊` } }
-//   messages.value = [ ...messages.value, message,tem_replay]
-//   return console.log(">>> 新增聊天记录")
-
-// }
-
-
-// watch(messages, () =>{
-//       // message:any = props.messageList
-//       // return messages
-//       console.log(">>> message change")
-//     }
-// )
 
 </script>
 

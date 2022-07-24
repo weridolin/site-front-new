@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-  import { routerPush } from 'src/router'
+  import { routerPush,router } from 'src/router'
   import { AuthApis } from "src/services/apis/auth"
   import { useAuthStore } from 'src/store/user'
   import { reactive, ref } from 'vue'
@@ -79,19 +79,27 @@
 
   const {updateUserInfo,updateToken} = useAuthStore()
 
-  function login(loginForm:loginForm){
+  function login(){
       isLogining.value=true
-      AuthApis.login(loginForm,{
+      AuthApis.login(form,{
         timeout:1000*2*60
       }).then(function(res){
         if (res.code!=-1){
           ElMessage.success(`登录成功!`)
           console.log(">>> 登录成功",res)
           updateUserInfo({
-            profile:res.profile,
-            permissions_dict:res.permissions_dict
+            profile:res.data.profile,
+            permissions_dict:res.data.permissions_dict
           })
-          updateToken(res.access_token,res.refresh_token)
+          updateToken(res.data.access_token,res.data.refresh_token)
+          console.log(useAuthStore().userInfo,useAuthStore().tokens)
+          const curr = localStorage.getItem('preRoute')
+          if (curr == null || curr=="/login") {
+            routerPush("Index");
+          } else {
+            console.log(">>curr",curr)
+            router.push({ path: curr });
+          }
         }else{
           ElMessage.error(`T T 登录异常!(${res.message})`)
         }

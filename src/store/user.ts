@@ -48,6 +48,7 @@ export const useAuthStore = defineStore('auth', {
             })
         },
         updateUserInfo(_userInfo:userInfo){
+            console.log("set  user info ",_userInfo)
             this.userInfo = _userInfo
             userInfoStorage.set(_userInfo)
         }

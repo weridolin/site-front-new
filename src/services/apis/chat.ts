@@ -3,6 +3,7 @@ import type {RequestParams,BaseResponse} from "src/services/base"
 
 //    { type: 'text', author: `bot`, data: { text: `现在是离线机器人,您可以输入对应的关键词,我会尽量回答的😊` } },
 export interface chatMessage {
+    id:number,
     type:string,
     author:string,
     data:{
