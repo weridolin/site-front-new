@@ -1,7 +1,7 @@
 <template>
   <div class="sc-header" :style="{background: colors.header.bg, color: colors.header.text}">
     <el-badge is-dot class="status" :type="status">
-      <el-avatar shape="circle" size="default" :src="titleImageUrl" />
+      <el-avatar shape="circle" size="default" :src="getUserAvatar()" />
     </el-badge>
 
     <!-- 多人聊天头像列表 -->
@@ -11,7 +11,7 @@
     <div v-else class="sc-header--title">{{ title }}</div> -->
 
     <div v-if="showCloseButton" class="sc-header--close-button" @click="$emit('close')">
-      <img :src="icons.img" :alt="icons.name" />
+      <img :src="closeImageUrl" alt="default" />
     </div>
   </div>
 </template>
@@ -19,18 +19,17 @@
 <script setup lang="ts">
 import {ref,reactive,watch} from "vue"
 import {useAuthStore} from 'src/store/user'
+import titleImageUrl from 'src/assets/chatIcons/robot.png'
+import closeImageUrl from 'src/assets/chatIcons/close-icon-big.png'
 
 const {isLogin,userInfo} = useAuthStore()
 const title= ref("离线机器人")
 // const inUserList =ref()
 const showCloseButton = ref(true)
-const titleImageUrl = ref('src/assets/chatIcons/robot.png')
+
 // const disableUserListToggle = ref(true)
 const status =ref("")
-const icons = reactive({
-    img: 'src/assets/chatIcons/close-icon-big.png',
-    name: 'default'
-})
+
 const colors = {
         header: {
           bg: '#4e8cff',
@@ -63,13 +62,16 @@ function  toggleUserList() {
     }
 
 function getUserAvatar(){
-  return "src/assets/chatIcons/mushroom-from-Mario.png"
+  if(isLogin.value){
+    return "src/assets/chatIcons/mushroom-from-Mario.png"
+  }
+  return titleImageUrl
 }
 
 watch(isLogin, (newValue, oldValue) => {
     console.log('watch isLogin 已触发', newValue)
     !newValue?title.value="离线机器人":title.value=userInfo?.profile.user.username as string
-    !newValue?titleImageUrl.value="src\assets\chatIcons\robot.png":getUserAvatar()
+    // !newValue?titleImageUrl.value="src\assets\chatIcons\robot.png":getUserAvatar()
     !newValue?status.value="danger":status.value="success"
 
 })

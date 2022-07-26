@@ -6,7 +6,7 @@
           <div class="index">
             <div
               class="index-bg"
-              :style="{ 'background-image': ' url(' + item.img_url + ')' }"
+              :style="{ 'background-image': 'url('+item.img_url+')' }"
             ></div>
             <div class="index-con">
               <!--                   首页增加 -->
@@ -64,6 +64,10 @@ import {
   hello
   } from "src/pages/Index"
 
+import bg1 from 'src/assets/bg1.jpg'
+import bg2 from 'src/assets/bg2.jpg'
+import bg3 from 'src/assets/bg3.jpg'
+
 const list = [
     {
       id: "1",
@@ -71,7 +75,7 @@ const list = [
       info:
         "H,e,l,l,o,!&nbsp;&nbsp;,W,e,l,c,o,m,e&nbsp;&nbsp;,t,o&nbsp;&nbsp;,b,l,o,g.",
       link: "www.baidu.com",
-      img_url:"src/assets/bg1.jpg",
+      img_url:bg1,
     },
     {
       id: "2",
@@ -79,7 +83,7 @@ const list = [
       info:
         "H,e,l,l,o,!&nbsp;&nbsp;,W,e,l,c,o,m,e&nbsp;&nbsp;,t,o&nbsp;&nbsp;,b,l,o,g.",
       link: "www.baidu.com",
-      img_url: "src/assets/bg2.jpg",
+      img_url:bg2,
     },
     {
       id: "3",
@@ -87,7 +91,7 @@ const list = [
       info:
         "H,e,l,l,o,!&nbsp;&nbsp;,W,e,l,c,o,m,e&nbsp;&nbsp;,t,o&nbsp;&nbsp;,b,l,o,g.",
       link: "www.baidu.com",
-      img_url:"src/assets/bg3.jpg",
+      img_url:bg3,
     },
 ];
 const imgList:any = [];
@@ -98,6 +102,14 @@ const daysOld = ref();
 const hrsOld  = ref();
 const minsOld = ref();
 const seconds =ref();
+
+// function getImagePath(path:str){
+//   return url(path)
+// }
+
+// function getCarouselBg(url:string){
+//   new URL(url, import.meta.url).href;
+// }
 
 onMounted(() => {
   setTimeout(() => {

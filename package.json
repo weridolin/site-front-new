@@ -6,7 +6,7 @@
     "prepare": "husky install",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview --port 4137",
+    "serve": "vite preview --port 3000",
     "lint:script": "eslint \"{src/**/*.{ts,vue},cypress/**/*.ts}\"",
     "lint:tsc": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "concurrently \"yarn lint:tsc\" \"yarn lint:script\"",

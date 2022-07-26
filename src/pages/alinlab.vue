@@ -54,9 +54,10 @@
 
 <script setup lang="ts">
     import { ref } from 'vue';
-    const fileUploadImg =ref("src/assets/fileUpload.png")
-    const dataBaseImg =ref("src/assets/dataBase.png")
-    const DrugImg =ref("src/assets/drug.png")
+    import fileUploadImg from "src/assets/fileUpload.png"
+    import dataBaseImg from "src/assets/dataBase.png"
+    import DrugImg from "src/assets/drug.png"
+    // const fileUploadImg =ref("src/assets/fileUpload.png")
 
 </script>
 
