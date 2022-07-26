@@ -1,6 +1,8 @@
 <template>
   <div>
     <Suggestions :suggestions="suggestions" :colors="colors" @sendSuggestion="_submitSuggestion" />
+
+    <!-- 如果选择了文件在输入框上面显示文件 -->
     <div
       v-if="file"
       class="file-container"
@@ -21,6 +23,8 @@
           title="Remove the file"
       /></span>
     </div>
+
+
     <form
       class="sc-user-input"
       :class="{active: inputActive}"
@@ -42,32 +46,32 @@
       ></div>
       <div class="sc-user-input--buttons">
         <div class="sc-user-input--button"></div>
-        <div v-if="showEmoji && !isEditing" class="sc-user-input--button">
+        <div class="sc-user-input--button">
           <EmojiIcon :on-emoji-picked="_handleEmojiPicked" :color="colors.userInput.text" />
         </div>
-        <div v-if="showFile && !isEditing" class="sc-user-input--button">
+        <div class="sc-user-input--button">
           <FileIcons :on-change="_handleFileSubmit" :color="colors.userInput.text" />
         </div>
-        <div v-if="isEditing" class="sc-user-input--button">
+        <!-- 不支持修改编辑已经发送的内容 -->
+        <!-- <div v-if="isEditing" class="sc-user-input--button">
           <UserInputButton
             :color="colors.userInput.text"
             tooltip="cancel"
             @click.prevent="_editFinish"
           >
             <IconCross />
-          </UserInputButton>
-        </div>
+          </UserInputButton>    
+        </div> -->
         <div class="sc-user-input--button">
-          <UserInputButton
+          <!-- <UserInputButton
             v-if="isEditing"
             :color="colors.userInput.text"
             tooltip="Edit"
             @click.prevent="_editText"
           >
             <IconOk />
-          </UserInputButton>
+          </UserInputButton> -->
           <UserInputButton
-            v-else
             :color="colors.userInput.text"
             tooltip="Send"
             @click.prevent="_submitText"
@@ -202,6 +206,7 @@ export default {
       this.inputActive = onoff
     },
     handleKey(event) {
+      console.log(">>> 输入框输入",event)
       if (event.keyCode === 13 && !event.shiftKey) {
         if (!this.isEditing) {
           this._submitText(event)
@@ -210,7 +215,7 @@ export default {
         }
         this._editFinish()
         event.preventDefault()
-      } else if (event.keyCode === 27) {
+      } else if (event.keyCode === 27) { //回车
         this._editFinish()
         event.preventDefault()
       }
@@ -290,11 +295,13 @@ export default {
       }
     },
     _handleEmojiPicked(emoji) {
-      if (this.showEmojiInText) {
-        this._addToTextEmoji(emoji)
-      } else {
-        this._submitEmoji(emoji)
-      }
+      // if (this.showEmojiInText) {
+      //   this._addToTextEmoji(emoji)
+      // } else {
+      //   this._submitEmoji(emoji)
+      // }
+      // emoji直接发送到文本里面
+      this._addToTextEmoji(emoji)
     },
     _submitEmoji(emoji) {
       this._checkSubmitSuccess(
@@ -305,6 +312,7 @@ export default {
         })
       )
     },
+    // 往TEXT中插入emoji
     _addToTextEmoji(emoji) {
       let range = this.prevSelectionRange
       if (!range) {

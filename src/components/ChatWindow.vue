@@ -11,6 +11,7 @@
     </Header>
     <!-- <UserList v-if="showUserList" :colors="colors" :participants="participants" /> -->
     <!-- 聊天内容列表 -->
+    
     <ChatMessageList
       :colors="colors"
       :messages="props.messages"

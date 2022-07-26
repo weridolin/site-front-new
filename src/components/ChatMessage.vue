@@ -20,6 +20,8 @@
         ></div>
       </slot>
 
+
+      <!-- 普通文本 -->
       <TextMessage
         v-if="message.type === 'text'"
         :message="message"
@@ -44,13 +46,19 @@
           </slot>
         </template>
       </TextMessage>
+
+      <!-- emoji表情 -->
       <EmojiMessage v-else-if="message.type === 'emoji'" :data="message.data" />
+
+      <!-- 文件消息 -->
       <FileMessage
         v-else-if="message.type === 'file'"
         :data="message.data"
         :message-colors="messageColors"
       />
       <TypingMessage v-else-if="message.type === 'typing'" :message-colors="messageColors" />
+      
+      <!-- 系统消息 -->
       <SystemMessage
         v-else-if="message.type === 'system'"
         :data="message.data"
@@ -68,7 +76,7 @@ import FileMessage from './messages/FileMessage.vue'
 import EmojiMessage from './messages/EmojiMessage.vue'
 import TypingMessage from './messages/TypingMessage.vue'
 import SystemMessage from './messages/SystemMessage.vue'
-import chatIcon from 'src/chatIcons/assets/chat-icon.svg'
+import chatIcon from 'src/assets/chatIcons/chat-icon.svg'
 
 export default {
   components: {

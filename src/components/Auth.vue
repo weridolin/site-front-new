@@ -105,7 +105,6 @@
   const affixContent = ref<string>("未登录")
   
   function showAuthMenu() {
-    console.log(">>>>>")
     expandAuthMenu.value==true?expandAuthMenu.value=false:expandAuthMenu.value=true
     showChatWindows.value=false
   }
