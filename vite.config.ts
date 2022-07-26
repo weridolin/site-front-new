@@ -14,4 +14,7 @@ export default defineConfig({
     vue(),
     analyzer({ summaryOnly: true }),
   ],
+  build: {
+    outDir: './dist/home'
+  }
 })
