@@ -44,7 +44,7 @@ export class Apis extends ApiBase {
     public login(loginForm:loginForm,params: RequestParams = {}){
         console.log(">>> 账户登录",loginForm)
         return this.post<loginResponse>({           
-            url:`api/v1/auth/login`,
+            url:`api/v1/auth/login/`,
             data:loginForm,
             ...params}
         )    
@@ -52,7 +52,7 @@ export class Apis extends ApiBase {
 
     public logout(params: RequestParams = {}){
         return this.post<loginResponse>({           
-            url:`api/v1/auth/logout`,
+            url:`api/v1/auth/logout/`,
             requiredLogin:true,
             ...params}
         ) 
