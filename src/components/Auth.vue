@@ -85,7 +85,7 @@
 <script setup lang="ts">
 
   import { InfoFilled } from '@element-plus/icons-vue'
-  import { ref } from 'vue'
+  import { ref,onMounted } from 'vue'
   import {useAuthStore} from 'src/store/user'
   import ChatWindow from 'src/components/ChatWindow.vue'
   import type {chatMessage} from 'src/services/apis/chat'
@@ -101,7 +101,7 @@
   const showLogout = ref(false) // 是否显示注销对话框
   const showChatWindows = ref(false)
 
-  const {isLogin,userInfo,clearAuthInfo} = useAuthStore()
+  const store = useAuthStore()
   const affixContent = ref<string>("未登录")
   
   function showAuthMenu() {
@@ -114,9 +114,10 @@
     }
 
   function getloginInfo(){
-    if (isLogin.value){
-      if (userInfo){
-        return `当前已经登录:${userInfo.profile.user.username}`
+    if (store.isLogin.value){
+      let _userInfo = store.userInfo
+      if (_userInfo){
+        return `当前已经登录:${_userInfo.profile.user.username}`
       }
     }else{
       return `👦:未登录`
@@ -125,10 +126,11 @@
 
 
   function getAffixContent (){
-    if (isLogin.value){
-      console.log(">>>",userInfo)
-      if (userInfo){
-        return `👦:${userInfo.profile.user.username}`
+    if (store.isLogin.value){
+      console.log(">>>获取登录信息",store.userInfo)
+      let _userInfo = store.userInfo
+      if (_userInfo){
+        return `👦:${_userInfo.profile.user.username}`
       }
       return `👦:未登录`
     }else{
@@ -183,13 +185,13 @@
 
   // ############################## 登出 ######################
   function logout(){
-    if (!isLogin.value){
+    if (!store.isLogin.value){
       ElMessage.error("当前未登录")
     }else{
       AuthApis.logout()
       .then(function(res){
         console.log(">>> 用户登出",res)
-        clearAuthInfo()
+        store.clearAuthInfo()
         ElMessage.success("登出成功!")
       }).catch(function(err){
         console.log(">>> 用户登出失败",err)
@@ -198,6 +200,22 @@
     }
   }
 
+
+  // ####################################### 更新用户信息,如果token失效,则清楚localStorage
+  onMounted(() => {
+    if (store.isLogin.value){
+      AuthApis.getUserProfile()
+      .then(function(res){
+        console.log(">>> token 未过期",res)
+      }).catch(function(err){
+        console.log(">>> 登录过期",err)
+        if (err.status==401){
+          console.log("登录过期,清除本地信息")
+          store.clearAuthInfo()
+        }
+      })
+    }
+  })
 
 </script>
 
