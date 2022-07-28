@@ -92,7 +92,7 @@
             permissions_dict:res.data.permissions_dict
           })
           updateToken(res.data.access_token,res.data.refresh_token)
-          console.log(useAuthStore().userInfo,useAuthStore().tokens)
+          console.log("更新store完成",useAuthStore().userInfo,useAuthStore().tokens)
           const curr = localStorage.getItem('preRoute')
           if (curr == null || curr=="/login") {
             routerPush("Index");
@@ -105,7 +105,7 @@
         }
         isLogining.value=false
       }).catch(function(err){
-          ElMessage.error(`T T ${err.response.data.message}!`)
+          ElMessage.error(`T T 登录异常${err.response.data.message}!`)
           isLogining.value=false
       }) 
   }

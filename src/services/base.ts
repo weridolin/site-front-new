@@ -142,7 +142,7 @@ export class ApiBase {
             })
             .catch((err) => {
                 console.log(">>> 获取请求响应异常",err)
-                reject(err);
+                reject(err.response);
             });
     });
     }

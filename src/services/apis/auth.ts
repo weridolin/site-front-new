@@ -39,6 +39,10 @@ export interface loginResponse extends BaseResponse {
     permissions_dict?:any  //TODO
 }
 
+export interface GetUserProfileResponse extends BaseResponse {
+    data:Profile
+}
+
 export class Apis extends ApiBase {
 
     public login(loginForm:loginForm,params: RequestParams = {}){
@@ -58,6 +62,13 @@ export class Apis extends ApiBase {
         ) 
     }
 
+    public getUserProfile(params:RequestParams = {}){
+        return this.get<GetUserProfileResponse>({           
+            url:`api/v1/auth/user/profile`,
+            requiredLogin:true,
+            ...params}
+        ) 
+    }
 }
 
 const AuthApis = new Apis({})
