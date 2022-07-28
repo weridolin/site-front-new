@@ -1,5 +1,6 @@
 import {ApiBase} from "src/services/base"
 import type {RequestParams,BaseResponse} from "src/services/base"
+import { extend } from "lodash"
 
 export interface Profile {
     id: number,
@@ -25,12 +26,19 @@ export interface User   {
     email:string,
 }
 
-export interface loginForm {
+export interface loginFormOrRegisterForm {
     username?:string,
     password:string,
     telephone?:string,
     email?:string,
 }
+
+// export interface registerForm {
+//     username:string,
+//     password:string,
+//     email:string,
+// }
+
 
 export interface loginResponse extends BaseResponse {
     access_token:string,
@@ -43,9 +51,15 @@ export interface GetUserProfileResponse extends BaseResponse {
     data:Profile
 }
 
+
+export interface registerResponse extends BaseResponse{
+
+}
+
+
 export class Apis extends ApiBase {
 
-    public login(loginForm:loginForm,params: RequestParams = {}){
+    public login(loginForm:loginFormOrRegisterForm,params: RequestParams = {}){
         console.log(">>> 账户登录",loginForm)
         return this.post<loginResponse>({           
             url:`api/v1/auth/login`,
@@ -68,6 +82,14 @@ export class Apis extends ApiBase {
             requiredLogin:true,
             ...params}
         ) 
+    }
+
+    public register(registerForm:loginFormOrRegisterForm,params:RequestParams={}){
+        return this.post<registerResponse>({
+            url:'/api/v1/auth/user/register',
+            data:registerForm,
+            ...params
+        })
     }
 }
 

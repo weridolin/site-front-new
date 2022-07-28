@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">
           <h1 class="text-xs-center">
-            登录
+            {{state =='login'?"登录":"注册"}}
           </h1>
           <!-- <p class="text-xs-center">
             <AppLink name="register">
@@ -23,8 +23,18 @@
 
           <form
             ref="formRef"
-            @submit.prevent="login"
+            @submit.prevent="submit"
           >
+            <fieldset class=" form-group">
+              <input
+                v-model="form.email"
+                class="form-control form-control-lg"
+                type="email"
+                required
+                placeholder="email"
+                v-if="state=='register'"
+              >
+            </fieldset>
             <fieldset
               class="form-group"
               aria-required="true"
@@ -50,8 +60,20 @@
               :disabled="!form.username || !form.password"
               type="submit"
             >
-              登录
+              {{state =='login'?"登录":"注册"}}
             </button>
+              <el-link type="primary" 
+                  @click="changeRegister"
+                  style="{font-weight:500;text-decoration:underline;font-style:italic;padding-top: 15px;padding-left: 5px;}">
+                    {{state =='login'?"没有账号?":"已有账号!"}}
+                  </el-link>
+              <!-- <button
+              class="btn btn-lg btn-primary pull-xs-right"
+              :disabled="!form.username || !form.password"
+              type="submit"
+            >
+              {{state =='login'?"登录":"注册"}}
+            </button> -->
           </form>
         </div>
       </div>
@@ -66,11 +88,14 @@
   import { reactive, ref } from 'vue'
   import {ElMessage} from "element-plus"
   import type {
-    loginForm
+    loginFormOrRegisterForm
   } from "src/services/apis/auth"
 
-  const isLogining=ref(false)
-  const form = reactive<loginForm>({
+
+  const state=ref<"register"|"login">("login")
+  const isLoginOrRegister=ref(false)
+  const loadingContent = ref("正在登录...")
+  const form = reactive<loginFormOrRegisterForm>({
     username:"",
     password:"",
     telephone:"",
@@ -79,8 +104,14 @@
 
   const {updateUserInfo,updateToken} = useAuthStore()
 
+  function submit(){
+    return state.value=="login"?login():register()
+  }
+
   function login(){
-      isLogining.value=true
+      console.log(">>登录")
+      isLoginOrRegister.value=true
+      loadingContent.value="正在登录..."
       AuthApis.login(form,{
         timeout:1000*2*60
       }).then(function(res){
@@ -101,14 +132,37 @@
             router.push({ path: curr });
           }
         }else{
-          ElMessage.error(`T T 登录异常!(${res.message})`)
+          ElMessage.error(`T T 登录异常: (${res.message})`)
         }
-        isLogining.value=false
+        isLoginOrRegister.value=false
       }).catch(function(err){
-          ElMessage.error(`T T 登录异常${err.response.data.message}!`)
-          isLogining.value=false
+          console.log(">>> 登录异常",err)
+          ElMessage.error(`T T 登录异常:${err.data.message}!`)
+          isLoginOrRegister.value=false
       }) 
   }
 
+  function changeRegister(){
+    state.value=="register"?state.value="login":state.value="register"
+  }
+
+
+  function register(){
+    console.log(">>> 注册")
+    isLoginOrRegister.value=true
+    loadingContent.value="正在注册..."
+    AuthApis.register(
+      form,{
+        timeout:2*60*1000
+      }
+    ).then(function(res){
+      console.log(">>> 注册成功",res)
+      ElMessage.success(`登录成功!`)
+      state.value="login"
+
+    }).catch(function(err){
+      ElMessage.error(`T T 注册失败:${err.data.message}!`)
+    })
+  }
 
 </script>

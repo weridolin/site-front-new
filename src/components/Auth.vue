@@ -12,7 +12,6 @@
         <div class="toolbar-item"  @click="showAuthMenu" style="transform: translateY(-50px);">
           <i><el-icon><MoreFilled /></el-icon></i>
         </div>
-        <!-- <el-button type="primary" color="#626aef" @click="showAuthMenu" class="statusBtn" round>{{affixContent}}<el-icon><User /></el-icon></el-button> -->
       </el-tooltip>
 
       <!-- 聊天固钉 -->
