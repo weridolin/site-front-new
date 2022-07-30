@@ -1,6 +1,6 @@
 import {ApiBase} from "src/services/base"
 import type {RequestParams,BaseResponse} from "src/services/base"
-import { extend } from "lodash"
+import {pwdEncrypt} from 'src/utils/encryption'
 
 export interface Profile {
     id: number,
@@ -60,7 +60,8 @@ export interface registerResponse extends BaseResponse{
 export class Apis extends ApiBase {
 
     public login(loginForm:loginFormOrRegisterForm,params: RequestParams = {}){
-        console.log(">>> 账户登录",loginForm)
+        let pwd = pwdEncrypt(loginForm.password)
+        loginForm.password = pwd as string
         return this.post<loginResponse>({           
             url:`api/v1/auth/login`,
             data:loginForm,
@@ -85,6 +86,8 @@ export class Apis extends ApiBase {
     }
 
     public register(registerForm:loginFormOrRegisterForm,params:RequestParams={}){
+        let pwd = pwdEncrypt(registerForm.password)
+        registerForm.password = pwd as string
         return this.post<registerResponse>({
             url:'/api/v1/auth/user/register',
             data:registerForm,
