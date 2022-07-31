@@ -116,7 +116,7 @@
     if (store.isLogin.value){
       let _userInfo = store.userInfo
       if (_userInfo){
-        return `当前已经登录:${_userInfo.profile.user.username}`
+        return `当前已经登录:${_userInfo.profile.user?_userInfo.profile.user.username:"undefined"}`
       }
     }else{
       return `👦:未登录`
@@ -129,7 +129,7 @@
       console.log(">>>获取登录信息",store.userInfo)
       let _userInfo = store.userInfo
       if (_userInfo){
-        return `👦:${_userInfo.profile.user.username}`
+        return `👦:`
       }
       return `👦:未登录`
     }else{

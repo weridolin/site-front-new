@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteParams, RouteRecordRaw } from 'vue-router'
 // import { isAuthorized } from './store/user'
 
@@ -191,7 +191,7 @@ export const routes: RouteRecordRaw[] = [
     }, 
 ]
 export const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes,
 })
 

@@ -57,14 +57,41 @@ export interface registerResponse extends BaseResponse{
 }
 
 
+export interface GetThirdLoginUrlResponse extends BaseResponse {
+    data:{
+        url:string
+    }
+}
+
+export interface LoginByThirdResponse extends BaseResponse {
+    data:{
+        oauth_id:number,
+        is_bind:boolean,
+        access_token:string,
+        refresh_token:string,
+        profile:Profile,
+        permissions_dict:any
+    }
+}
+
+
+
+export interface BindAccountResponse extends LoginByThirdResponse {
+}
+
 export class Apis extends ApiBase {
 
     public login(loginForm:loginFormOrRegisterForm,params: RequestParams = {}){
         let pwd = pwdEncrypt(loginForm.password)
-        loginForm.password = pwd as string
+        let temForm = {
+            username:loginForm.username,
+            password:pwd,
+            email:loginForm.email,
+            telephone:loginForm.telephone
+        }
         return this.post<loginResponse>({           
             url:`api/v1/auth/login`,
-            data:loginForm,
+            data:temForm,
             ...params}
         )    
     }
@@ -87,10 +114,46 @@ export class Apis extends ApiBase {
 
     public register(registerForm:loginFormOrRegisterForm,params:RequestParams={}){
         let pwd = pwdEncrypt(registerForm.password)
-        registerForm.password = pwd as string
+        let temForm = {
+            username:registerForm.username,
+            password:pwd,
+            email:registerForm.email,
+            telephone:registerForm.telephone
+        }
         return this.post<registerResponse>({
             url:'/api/v1/auth/user/register',
-            data:registerForm,
+            data:temForm,
+            ...params
+        })
+    }
+
+
+    // ###################### third login ###############################
+    public getThirdLoginUrl(type:string,params:RequestParams={}){
+        return this.get<GetThirdLoginUrlResponse>({
+            url:`api/v1/auth/third/url/${type}`,
+            ...params,
+        })
+    }
+
+    public loginByGithub(authCode:string,params:RequestParams={}){
+        return this.get<LoginByThirdResponse>({
+            url:`/api/v1/auth/third/githubLogin?code=${authCode}`,
+            ...params,
+        })
+    }
+
+    public bindAccount(loginForm:loginFormOrRegisterForm,oauth_id:number,params:RequestParams={}){
+        let pwd = pwdEncrypt(loginForm.password)
+        let temForm = {
+            username:loginForm.username,
+            password:pwd,
+            email:loginForm.email,
+            telephone:loginForm.telephone
+        }
+        return  this.post<BindAccountResponse>({
+            url:`api/v1/auth/third/bind?oauth_id=${oauth_id}`,
+            data:temForm,
             ...params
         })
     }
