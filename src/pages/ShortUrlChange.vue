@@ -79,7 +79,7 @@ function getShortUrl(){
         console.log(">>> 生成短链接成功",res)
         ElMessage.success("生成短链接成功!")
         form.short_flag = res.data.short_flag
-        shortUrl.value =`${CONFIG.API_HOST}/api/v1/third/shortUrl/${form.short_flag}`
+        shortUrl.value =`${CONFIG.SHORT_HOST}/${form.short_flag}`
     }).catch(function(err){
         console.log(">>> 生成短链接异常",err)
         ElMessage.error(`生成短链接异常:${err.data.message}`)
