@@ -2,51 +2,29 @@
 
     <div class ="alinLab" >
         <div class="container">
-            <div class="card">
-                <div class="face face1">
-                    <div class="content">
-                        <img :src="fileUploadImg" alt="picture">
-                        <h3>文件中转站</h3>
-                    </div>
-                </div>
+            <el-row :gutter="30">
+                <el-col
+                    v-for="item in menus"
+                    :key="item.title"
+                    :xs="24" :sm="24" :md="12" :lg="8" :xl="8"
+                >
+                    <div class="card">
+                        <div class="face face1">
+                            <div class="content">
+                                <img :src="item.img" alt="picture">
+                                <h3>{{item.title}}</h3>
+                            </div>
+                        </div>
 
-                <div class="face face2">
-                    <div class="content">
-                        <p>提供一个文件中转的功能,可以在一个地方上传,在另外一个地方下载</p>
-                            <router-link to="/fileBroker">冲冲冲</router-link>
-                            <!-- <a href="#">冲冲冲</a> -->
+                        <div class="face face2">
+                            <div class="content">
+                                <p>{{item.desc}}</p>
+                                    <router-link :to="item.route">冲冲冲</router-link>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="face face1">
-                    <div class="content">
-                        <img :src="dataBaseImg" alt="picture">
-                        <h3>数据生成器</h3>
-                    </div>
-                </div>
-                <div class="face face2">
-                    <div class="content">
-                        <p>提供一个数据生成的功能,自定对应的字段和类型和对应的生成数据条数,生成对应的假数据</p>
-                            <router-link to="/dataFaker">冲冲冲</router-link>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="face face1">
-                    <div class="content">
-                        <img :src="DrugImg" alt="picture">
-                        <h3>毒</h3>
-                    </div>
-                </div>
-                <div class="face face2">
-                    <div class="content">
-                        <p>来喝点毒鸡汤吧</p>
-                            <router-link to="/drug">冲冲冲</router-link>
-                    </div>
-                </div>
-            </div>
+                </el-col>        
+            </el-row>
         </div>
     
 </div>
@@ -58,6 +36,28 @@
     import dataBaseImg from "src/assets/dataBase.png"
     import DrugImg from "src/assets/drug.png"
     // const fileUploadImg =ref("src/assets/fileUpload.png")
+
+    const menus = ref([
+        {
+            "img":fileUploadImg,
+            "title":"文件中转站",
+            "desc":"提供一个文件中转的功能,可以在一个地方上传,在另外一个地方下载",
+            "route":"/fileBroker"
+        },
+        {
+            "img":dataBaseImg,
+            "title":"数据生成器",
+            "desc":"提供一个数据生成的功能,自定对应的字段和类型和对应的生成数据条数,生成对应的假数据",
+            "route":"/dataFaker"
+        },
+        {
+            "img":DrugImg,
+            "title":"毒",
+            "desc":"来喝点毒鸡汤吧",
+            "route":"/drug"
+        },
+    ])
+
 
 </script>
 

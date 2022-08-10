@@ -13,6 +13,7 @@ export type AppRouteNames =
     | 'Drug'
     | 'Message'
     | 'GrowthRoute'
+    | 'third_shortUrl'
 
 const name = "werido"
 const nav = {
@@ -189,6 +190,20 @@ export const routes: RouteRecordRaw[] = [
             header:true
         }
     }, 
+
+    /***********************  third apis   *****************************/
+    {
+        path: '/third/shortUrl',
+        name: 'third_shortUrl',
+        component: ()=>import('./pages/ShortUrlChange.vue'),
+        meta: {
+            keepAlive: true, // 需要被缓存
+            title: '短链接生成',
+            nav: nav,
+            footer:true,
+            header:false
+        }
+    },   
 ]
 export const router = createRouter({
     history: createWebHistory(),
@@ -203,5 +218,5 @@ export function routerPush (name: AppRouteNames, params?: RouteParams): ReturnTy
         })
     } else {
         return router.push({ name })
-  }
+    }
 }
