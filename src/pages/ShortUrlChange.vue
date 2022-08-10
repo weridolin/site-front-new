@@ -76,7 +76,7 @@ function getShortUrl(){
     ThirdApis.createShortUrl(form,{
         timeout:2*60*1000
     }).then(function(res){
-        console.log(">>> 生成短链接成功",res)
+        console.log(">>> 生成短链接成功",res,import.meta.env)
         ElMessage.success("生成短链接成功!")
         form.short_flag = res.data.short_flag
         shortUrl.value =`${CONFIG.SHORT_HOST}/${form.short_flag}`

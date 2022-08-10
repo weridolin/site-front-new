@@ -2,7 +2,7 @@
 
     <div class ="alinLab" >
         <div class="container">
-            <el-row :gutter="30">
+            <!-- <el-row :gutter="30">
                 <el-col
                     v-for="item in menus"
                     :key="item.title"
@@ -24,9 +24,33 @@
                         </div>
                     </div>
                 </el-col>        
+            </el-row>         -->
+              <el-row :gutter="30">
+                <el-col
+                    v-for="item in menus"
+                    :key="item.title"
+                    :xs="24" :sm="24" :md="12" :lg="8" :xl="8"
+                >
+                    <div class="card">
+                        <div class="face face1">
+                            <div class="content">
+                                <img :src="item.img" alt="picture">
+                                <h3>{{item.title}}</h3>
+                            </div>
+                        </div>
+
+                        <div class="face face2">
+                            <div class="content">
+                                <p>{{item.desc}}</p>
+                                    <router-link :to="item.route">冲冲冲</router-link>
+                            </div>
+                        </div>
+                    </div>
+                </el-col>  
             </el-row>
         </div>
-    
+
+
 </div>
 </template>
 
@@ -35,6 +59,7 @@
     import fileUploadImg from "src/assets/fileUpload.png"
     import dataBaseImg from "src/assets/dataBase.png"
     import DrugImg from "src/assets/drug.png"
+    import URLImg from "src/assets/URL.png"
     // const fileUploadImg =ref("src/assets/fileUpload.png")
 
     const menus = ref([
@@ -55,6 +80,12 @@
             "title":"毒",
             "desc":"来喝点毒鸡汤吧",
             "route":"/drug"
+        },
+        {
+            "img":URLImg,
+            "title":"短链接平台",
+            "desc":"将长链接生成对应的短链接",
+            "route":"/third/shortUrl"
         },
     ])
 
@@ -86,29 +117,12 @@
         box-shadow: inset 0 0 0 0px rgba(0, 0, 0, 0.125);
     }
 
-    @media screen and (min-width:1200px) {
-        .container{
-        width: 1000px;
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        }
-    }
 
-    @media screen and (max-width:768px) {
-        .container{
-        width: 1000px;
-        position: relative;
-        display: flex;
-        justify-content: flex-end;
-        flex-direction: column;
-        align-items: center;
-        }
-    }
 
     .container .card{
         position: relative;
         cursor: pointer;
+        margin-left: 30px;
     }
 
     .container .card .face{
@@ -175,7 +189,7 @@
     }
 
     .container .card .face.face2 .content a{
-        margin: 15px 0 0;
+        /* margin: 15px 0 0; */
         display:  inline-block;
         text-decoration: none;
         font-weight: 900;
