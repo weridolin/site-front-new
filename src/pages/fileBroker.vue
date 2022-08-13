@@ -67,7 +67,7 @@
       title="文件下载"
       v-model="isShowDrawer"
       :direction="direction"
-      :size ="drawerSize"
+      :size ="getDrawerSize"
       @open="openDrawer">
         <div class="demo-drawer__content">
           <el-form :model="downForm">
@@ -222,6 +222,16 @@ body {
     window.removeEventListener('beforeunload', e => beforeunloadHandler(e))
   })
 
+
+  function getDrawerSize(){
+    if(window.screen.availWidth<768){
+    //移动端
+      drawerSize.value="100%"
+    }else{
+        //PC端
+      drawerSize.value="80%"
+    }
+  }
 
 </script>
 
