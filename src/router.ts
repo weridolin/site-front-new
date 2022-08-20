@@ -204,6 +204,19 @@ export const routes: RouteRecordRaw[] = [
             header:false
         }
     },   
+    /***********************  apisInfoCollections   *****************************/
+        {
+            path: '/apiInfoCollector',
+            name: 'apiInfoCollector',
+            component: ()=>import('./pages/ApisCollections.vue'),
+            meta: {
+                keepAlive: true, // 需要被缓存
+                title: 'Apis合集',
+                nav: nav,
+                footer:true,
+                header:false
+            }
+        },  
 ]
 export const router = createRouter({
     history: createWebHistory(),

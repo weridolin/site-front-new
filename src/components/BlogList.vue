@@ -125,8 +125,6 @@
       }).catch(function(err){
         console.log(">>> update total views error",err)
       })
-
-
   }
 </script>
 

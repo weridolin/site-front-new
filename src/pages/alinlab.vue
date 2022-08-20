@@ -2,30 +2,7 @@
 
     <div class ="alinLab" >
         <div class="container">
-            <!-- <el-row :gutter="30">
-                <el-col
-                    v-for="item in menus"
-                    :key="item.title"
-                    :xs="24" :sm="24" :md="12" :lg="8" :xl="8"
-                >
-                    <div class="card">
-                        <div class="face face1">
-                            <div class="content">
-                                <img :src="item.img" alt="picture">
-                                <h3>{{item.title}}</h3>
-                            </div>
-                        </div>
-
-                        <div class="face face2">
-                            <div class="content">
-                                <p>{{item.desc}}</p>
-                                    <router-link :to="item.route">冲冲冲</router-link>
-                            </div>
-                        </div>
-                    </div>
-                </el-col>        
-            </el-row>         -->
-              <el-row :gutter="30">
+            <el-row :gutter="30">
                 <el-col
                     v-for="item in menus"
                     :key="item.title"
@@ -60,6 +37,7 @@
     import dataBaseImg from "src/assets/dataBase.png"
     import DrugImg from "src/assets/drug.png"
     import URLImg from "src/assets/URL.png"
+    import ApiImg from "src/assets/Api.png"
     // const fileUploadImg =ref("src/assets/fileUpload.png")
 
     const menus = ref([
@@ -86,6 +64,12 @@
             "title":"短链接平台",
             "desc":"将长链接生成对应的短链接",
             "route":"/third/shortUrl"
+        },
+        {
+            "img":ApiImg,
+            "title":"Api信息汇总",
+            "desc":"汇总网上各种常用API调用信息,不定时更新",
+            "route":"/apiInfoCollector"
         },
     ])
 
