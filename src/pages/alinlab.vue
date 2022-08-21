@@ -37,7 +37,7 @@
     import dataBaseImg from "src/assets/dataBase.png"
     import DrugImg from "src/assets/drug.png"
     import URLImg from "src/assets/URL.png"
-    import ApiImg from "src/assets/Api.png"
+    import ApiImg from "src/assets/API.png"
     // const fileUploadImg =ref("src/assets/fileUpload.png")
 
     const menus = ref([
