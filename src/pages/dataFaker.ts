@@ -1,6 +1,7 @@
 import { ElMessage } from 'element-plus'
 import { ref,reactive } from 'vue'
 import {dataFakerApis} from 'src/services/apis/dataFaker'
+import { CONFIG } from 'src/config'
 
 const formLabelWidth =ref("120px")
 
@@ -481,8 +482,12 @@ function downFile(){
      * 此时，如果是下载浏览器无法解析的文件，例如.exe,.xlsx..那么浏览器会自动下载，但是如果使用浏览器可以解析的文件，比如.txt,.png,.pdf....浏览器就会采取预览模式
      * 所以，对于.txt,.png,.pdf等的预览功能我们就可以直接不设置download属性(前提是后端响应头的Content-Type: application/octet-stream，如果为application/pdf浏览器则会判断文件为 pdf ，自动执行预览的策略)
      */  
+
+    if (process.env.NODE_ENV == "production"){
+        el.href =`http://127.0.0.1:8000/api/v1/dataFaker?download_code=${downForm.down_code}`;
+    }
     downForm.down_fileName && el.setAttribute('download', downForm.down_fileName);
-    el.href =`http://127.0.0.1:8000/api/v1/dataFaker?download_code=${downForm.down_code}`;
+    el.href =`${CONFIG.API_HOST}/api/v1/dataFaker?download_code=${downForm.down_code}`;
     console.log(el);
     document.body.appendChild(el);
     el.click();
