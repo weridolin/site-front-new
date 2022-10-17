@@ -257,7 +257,7 @@ function build_conn(){
     let ws_url = "ws://127.0.0.1:8000"
     // HTMLFormControlsCollection
     if (process.env.NODE_ENV == "production"){
-        ws_url = "ws://www.weridolin.cn"  // another way
+        ws_url = "wss://www.weridolin.cn"  // another way
     }
     console.log(">>>>>>>>ws url",ws_url,process.env.NODE_ENV )
     ws_conn = new WebSocket(`${ws_url}/ws/dataFaker/${key.value}`)
