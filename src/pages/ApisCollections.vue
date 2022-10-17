@@ -201,6 +201,7 @@ function redirectToUrl(url:string){
 .result {
     margin-top: 5%; 
     margin-bottom: 5%;
+    background-color: #ebe2e22b
 }
 .result-suffix{
     margin-left:5px;
