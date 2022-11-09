@@ -56,6 +56,16 @@ export interface registerResponse extends BaseResponse{
 
 }
 
+export interface refreshTokenForm {
+    refresh:string
+
+}
+export interface refreshTokenResponse extends BaseResponse {
+    data:{
+        access:string
+    }
+
+}
 
 export interface GetThirdLoginUrlResponse extends BaseResponse {
     data:{
@@ -90,7 +100,7 @@ export class Apis extends ApiBase {
             telephone:loginForm.telephone
         }
         return this.post<loginResponse>({           
-            url:`api/v1/auth/login`,
+            url:`api/v1/auth/login/`,
             data:temForm,
             ...params}
         )    
@@ -98,7 +108,7 @@ export class Apis extends ApiBase {
 
     public logout(params: RequestParams = {}){
         return this.post<loginResponse>({           
-            url:`api/v1/auth/logout`,
+            url:`api/v1/auth/logout/`,
             requiredLogin:true,
             ...params}
         ) 
@@ -121,12 +131,19 @@ export class Apis extends ApiBase {
             telephone:registerForm.telephone
         }
         return this.post<registerResponse>({
-            url:'/api/v1/auth/user/register',
+            url:'/api/v1/auth/register/',
             data:temForm,
             ...params
         })
     }
 
+    public async refreshToken(requestForm:refreshTokenForm,params:RequestParams={}){
+        await this.post<refreshTokenResponse>({
+            url:`/api/v1/auth/token/refresh/`,
+            data:requestForm,
+            ...params
+        })
+    }
 
     // ###################### third login ###############################
     public getThirdLoginUrl(type:string,params:RequestParams={}){

@@ -3,7 +3,7 @@
   <span
     class="apiTag" 
     p="x-2"
-    :type = "type"
+    :type = "getRandomType()"
   >
     <slot/>
   </span>
@@ -20,6 +20,18 @@ import { ref,computed } from 'vue'
   const isSelected = computed(()=> props.active?1:0.2)
   // const isSelected = ref(0.2)
 
+  function getRandomType(){
+      if (props.type=="src"){
+        let types = ["life","work","card","condition"]
+        let index = Math.floor(Math.random()*(types.length))
+        // console.log(">>>>>>",types[index])
+        return types[index]
+      }else {
+        return props.type
+      }
+
+    }
+
 </script>
 
 <style  scoped>
@@ -35,7 +47,7 @@ import { ref,computed } from 'vue'
   border-width: 1px;
   border-style: solid;
   margin: 4px;
-  padding: 4px 8px;
+  /* padding: 4px 8px; */
       /* --un-text-opacity: 1; */
   /* color: rgba(22,101,52,.6); */
 }

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import type { Profile } from 'src/services/apis/auth'
 import Storage from 'src/utils/storage'
 import { computed, ref } from 'vue'
+// import {AuthApis} from 'src/services/apis/auth'
 
 export interface userInfo {
     profile:Profile,
@@ -51,7 +52,20 @@ export const useAuthStore = defineStore('auth', {
             console.log("set  user info ",_userInfo)
             this.userInfo = _userInfo
             userInfoStorage.set(_userInfo)
-        }
+        },
+        // refreshToken(){
+        //     if (this.tokens){
+        //         let refreshForm = {
+        //             "refresh":this.tokens?.refreshToken
+        //         }
+        //         return AuthApis.refreshToken(
+        //             refreshForm,{
+        //                 timeout:2*60*1000
+        //             }
+        //         )
+        //     }
+            
+        // }
     },
 })
 

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import type {
     AxiosResponse,
     AxiosRequestConfig,
@@ -6,9 +6,9 @@ import type {
 } from 'axios';
 
 import { useAuthStore } from 'src/store/user'
-
+// const {updateUserInfo,updateToken} = useAuthStore()
 import { CONFIG } from 'src/config'
-
+import {ElMessage} from 'element-plus'
 
 const axiosInstance = axios.create(
     {
@@ -17,6 +17,80 @@ const axiosInstance = axios.create(
     }
 )
 
+// 刷新TOKEN返回类型
+export interface refreshTokenResponse {
+    access:string
+}
+
+// 是否正在刷新token 
+let isRefreshToken = false  
+// 重试队列，每一项将是一个待执行的函数形式
+let requests:any[] = []
+// 定义拦截器
+axiosInstance.interceptors.response.use(
+    response => {
+        // 正常响应时的拦截
+        return response
+    }, 
+    error => {
+        // 出现异常时的拦截
+        console.log("默认的异常拦截器",isRefreshToken)
+        if (error.response.status==401 && !error.config.url.includes('auth/token/refresh/')){
+            // 只有在非刷新Token的接口时才需要重新刷新TOKEN 
+            // 如果调用了刷新TOKEN接口后出现401,说明refresh token,此时不应该再去刷新Token
+            console.log(useAuthStore().isLogin.value,useAuthStore().tokens?.refreshToken)
+            if (useAuthStore().isLogin.value && useAuthStore().tokens?.refreshToken){
+                if (!isRefreshToken){
+                    isRefreshToken=true
+                    console.log(">>> 刷新token....")
+                    return axiosInstance.request<refreshTokenResponse,any>({
+                        method:"post",
+                        url:`api/v1/auth/token/refresh/`,
+                        data:{
+                            "refresh":useAuthStore().tokens?.refreshToken
+                        }
+                    }).then((res)=>{
+                            useAuthStore().updateToken(res.data.access,useAuthStore().tokens?.refreshToken as string)
+                            console.log("刷新token成功",res)
+                            // 已经刷新了token，将所有队列中的请求进行重试
+                            requests.forEach(cb => cb(res.data.access))
+                            requests = []
+                            //重新发送请求
+                            const config = error.config
+                            config.headers={"Authorization":`Bearer ${useAuthStore().tokens?.accessToken}`}
+                            isRefreshToken=false
+                            return axiosInstance(config)
+                        },err=>{
+                            if (err.config.url.includes("auth/token/refresh/")){
+                                console.log(">>>刷新token失效",err)
+                                // 调用刷新token接口时出现401 说明refresh token过期,否则为 this.client.request(config) 抛出的异常,
+                                // 为啥 this.client.request(config) 抛出的异常会被 catch到
+                                ElMessage.info("登录已经过期,请重新登录")
+                                useAuthStore().clearAuthInfo()
+                            }
+                            isRefreshToken=false
+                            return Promise.reject(err)
+                    })
+                }else{
+                    // 正在刷新token，将返回一个未执行resolve的promise
+                    return new Promise(resolve => {
+                    // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
+                        requests.push((token: any) => {
+                            error.config.headers.Authorization = `bearer ${token}`;
+                            error.config.headers['Content-Type'] = 'application/json;charset=UTF-8';
+                            resolve(axiosInstance(error.config));
+                    });
+                });        
+                }
+            }else{
+                useAuthStore().clearAuthInfo()
+                ElMessage.error("请先登录")
+                return Promise.reject(error)
+            }
+        }
+        return Promise.reject(error)
+    }
+)
 
 export enum ContentType {
     Json = "application/json",
@@ -34,17 +108,17 @@ export interface BaseResponse {
 
 
 // 定义 AXIOS 拦截器
-interface InterceptorHooks {
-    requestInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig;
-    requestInterceptorCatch?: (error: any) => any;
-    responseInterceptor?: (response: AxiosResponse) => AxiosResponse;
-    responseInterceptorCatch?: (error: any) => any;
-}
+// interface InterceptorHooks {
+//     userRequestInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig;
+//     useRequestErrorInterceptor?: (error: any) => Promise<any>;
+//     useResponseInterceptor?: (response: AxiosResponse) => AxiosResponse;
+//     useResponseErrorInterceptor?: (error: any) => Promise<any>;
+// }
 
 // 扩展 AxiosRequestConfig
 interface AxiosRequestConfigPlus extends AxiosRequestConfig {
-    interceptorHooks?: InterceptorHooks;
-    showingLoading?:boolean;
+    // interceptorHooks?: InterceptorHooks;
+    // showingLoading?:boolean; 
     requiredLogin?:boolean
 }
 
@@ -63,73 +137,11 @@ export class ApiBase {
 
     constructor(options:AxiosRequestConfigPlus){
         this.config = options;
-        // this.setupInterceptor()
     }
 
-    public setupInterceptor(): void {
-        this.client.interceptors.request.use(
-            this.config.interceptorHooks?
-                this.config.interceptorHooks.requestInterceptor
-                ? this.config.interceptorHooks.requestInterceptor
-                : function (config) {
-                    console.log(">>> 默认请求拦截器")
-                    return config;
-                }
-            :function (config) {
-                console.log(">>> 默认请求拦截器")
-                return config;
-            },
-
-            this.config.interceptorHooks?
-                this.config.interceptorHooks.requestInterceptorCatch
-                ?this.config.interceptorHooks.requestInterceptorCatch
-                :function (error) {
-                    console.log(">>> 默认请求出错拦截器")
-                    return Promise.reject(error);
-                }
-            :function (error) {
-                    console.log(">>> 默认请求出错拦截器")
-                    return Promise.reject(error);
-                }   
-        )
-        this.client.interceptors.response.use(
-            this.config.interceptorHooks?
-                this.config.interceptorHooks.responseInterceptor
-                ? this.config.interceptorHooks.responseInterceptor
-                :function (response) {
-                    // 2xx 范围内的状态码都会触发该函数。
-                    // 对响应数据做点什么
-                    console.log(">>> 默认响应拦截")
-                    return response;
-                }
-            :function (response) {
-                    // 2xx 范围内的状态码都会触发该函数。
-                    // 对响应数据做点什么
-                    console.log(">>> 默认响应拦截")
-                    return response;
-            },
-            this.config.interceptorHooks?
-                this.config.interceptorHooks.responseInterceptorCatch
-                ? this.config.interceptorHooks.responseInterceptorCatch
-                :function (error) {
-                    console.log(">>> 默认响应错误拦截")
-                    // 2xx 范围内的状态码都会触发该函数。
-                    // 对响应数据做点什么
-                    return error;
-                }
-            :function (error) {
-                    // 超出 2xx 范围的状态码都会触发该函数。
-                    // 对响应错误做点什么
-                    console.log(">>> 默认响应错误拦截")
-                    return Promise.reject(error);
-            }
-        )
-    
-    }
-    
 
     // 类型参数的作用，T决定AxiosResponse实例中data的类型
-    request<T = any>(config: AxiosRequestConfigPlus ): Promise<T> {
+    request<T = any>(config: AxiosRequestConfigPlus): Promise<T> {
         if (config.requiredLogin){
             config.headers={"Authorization":`Bearer ${useAuthStore().tokens?.accessToken}`}
         }
@@ -137,11 +149,11 @@ export class ApiBase {
             this.client
             .request<any, AxiosResponse<T>>(config)
             .then((res) => {
-                console.log(">>> 获取请求响应",res)
+                // console.log(">>> 获取请求响应",res)
                 resolve(res.data);
             })
             .catch((err) => {
-                console.log(">>> 获取请求响应异常",err)
+                // console.log(">>> 获取请求响应异常",err)
                 reject(err.response);
             });
     });
@@ -166,61 +178,5 @@ export class ApiBase {
         return this.request({method: 'PUT' , ...config});
     }
 
-    }
+}
 
-
-//         /**
-//    * 响应拦截
-//    */
-//     axiosInstance.interceptors.response.use(
-//         function (response) {
-//             // 对响应数据做点什么
-//             console.log(">>>正常response拦截")
-//             return response.data;
-//         },
-
-//         function (error) {
-//             console.log(">>>异常response拦截")
-//         // 对响应错误做点什么
-//             switch (error.response?.status) {
-//                 case 400:
-//                     error.message = '请求错误(400)';
-//                     break;
-//                 case 401:
-//                     error.message = '未授权(401)';
-//                     break;
-//                 case 403:
-//                     error.message = '拒绝访问(403)';
-//                     break;
-//                 case 404:
-//                     error.message = '请求出错(404)';
-//                     break;
-//                 case 408:
-//                     error.message = '请求超时(408)';
-//                     break;
-//                 case 500:
-//                     error.message = '服务器错误(500)';
-//                     break;
-//                 case 501:
-//                     error.message = '服务未实现(501)';
-//                     break;
-//                 case 502:
-//                     error.message = '网络错误(502)';
-//                     break;
-//                 case 503:
-//                     error.message = '服务不可用(503)';
-//                     break;
-//                 case 504:
-//                     error.message = '网络超时(504)';
-//                     break;
-//                 case 505:
-//                     error.message = 'HTTP版本不受支持(505)';
-//                     break;
-//                 default:
-//                     error.message = `连接出错(${error.response?.status})!`;
-//             }
-//             // Toast.fail(error.message);
-//             return Promise.reject(error);
-//         },
-//         );
-    

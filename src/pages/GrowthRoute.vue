@@ -37,8 +37,6 @@
   import {HomeApi} from 'src/services/apis/home'
   import type {updateLog} from 'src/services/apis/home'
 
-
-
   const list =ref<updateLog[]>()
   const card = ref(document.body.clientWidth > 885 ? "card" : "")
   // carousel: [],
@@ -51,7 +49,7 @@
       list.value = res
     }
 
-    const initUpdateLog = async () => {
+  const initUpdateLog = async () => {
         await get_list()
     }
 

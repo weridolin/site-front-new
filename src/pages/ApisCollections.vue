@@ -1,30 +1,31 @@
 <template>
     <el-row>
-        <h2 opacity="90" text="base" font="bold" p="1" class="title">
-            🗂️Apis信息汇总平台
-        </h2>
+        <h4 opacity="90" text="base" font="bold" p="1" class="title">
+            🗂️Apis信息汇总平台(数据来自各大API平台)(上次更新时间{{lastUpdateTime}})
+        </h4>
     </el-row>
-
-    <div
-        v-for="(value,type,index) in ApiInfos" 
-        :key="index"
-    >   
-        <el-row class="item-title">
-                {{value.display}}
-        </el-row>    
-        <el-row class="item-list"> 
-        <ApiTag
-            v-for="item in value.items" :key="item.label"
-            :active="apiSelect.includes(item.content)"
-            :type="type"
-            @click="selectApi(item.content)"
-        >
-            <span  class="inline-flex">{{item.prefixIcon}}</span>
-            <span class="inline-flex" m="l-1" style="margin-left: 0.25rem;">{{item.content}}
-            </span>
-        </ApiTag>
-    </el-row> 
-    </div>
+    <WaveButton></WaveButton>
+    <el-row class="item-list"> 
+        <div
+            v-for="item in ApiInfos" 
+            :key="item.id"
+        >   
+            <!-- <el-row class="item-title">
+                    {{value.display}}
+            </el-row>     -->
+                <ApiTag
+                    :active="apiSelect.includes(item.api_name)"
+                    @click="selectApi(item)"
+                    type='src'
+                >
+                    <span  class="inline-flex">{{getRandomPrefixIcon()}}</span>
+                    <span class="inline-flex" m="l-1" style="margin-left: 0.25rem;">
+                        {{item.api_name}}({{item.api_price}}{{item.api_price_unit}})
+                    </span>
+                </ApiTag>
+            
+        </div>
+    </el-row>
     <div class="filter-condition">
         <el-divider>
             <el-icon><star-filled /></el-icon>
@@ -32,8 +33,28 @@
         </el-divider>
         <el-row>
             <ApiTag
-                v-for="value in condition" :key="value"
-                :active="conditionSelect.includes(value)"
+                v-for="value in price" :key="value"
+                :active="conditionSelect.price.includes(value)"
+                type="condition"
+                @click="selectCondition(value)"
+            >
+                <span  class="inline-flex">🔎</span>
+                <span class="inline-flex" m="l-1" style="margin-left: 0.25rem;">{{value}}
+                </span>
+            </ApiTag>
+            <ApiTag
+                v-for="value in platform" :key="value"
+                :active="conditionSelect.platform.includes(value)"
+                type="condition"
+                @click="selectCondition(value)"
+            >
+                <span  class="inline-flex">🔎</span>
+                <span class="inline-flex" m="l-1" style="margin-left: 0.25rem;">{{value}}
+                </span>
+            </ApiTag>
+            <ApiTag
+                v-for="value in types" :key="value"
+                :active="conditionSelect.types.includes(value)"
                 type="condition"
                 @click="selectCondition(value)"
             >
@@ -51,13 +72,14 @@
         </el-divider>
         <el-row>
             <ApiTag
-                v-for="value in result" :key="value.title"
+                v-for="item in result" :key="item.id"
                 :active="false"
                 type="result"
-                @click="redirectToUrl(value.url)"
+                @click="redirectToUrl(item.api_url)"
             >
                 <span  class="inline-flex">🪄</span>
-                <span class="inline-flex" m="l-1" style="margin-left: 0.25rem;">{{value.title}}
+                <span class="inline-flex" m="l-1" style="margin-left: 0.25rem;">
+                    {{item.api_name}}({{item.api_price}}{{item.api_price_unit}})
                 </span>
                 <span  class="inline-flex result-suffix" >🔗</span>
             </ApiTag>
@@ -66,104 +88,120 @@
 </template>
 
 <script lang="ts" setup>
-import ApiTag from 'src/components/ApiTags.vue'
-import { ref,computed } from 'vue'
-import { StarFilled } from '@element-plus/icons-vue'
-import {ElMessage} from 'element-plus'
+    import ApiTag from 'src/components/ApiTags.vue'
+    import WaveButton from 'src/components/WavePlayButton.vue'
+    import { ref,computed } from 'vue'
+    import { StarFilled } from '@element-plus/icons-vue'
+    import {ThirdApis} from 'src/services/apis/third'
 
-const conditionSelect =ref([""])
-
-const apiSelect=ref([""])
+    import type {ApiInfo,conditionSelectForm}  from 'src/services/apis/third'
 
 
-const ApiInfos = ref({
-    "life":
-        {   
-            "display":"🎬生活中常用Api",
-            "items":[
-                {"label":1,"content":"内容1","type":"life","prefixIcon":"🍅"},
-                {"label":2,"content":"内容2","type":"life","prefixIcon":"🍅"},
-                {"label":3,"content":"内容13","type":"life","prefixIcon":"🍅"},     
-                {"label":1,"content":"内容4","type":"life","prefixIcon":"🍅"},
-                {"label":2,"content":"内容5","type":"life","prefixIcon":"🍅"},
-                {"label":3,"content":"1212","type":"life","prefixIcon":"🍅"},  
-            ],
-        },
-    
-    "work":
-        {    
-            "display":"💻工作中常用API",
-            "items":[
-                {"label":1,"content":"213","type":"work","prefixIcon":"🍅"},
-                {"label":2,"content":"223242222222","type":"work","prefixIcon":"🍅"},
-                {"label":3,"content":"222423222222","type":"work","prefixIcon":"🍅"},
-            ]
-        },
-    "card":{
-            "display":"👔证件相关API",
-            "items":
-            [
-            {"label":1,"content":"内容12321","type":"card","prefixIcon":"🍅"},
-            {"label":2,"content":"22231321222222","type":"card","prefixIcon":"🍅"},
-            {"label":3,"content":"22224214122222","type":"card","prefixIcon":"🍅"}  
-            ]      
-    }
-})
 
-const condition = ref([
-    "免费","收费"
-])
 
-const result =ref([
-    {
-        "title":"res",
-        "url":"https://www.baidu.com"
-    },
+    const conditionSelect=ref<conditionSelectForm>(
         {
-        "title":"res",
-        "url":"https://www.baidu.com"
-    }
-])
-
-const active =ref(true)
-
-function selectApi(api:string){
-    // console.log("select api ",api)
-    // active.value=false
-    // em
-    if (!apiSelect.value.includes(api)){
-        apiSelect.value.push(api)
-        console.log("select api ",api)
-    }else{
-        console.log("remove api ",api)
-        const index = apiSelect.value.indexOf(api)
-        apiSelect.value.splice(index,1)
-    }
-    ElMessage.info("功能建设中...")
+            "types":[],
+            "price":[],
+            "platform":[]
+        }
+    )
     
-}
+    const apiSelect=ref([""])
 
-function selectCondition(condition:string){
-    if (!conditionSelect.value.includes(condition)){
-        conditionSelect.value.push(condition)
-        console.log("select api ",condition)
-    }else{
-        console.log("remove api ",condition)
-        const index = conditionSelect.value.indexOf(condition)
-        conditionSelect.value.splice(index,1)
+    const ApiInfos = ref<ApiInfo[]>()
+
+    const price = ref([
+        "免费","收费"
+    ])
+    
+    const platform = ref<string[]>([])
+
+    const types = ref<string[]>([])
+
+    const lastUpdateTime = ref("")
+    const result =ref<ApiInfo[]>([])
+
+
+    function selectApi(item:ApiInfo){
+        window.open(item.api_url)   
     }
-    ElMessage.info("功能建设中...")
-}
 
-function getApiInfos(){
+    function selectCondition(condition:string){
+        if (price.value.includes(condition)){
+            if (!conditionSelect.value.price.includes(condition)){
+                conditionSelect.value.price.push(condition)
+            }else{
+                const index = conditionSelect.value.price.indexOf(condition)
+                conditionSelect.value.price.splice(index,1)
+            }
 
-}
+        }else if (platform.value.includes(condition)){
+            if (!conditionSelect.value.platform.includes(condition)){
+            conditionSelect.value.platform.push(condition)
+            
+            }else{
+                const index = conditionSelect.value.platform.indexOf(condition)
+                conditionSelect.value.platform.splice(index,1)
+                
+            }
+        }else if (types.value.includes(condition)){
+            if (!conditionSelect.value.types.includes(condition)){
+                conditionSelect.value.types.push(condition)
+            }else{
+                const index = conditionSelect.value.types.indexOf(condition)
+                conditionSelect.value.types.splice(index,1)
+            }
+            
+        }
+        console.log("select condition",condition,conditionSelect.value.price,conditionSelect.value.platform,conditionSelect.value.types)
+        search()
+    }
 
-function redirectToUrl(url:string){
-    console.log("join to url",url)
-    window.open(url)
-}
+    function getApiInfos(){
+        ThirdApis.getApiInfoList({
+            timeout:2*60*1000
+        }).then(function (res) {
+            console.log("get api info",res)
+            ApiInfos.value = res.data.api_infos
+            platform.value = res.data.platform
+            types.value = res.data.api_types
+            lastUpdateTime.value = res.data.api_infos[0].updated
 
+        }).catch(function(err){
+            console.log("get api info error",err)
+        })
+    }
+
+    function redirectToUrl(url:string){
+        console.log("join to url",url)
+        window.open(url)
+    }
+
+    function getRandomPrefixIcon(){
+        let prefixIconSet=[
+            "❤️","🧡","💛","💚","💙","💜","🖤","🤎","❤️‍🔥","❤️‍🩹","💖","💗","💓","💞","💕","❣️","💘","💝","💟","💌"]
+        let index = Math.floor(Math.random()*(prefixIconSet.length))
+        return prefixIconSet[index]
+    }
+
+    function search(){
+        if (conditionSelect.value.types.length==0 && conditionSelect.value.platform.length==0 && conditionSelect.value.price.length==0){
+            result.value=[]
+            return
+        }
+        ThirdApis.apiSearch(conditionSelect.value,{
+            timeout:2*60*1000
+        }).then(function(res){
+            result.value=res.data.api_infos
+            console.log("search result",res)
+        }).catch(function(err){
+            console.log("search err",err)
+        })
+    }
+
+
+    getApiInfos()
 
 </script>
 
