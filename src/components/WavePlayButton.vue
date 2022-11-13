@@ -36,7 +36,7 @@
                 class="run" 
                 name="run" 
                 size="small" 
-                @click="onBtnClick"  
+                @click="onBtnClick(scope.row.name)"  
                 type="primary" 
                 round > 运行
               </el-button>
@@ -72,7 +72,7 @@
 
 
   /*  play button  */
-  function onBtnClick(e:MouseEvent){
+  function onBtnClick(spider_name:string){
       // const playBtn = document.querySelector('.wave-btn')
 
       if (isRunning.value){
@@ -80,7 +80,7 @@
           ElMessage.info("api spider正在运行中...")
           
       }else{
-          let res=ThirdApis.startSpiderScript()
+          let res=ThirdApis.startSpiderScript(spider_name)
           // console.log("122",res)
           res.then(
               function(res){

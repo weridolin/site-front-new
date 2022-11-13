@@ -127,10 +127,13 @@ export class Api extends ApiBase {
     /**
      * 开启spider脚本
      */
-    public startSpiderScript(params:RequestParams={}){
+    public startSpiderScript(spider_name:string,params:RequestParams={}){
         console.log(">>> start spider script")
         return this.post<BaseResponse>({
             url:`api/v1/third/apiCollector/task`,
+            data:{
+                "spider_name":spider_name
+            },
             ...params,
             requiredLogin:true
         })
