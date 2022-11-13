@@ -171,9 +171,9 @@
     email:"",
   })
 
-  const {updateUserInfo,updateToken} = useAuthStore()
+  // const {updateUserInfo,updateToken} = useAuthStore()
 
-  const title = computed(
+  const title = computed( 
     () => {
       switch (state.value) {
         case "register":
@@ -210,8 +210,8 @@
         if (res.code!=-1){
           ElMessage.success(`登录成功!`)
           console.log(">>> 登录成功",res.data)
-          updateUserInfo(res.data.user_info)
-          updateToken(res.data.access_token,res.data.refresh_token)
+          useAuthStore().updateUserInfo(res.data.user_info)
+          useAuthStore().updateToken(res.data.access_token,res.data.refresh_token)
           console.log("更新store完成",useAuthStore().userInfo)
 
           // 跳转回登陆前的页面

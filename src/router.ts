@@ -354,7 +354,7 @@ router.beforeEach(async (to,from, next) => {
   if (to.meta.requireAuth){
     if (!useAuthStore().isLogin.value){
       ElMessage.error("请先登录...")
-      console.log(`${to.path}需要登录,当前未登录`)
+      console.log(`${to.path}需要登录,当前未登录`,useAuthStore().userInfo)
       next(`/login`)
       return
     }
