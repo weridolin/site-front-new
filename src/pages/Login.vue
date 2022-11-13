@@ -209,28 +209,29 @@
       }).then(function(res){
         if (res.code!=-1){
           ElMessage.success(`登录成功!`)
-          console.log(">>> 登录成功",res)
-          updateUserInfo({
-            profile:res.data.profile,
-            permissions_dict:res.data.permissions_dict
-          })
+          console.log(">>> 登录成功",res.data)
+          updateUserInfo(res.data.user_info)
           updateToken(res.data.access_token,res.data.refresh_token)
-          console.log("更新store完成",useAuthStore().userInfo,useAuthStore().tokens)
-          const curr = localStorage.getItem('preRoute')
-          if (curr == null || curr=="/login") {
+          console.log("更新store完成",useAuthStore().userInfo)
+
+          // 跳转回登陆前的页面
+          const prePage = localStorage.getItem('preRoute')
+          if (prePage == null || prePage=="/login") {
             routerPush("Index");
           } else {
-            console.log(">>curr",curr)
-            router.push({ path: curr });
+            console.log(">>curr",prePage)
+            router.push({ path: prePage });
           }
         }else{
           ElMessage.error(`T T 登录异常: (${res.message})`)
         }
-        isLoginOrRegister.value=false
+        // isLoginOrRegister.value=false
       }).catch(function(err){
           console.log(">>> 登录异常",err)
           ElMessage.error(`T T 登录异常:${err.data.message}!`)
-          isLoginOrRegister.value=false
+          // isLoginOrRegister.value=false
+      }).finally(()=>{
+        isLoginOrRegister.value=false
       }) 
   }
 

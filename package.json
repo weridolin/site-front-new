@@ -30,6 +30,7 @@
     "msgdown": "^1.0.2",
     "nprogress": "^0.2.0",
     "particles.vue3": "^1.22.0",
+    "path-to-regexp": "^6.2.1",
     "pinia": "^2.0.14",
     "qrcode.vue": "^3.3.3",
     "rxjs": "^7.5.5",

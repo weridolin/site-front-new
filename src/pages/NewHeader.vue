@@ -198,10 +198,13 @@ export default {
     },
   },
   watch: {
-    $route(to, from) {
+    $route(to, from) {      
       // 对路由变化作出响应...
-      this.navQuiet = to.meta.nav;
-      console.log("nav", to.meta.nav);
+      if (to.meta){
+        this.navQuiet = to.meta.nav;
+        console.log("nav", to,from);
+      }
+
       // if(to.name=='NewHome'){
       //     console.log(to.name)
       //     this.getArticle()

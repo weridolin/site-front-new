@@ -26,6 +26,33 @@ export interface User   {
     email:string,
 }
 
+
+/*****   permission  ******/
+export interface Menu {
+    menu_name:string,
+    menu_url:string,
+    menu_icon:string,
+    menu_type:number,
+    menu_view_path:string,
+    menu_route_name:string,
+    p_id:number|null,
+    id:number,
+    children:Menu[]
+}
+
+
+export interface Permissions {
+    menu:Menu[]
+}
+
+export interface userInfo {
+    profile:Profile,
+    permissions:Permissions,
+    roles:string[]
+}
+
+
+
 export interface loginFormOrRegisterForm {
     username?:string,
     password:string,
@@ -48,7 +75,7 @@ export interface loginResponse extends BaseResponse {
 }
 
 export interface GetUserProfileResponse extends BaseResponse {
-    data:Profile
+    data:userInfo
 }
 
 
@@ -114,7 +141,7 @@ export class Apis extends ApiBase {
         ) 
     }
 
-    public getUserProfile(params:RequestParams = {}){
+    public async getUserProfile(params:RequestParams = {}){
         return this.get<GetUserProfileResponse>({           
             url:`api/v1/auth/user/profile`,
             requiredLogin:true,
@@ -136,6 +163,8 @@ export class Apis extends ApiBase {
             ...params
         })
     }
+
+
 
     public async refreshToken(requestForm:refreshTokenForm,params:RequestParams={}){
         await this.post<refreshTokenResponse>({

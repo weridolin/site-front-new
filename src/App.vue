@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="home-blog">
-    <new-header class="siteHeader" v-show="$route.meta.header"></new-header>
+    <new-header class="siteHeader" v-show="$route.meta.header && !$route.path.includes('admin') "></new-header>
     <router-view v-slot="{ Component }" v-if="$route.meta.keepAlive">
       <keep-alive>
         <component :is="Component" />
@@ -10,16 +10,9 @@
     <router-view v-if="!$route.meta.keepAlive" class="route-content"></router-view>
     <el-backtop :right="20" :bottom="50" />
     <index-footer :route="$route.path" v-show="$route.meta.footer && $route.path!=='/drug'"></index-footer>
-    <!-- <transition name="slide-fade">
-        <el-backtop :right="100" :bottom="100" />
-        <el-backtop :right="20" >
-          <div class="iconfont backtop">&#xe601;</div>
-        </el-backtop>
-    </transition> -->
     <!-- APP.vue定义组件都是页面公用的App.vue是项目的主组件，页面入口文件 ，所有页面都在App.vue下进行切换，app.vue负责构建定义及页面组件归集 -->
     <!-- <music></music>  -->
     <auth ></auth>
-    <!-- <Auth2></Auth2> -->
   </div>
 </template>
 
