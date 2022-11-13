@@ -289,47 +289,56 @@
     }
   })
 
-  function loginByGithub(authCode:string){
-    isLoginOrRegister.value=true
-    loadingContent.value="正在登录..."
-    AuthApis.loginByGithub(authCode,{
-      timeout:2*1000*60
-    }).then(function(res){
-      ElMessage.success("第三方登录成功")
-      console.log(">>> 第三方登录成功",res)
-      updateUserInfo({
-        profile:res.data.profile,
-        permissions_dict:res.data.permissions_dict
-      })
-      updateToken(res.data.access_token,res.data.refresh_token)
-      console.log("更新store完成",useAuthStore().userInfo,useAuthStore().tokens)
-      const curr = localStorage.getItem('preRoute')
-      if (curr == null || curr=="/login") {
-        routerPush("Index");
-      } else {
-        console.log(">>curr",curr)
-        router.push({ path: curr });
-      }
-      isLoginOrRegister.value=false
-      loadingContent.value="正在登录..."
-    }).catch(function(err){
-      console.log(">>>登录 by github 异常！",err)
-      if (err.data.status==404){
-        state.value="bind",
-        ElMessage.warning("请先绑定账号!")
-        bind_id.value = err.data.data.oauth_id
-      }else{
-        ElMessage.error(`登录异常${err.data.message}`)
-      }
-      isLoginOrRegister.value=false
-      loadingContent.value="正在登录..."
-    })
-  }
   function loginByWechat(){
-    console.log(">>> login by wechat ")
+    ElMessage.warning("建设中...")
   }
+
   function loginByQQ(){
-    console.log(">>> login by qq ")
+    ElMessage.warning("建设中...")
+  }
+
+  function loginByGithub(authCode:string){
+    ElMessage.warning("建设中...")
+  //   isLoginOrRegister.value=true
+  //   loadingContent.value="正在登录..."
+  //   AuthApis.loginByGithub(authCode,{
+  //     timeout:2*1000*60
+  //   }).then(function(res){
+  //     ElMessage.success("第三方登录成功")
+  //     console.log(">>> 第三方登录成功",res)
+  //     updateUserInfo({
+  //       profile:res.data.profile,
+  //       permissions_dict:res.data.permissions_dict
+  //     })
+  //     updateToken(res.data.access_token,res.data.refresh_token)
+  //     console.log("更新store完成",useAuthStore().userInfo,useAuthStore().tokens)
+  //     const curr = localStorage.getItem('preRoute')
+  //     if (curr == null || curr=="/login") {
+  //       routerPush("Index");
+  //     } else {
+  //       console.log(">>curr",curr)
+  //       router.push({ path: curr });
+  //     }
+  //     isLoginOrRegister.value=false
+  //     loadingContent.value="正在登录..."
+  //   }).catch(function(err){
+  //     console.log(">>>登录 by github 异常！",err)
+  //     if (err.data.status==404){
+  //       state.value="bind",
+  //       ElMessage.warning("请先绑定账号!")
+  //       bind_id.value = err.data.data.oauth_id
+  //     }else{
+  //       ElMessage.error(`登录异常${err.data.message}`)
+  //     }
+  //     isLoginOrRegister.value=false
+  //     loadingContent.value="正在登录..."
+  //   })
+  // }
+  // function loginByWechat(){
+  //   console.log(">>> login by wechat ")
+  // }
+  // function loginByQQ(){
+  //   console.log(">>> login by qq ")
   }
 
   function GetThirdLoginUrl(type:string){
@@ -344,32 +353,32 @@
   }
 
   function bindAccount(){
-    isLoginOrRegister.value=true
-    loadingContent.value="正在绑定账户..."
-    AuthApis.bindAccount(form,bind_id.value,{
-      timeout:2*60*1000
-    }).then(function(res){
-        ElMessage.success(`绑定成功!`)
-        console.log(">>> 绑定成功",res)
-        updateUserInfo({
-          profile:res.data.profile,
-          permissions_dict:res.data.permissions_dict
-        })
-        updateToken(res.data.access_token,res.data.refresh_token)
-        console.log("更新store完成",useAuthStore().userInfo,useAuthStore().tokens)
-        bind_id.value=null
-        const curr = localStorage.getItem('preRoute')
-        if (curr == null || curr=="/login") {
-          routerPush("Index");
-        } else {
-          console.log(">>curr",curr)
-          router.push({ path: curr });
-    }
-    }).catch(function(err){
-      isLoginOrRegister.value=false
-      loadingContent.value="正在登录..."
-      ElMessage.error(`T T 绑定失败:${err.data.message}`)
-    })
+    // isLoginOrRegister.value=true
+    // loadingContent.value="正在绑定账户..."
+    // AuthApis.bindAccount(form,bind_id.value,{
+    //   timeout:2*60*1000
+    // }).then(function(res){
+    //     ElMessage.success(`绑定成功!`)
+    //     console.log(">>> 绑定成功",res)
+    //     useAuthStore().updateUserInfo({
+    //       profile:res.data.profile,
+    //       userin:res.data.permissions_dict
+    //     })
+    //     updateToken(res.data.access_token,res.data.refresh_token)
+    //     console.log("更新store完成",useAuthStore().userInfo,useAuthStore().tokens)
+    //     bind_id.value=null
+    //     const curr = localStorage.getItem('preRoute')
+    //     if (curr == null || curr=="/login") {
+    //       routerPush("Index");
+    //     } else {
+    //       console.log(">>curr",curr)
+    //       router.push({ path: curr });
+    // }
+    // }).catch(function(err){
+    //   isLoginOrRegister.value=false
+    //   loadingContent.value="正在登录..."
+    //   ElMessage.error(`T T 绑定失败:${err.data.message}`)
+    // })
   }
 
 </script>

@@ -100,7 +100,7 @@
   const showLogout = ref(false) // 是否显示注销对话框
   const showChatWindows = ref(false)
 
-  const store = useAuthStore()
+  // const store = useAuthStore()
   const affixContent = ref<string>("未登录")
   
   function showAuthMenu() {
@@ -113,8 +113,8 @@
     }
 
   function getloginInfo(){
-    if (store.isLogin.value){
-      let _userInfo = store.userInfo
+    if (useAuthStore().isLogin.value){
+      let _userInfo = useAuthStore().userInfo
       if (_userInfo){
         return `当前已经登录:${_userInfo.profile.user?_userInfo.profile.user.username:"undefined"}`
       }
@@ -125,9 +125,9 @@
 
 
   function getAffixContent (){
-    if (store.isLogin.value){
-      console.log(">>>获取登录信息",store.userInfo)
-      let _userInfo = store.userInfo
+    if (useAuthStore().isLogin.value){
+      console.log(">>>获取登录信息",useAuthStore().userInfo)
+      let _userInfo = useAuthStore().userInfo
       if (_userInfo){
         return `👦:`
       }
@@ -184,13 +184,14 @@
 
   // ############################## 登出 ######################
   function logout(){
-    if (!store.isLogin.value){
+    if (!useAuthStore().isLogin.value){
       ElMessage.error("当前未登录")
     }else{
       AuthApis.logout()
       .then(function(res){
         console.log(">>> 用户登出",res)
-        store.clearAuthInfo()
+        useAuthStore().clearAuthInfo()
+        console.log("userInfo after logout",useAuthStore().userInfo)
         ElMessage.success("登出成功!")
       }).catch(function(err){
         console.log(">>> 用户登出失败",err)
@@ -202,7 +203,7 @@
 
   // ####################################### 更新用户信息,如果token失效,则清楚localStorage
   onMounted(() => {
-    if (store.isLogin.value){
+    if (useAuthStore().isLogin.value){
       AuthApis.getUserProfile()
       .then(function(res){
         console.log(">>> token 未过期",res)
@@ -210,7 +211,7 @@
         console.log(">>> 登录过期",err)
         if (err.status==401){
           console.log("登录过期,清除本地信息")
-          store.clearAuthInfo()
+          useAuthStore().clearAuthInfo()
         }
       })
     }

@@ -46,45 +46,43 @@ export const useAuthStore = defineStore("auth", {
      * @param refreshToken
      */
     updateToken(accessToken: string, refreshToken: string) {
-      (this.tokens = {
+      this.tokens = {
         accessToken: accessToken,
         refreshToken: refreshToken,
-      }),
-        tokenStorage.set({
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-        });
+      }
+      console.log("set token.")
     },
     /**
      * 更新用户信息
      */
     updateUserInfo(_userInfo: userInfo) {
+      this.userInfo = _userInfo
       console.log("set user info ", _userInfo);
-      userInfoStorage.set(_userInfo);
+      // userInfoStorage.set(_userInfo);
       // this.updateRouter();
     },
     /**
      * 更新动态路由
      */
-    updateRouter() {
-      console.log("update dynamical menu",this.userInfo?.permissions)
-      this.userInfo?.permissions.menu.forEach((route) => {
-        console.log(`add dynamical menu to route:${route}`);
-        router.addRoute("adminIndex", {
-          path: route.menu_url,
-          name: route.menu_route_name,
-          component: () => import(`./pages/admin/${route.menu_view_path}`),
-          meta:{
-            keepAlive: false, // 需要被缓存
-            title: route.menu_name,
-            footer: false,
-            header: false,
-            requireAuth: true,
-            nav:nav
-          },
-        });
-    });
-    console.log("now router",router.getRoutes())
-    }
+    // updateRouter() {
+    //   console.log("update dynamical menu",this.userInfo?.permissions)
+    //   this.userInfo?.permissions.menu.forEach((route) => {
+    //     console.log(`add dynamical menu to route:${route}`);
+    //     router.addRoute("adminIndex", {
+    //       path: route.menu_url,
+    //       name: route.menu_route_name,
+    //       component: () => import(`./pages/admin/${route.menu_view_path}`),
+    //       meta:{
+    //         keepAlive: false, // 需要被缓存
+    //         title: route.menu_name,
+    //         footer: false,
+    //         header: false,
+    //         requireAuth: true,
+    //         nav:nav
+    //       },
+    //     });
+    // });
+    // console.log("now router",router.getRoutes())
+    // }
   },
 });
