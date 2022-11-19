@@ -1,12 +1,12 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 import type {
   Profile,
   Permissions,
   userInfo,
   Menu,
-} from "src/services/apis/auth";
+} from 'src/services/apis/auth'
 // import Storage from "src/utils/storage";
-import { computed, ref, reactive } from "vue";
+import { computed, ref, reactive } from 'vue'
 // import { router,nav } from "src/router";
 // import {AuthApis} from 'src/services/apis/auth'
 
@@ -16,52 +16,52 @@ import { computed, ref, reactive } from "vue";
 // }
 
 export interface Tokens {
-  accessToken: string;
-  refreshToken: string;
+  accessToken: string
+  refreshToken: string
 }
 
 // export const userInfoStorage = new Storage<userInfo>("userInfo");
 // const tokenStorage = new Storage<tokens>("token");
 
-export const useAuthStore = defineStore("auth", {
+export const useAuthStore = defineStore('auth', {
   state: () => {
     return {
       userInfo: null as userInfo | null,
       tokens: null as Tokens | null,
-    };
+    }
   },
   getters: {
-    isLogin(state) {
-      return computed(() => state.userInfo != null);
+    isLogin (state) {
+      return computed(() => state.userInfo != null)
     },
   },
   actions: {
     /**
      * 清除登录信息
      */
-    clearAuthInfo() {
-      this.userInfo = null;
-      this.tokens = null;
+    clearAuthInfo () {
+      this.userInfo = null
+      this.tokens = null
     },
     /**
      * 更新token
      * @param accessToken
      * @param refreshToken
      */
-    updateToken(accessToken: string, refreshToken: string) {
+    updateToken (accessToken: string, refreshToken: string) {
       this.tokens = {
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      };
-      console.log("set token.");
+        accessToken,
+        refreshToken,
+      }
+      console.log('set token.')
     },
     /**
      * 更新用户信息
      */
-    updateUserInfo(_userInfo: userInfo) {
-      this.userInfo = _userInfo;
+    updateUserInfo (_userInfo: userInfo) {
+      this.userInfo = _userInfo
       // localStorage.setItem("menu",JSON.stringify(_userInfo.permissions.menu))
-      console.log("set user info ", _userInfo);
+      console.log('set user info ', _userInfo)
     },
     /**
      * 更新动态路由
@@ -88,4 +88,4 @@ export const useAuthStore = defineStore("auth", {
     // }
   },
   persist: true,
-});
+})

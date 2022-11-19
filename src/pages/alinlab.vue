@@ -1,85 +1,87 @@
 <template>
+  <div class="alinLab">
+    <div class="container">
+      <el-row :gutter="30">
+        <el-col
+          v-for="item in menus"
+          :key="item.title"
+          :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="8"
+          :xl="8"
+        >
+          <div class="card">
+            <div class="face face1">
+              <div class="content">
+                <img :src="item.img" alt="picture">
+                <h3>{{ item.title }}</h3>
+              </div>
+            </div>
 
-    <div class ="alinLab" >
-        <div class="container">
-            <el-row :gutter="30">
-                <el-col
-                    v-for="item in menus"
-                    :key="item.title"
-                    :xs="24" :sm="24" :md="12" :lg="8" :xl="8"
-                >
-                    <div class="card">
-                        <div class="face face1">
-                            <div class="content">
-                                <img :src="item.img" alt="picture">
-                                <h3>{{item.title}}</h3>
-                            </div>
-                        </div>
-
-                        <div class="face face2">
-                            <div class="content">
-                                <p>{{item.desc}}</p>
-                                    <router-link :to="item.route">冲冲冲</router-link>
-                            </div>
-                        </div>
-                    </div>
-                </el-col>  
-            </el-row>
-        </div>
-
-
-</div>
+            <div class="face face2">
+              <div class="content">
+                <p>{{ item.desc }}</p>
+                <router-link :to="item.route">
+                  冲冲冲
+                </router-link>
+              </div>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue';
-    import fileUploadImg from "src/assets/fileUpload.png"
-    import dataBaseImg from "src/assets/dataBase.png"
-    import DrugImg from "src/assets/drug.png"
-    import URLImg from "src/assets/URL.png"
-    import BackendImg from "src/assets/backend.png"
-    import ApiImg from "src/assets/API.png"
-    // const fileUploadImg =ref("src/assets/fileUpload.png")
+import { ref } from 'vue'
+import fileUploadImg from 'src/assets/fileUpload.png'
+import dataBaseImg from 'src/assets/dataBase.png'
+import DrugImg from 'src/assets/drug.png'
+import URLImg from 'src/assets/URL.png'
+import BackendImg from 'src/assets/backend.png'
+import ApiImg from 'src/assets/API.png'
+// const fileUploadImg =ref("src/assets/fileUpload.png")
 
-    const menus = ref([
-        {
-            "img":fileUploadImg,
-            "title":"文件中转站",
-            "desc":"提供一个文件中转的功能,可以在一个地方上传,在另外一个地方下载",
-            "route":"/fileBroker"
-        },
-        {
-            "img":dataBaseImg,
-            "title":"数据生成器",
-            "desc":"提供一个数据生成的功能,自定对应的字段和类型和对应的生成数据条数,生成对应的假数据",
-            "route":"/dataFaker"
-        },
-        {
-            "img":DrugImg,
-            "title":"毒",
-            "desc":"来喝点毒鸡汤吧",
-            "route":"/drug"
-        },
-        {
-            "img":URLImg,
-            "title":"短链接平台",
-            "desc":"将长链接生成对应的短链接",
-            "route":"/third/shortUrl"
-        },
-        {
-            "img":ApiImg,
-            "title":"Api信息汇总",
-            "desc":"汇总网上各种常用API调用信息,不定时更新",
-            "route":"/apiInfoCollector"
-        },
-        {
-            "img":BackendImg,
-            "title":"管理后台",
-            "desc":"该网站对应的管理后台",
-            "route":"/admin"
-        },
-    ])
-
+const menus = ref([
+  {
+    img: fileUploadImg,
+    title: '文件中转站',
+    desc: '提供一个文件中转的功能,可以在一个地方上传,在另外一个地方下载',
+    route: '/fileBroker',
+  },
+  {
+    img: dataBaseImg,
+    title: '数据生成器',
+    desc: '提供一个数据生成的功能,自定对应的字段和类型和对应的生成数据条数,生成对应的假数据',
+    route: '/dataFaker',
+  },
+  {
+    img: DrugImg,
+    title: '毒',
+    desc: '来喝点毒鸡汤吧',
+    route: '/drug',
+  },
+  {
+    img: URLImg,
+    title: '短链接平台',
+    desc: '将长链接生成对应的短链接',
+    route: '/third/shortUrl',
+  },
+  {
+    img: ApiImg,
+    title: 'Api信息汇总',
+    desc: '汇总网上各种常用API调用信息,不定时更新',
+    route: '/apiInfoCollector',
+  },
+  {
+    img: BackendImg,
+    title: '管理后台',
+    desc: '该网站对应的管理后台',
+    route: '/admin',
+  },
+])
 
 </script>
 
@@ -107,8 +109,6 @@
         border-radius: 0.25rem;
         box-shadow: inset 0 0 0 0px rgba(0, 0, 0, 0.125);
     }
-
-
 
     .container .card{
         position: relative;
@@ -194,4 +194,3 @@
         color: #fff;
     }
 </style>
-

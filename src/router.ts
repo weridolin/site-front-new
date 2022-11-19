@@ -1,63 +1,63 @@
-import { createRouter, createWebHistory } from "vue-router";
-import type { RouteParams, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteParams, RouteRecordRaw } from 'vue-router'
 // import { isAuthorized } from './store/user'
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 // import {Route} from 'vue-router'
-import {useAuthStore} from 'src/store/user'
-import {AuthApis}  from 'src/services/apis/auth'
-import type {Menu} from 'src/services/apis/auth'
-import { ElMessage } from "element-plus";
+import { useAuthStore } from 'src/store/user'
+import { AuthApis } from 'src/services/apis/auth'
+import type { Menu } from 'src/services/apis/auth'
+import { ElMessage } from 'element-plus'
 
 NProgress.inc(0.2)
 NProgress.configure({ easing: 'ease', speed: 500, showSpinner: false })
 
 export type AppRouteNames =
-  | "Index"
-  | "NewHome"
-  | "oauth"
-  | "BlogContent"
-  | "Link"
-  | "fileBroker"
-  | "alinLab"
-  | "Drug"
-  | "Message"
-  | "GrowthRoute"
-  | "third_shortUrl"
-  | "login"
+  | 'Index'
+  | 'NewHome'
+  | 'oauth'
+  | 'BlogContent'
+  | 'Link'
+  | 'fileBroker'
+  | 'alinLab'
+  | 'Drug'
+  | 'Message'
+  | 'GrowthRoute'
+  | 'third_shortUrl'
+  | 'login'
   | string
 
-const name = "werido";
+const name = 'werido'
 export const nav = {
   navNoQuiet: {
-    boxShadow: " 0px 10px 20px 4px  rgba(195,199, 199,0.4)",
-    backgroundColor: "#fff",
-    color: "rgba(0,0,0,.5)",
+    boxShadow: ' 0px 10px 20px 4px  rgba(195,199, 199,0.4)',
+    backgroundColor: '#fff',
+    color: 'rgba(0,0,0,.5)',
   },
   navQuiet: {
-    color: "#fff",
+    color: '#fff',
   },
-};
+}
 export const nav1 = {
   navNoQuiet: {
-    boxShadow: " 0px 10px 20px 4px  rgba(195,199, 199,0.4)",
-    backgroundColor: "#fff",
-    color: "rgba(0,0,0,.5)",
+    boxShadow: ' 0px 10px 20px 4px  rgba(195,199, 199,0.4)',
+    backgroundColor: '#fff',
+    color: 'rgba(0,0,0,.5)',
   },
   navQuiet: {
-    backgroundColor: "#fff",
-    color: "rgba(0,0,0,.5)",
+    backgroundColor: '#fff',
+    color: 'rgba(0,0,0,.5)',
   },
-};
+}
 
 export const routes: RouteRecordRaw[] = [
   {
-    path: "/login",
-    name: "login",
-    component: () => import("./pages/Login.vue"),
+    path: '/login',
+    name: 'login',
+    component: () => import('./pages/Login.vue'),
     meta: {
       keepAlive: false, // 需要被缓存
-      title: "登录",
+      title: '登录',
       nav: nav1,
       footer: true,
       header: false,
@@ -65,18 +65,18 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: "/",
-    name: "Index",
-    component: () => import("./pages/Index.vue"),
+    path: '/',
+    name: 'Index',
+    component: () => import('./pages/Index.vue'),
     meta: {
-      title: "首页-" + name,
-      nav: nav,
+      title: `首页-${name}`,
+      nav,
       footer: true,
       header: true,
       keepAlive: false,
       requireAuth: false,
     },
-  }, 
+  },
   // {
   //   path: "/",
   //   name: "Index",
@@ -121,12 +121,12 @@ export const routes: RouteRecordRaw[] = [
   //   },
   // },
   {
-    path: "/oauth",
-    name: "oauth",
-    component: () => import("./pages/oauth.vue"),
+    path: '/oauth',
+    name: 'oauth',
+    component: () => import('./pages/oauth.vue'),
     meta: {
       keepAlive: true, // 需要被缓存
-      title: "oauth认证",
+      title: 'oauth认证',
       nav: nav1,
       footer: false,
       header: false,
@@ -134,9 +134,9 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: "/blog/:id",
-    name: "BlogContent",
-    component: () => import("./pages/BlogContent.vue"),
+    path: '/blog/:id',
+    name: 'BlogContent',
+    component: () => import('./pages/BlogContent.vue'),
     meta: {
       keepAlive: false, // 需要被缓存
       nav: nav1,
@@ -146,75 +146,75 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: "/link",
-    name: "Link",
-    component: () => import("./pages/Link.vue"),
+    path: '/link',
+    name: 'Link',
+    component: () => import('./pages/Link.vue'),
     meta: {
       keepAlive: false, // 需要被缓存
-      title: "友情链接-" + name,
-      nav: nav,
+      title: `友情链接-${name}`,
+      nav,
       footer: true,
       header: true,
       requireAuth: false,
     },
   },
   {
-    path: "/fileBroker",
-    name: "fileBroker",
-    component: () => import("./pages/fileBroker.vue"),
+    path: '/fileBroker',
+    name: 'fileBroker',
+    component: () => import('./pages/fileBroker.vue'),
     meta: {
-      title: "文件慢传",
-      nav: nav,
+      title: '文件慢传',
+      nav,
       footer: false,
       header: false,
       requireAuth: false,
     },
   },
   {
-    path: "/alinLab",
-    name: "alinLab",
-    component: () => import("./pages/alinlab.vue"),
+    path: '/alinLab',
+    name: 'alinLab',
+    component: () => import('./pages/alinlab.vue'),
     meta: {
-      title: "alin-lab",
-      nav: nav,
+      title: 'alin-lab',
+      nav,
       footer: false,
       header: false,
       requireAuth: false,
     },
   },
   {
-    path: "/dataFaker",
-    name: "dataFaker",
-    component: () => import("./pages/dataFaker.vue"),
+    path: '/dataFaker',
+    name: 'dataFaker',
+    component: () => import('./pages/dataFaker.vue'),
     meta: {
-      title: "数据生成器",
-      nav: nav,
+      title: '数据生成器',
+      nav,
       footer: false,
       header: false,
       requireAuth: false,
     },
   },
   {
-    path: "/drug",
-    name: "Drug",
-    component: () => import("./pages/Drug.vue"),
+    path: '/drug',
+    name: 'Drug',
+    component: () => import('./pages/Drug.vue'),
     meta: {
       keepAlive: true, // 需要被缓存
-      title: "毒",
-      nav: nav,
+      title: '毒',
+      nav,
       footer: false,
       header: false,
       requireAuth: false,
     },
   },
   {
-    path: "/message",
-    name: "Message",
-    component: () => import("./pages/Message.vue"),
+    path: '/message',
+    name: 'Message',
+    component: () => import('./pages/Message.vue'),
     meta: {
       // keepAlive: true, // 需要被缓存
-      title: "留言区-" + name,
-      nav: nav,
+      title: `留言区-${name}`,
+      nav,
       footer: true,
       header: true,
       keepAlive: true,
@@ -222,173 +222,168 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: "/route",
-    name: "GrowthRoute",
-    component: () => import("./pages/GrowthRoute.vue"),
+    path: '/route',
+    name: 'GrowthRoute',
+    component: () => import('./pages/GrowthRoute.vue'),
     meta: {
       keepAlive: true, // 需要被缓存
-      title: "成长路线-" + name,
-      nav: nav,
+      title: `成长路线-${name}`,
+      nav,
       footer: true,
       header: true,
       requireAuth: false,
     },
   },
 
-  /***********************  third apis   *****************************/
+  /** *********************  third apis   *****************************/
   {
-    path: "/third/shortUrl",
-    name: "third_shortUrl",
-    component: () => import("./pages/ShortUrlChange.vue"),
+    path: '/third/shortUrl',
+    name: 'third_shortUrl',
+    component: () => import('./pages/ShortUrlChange.vue'),
     meta: {
       keepAlive: true, // 需要被缓存
-      title: "短链接生成",
-      nav: nav,
+      title: '短链接生成',
+      nav,
       footer: true,
       header: false,
       requireAuth: false,
     },
   },
-  /***********************  apisInfoCollections   *****************************/
+  /** *********************  apisInfoCollections   *****************************/
   {
-    path: "/apiInfoCollector",
-    name: "apiInfoCollector",
-    component: () => import("./pages/ApisCollections.vue"),
+    path: '/apiInfoCollector',
+    name: 'apiInfoCollector',
+    component: () => import('./pages/ApisCollections.vue'),
     meta: {
       keepAlive: true, // 需要被缓存
-      title: "Apis合集",
-      nav: nav,
+      title: 'Apis合集',
+      nav,
       footer: true,
       header: false,
       requireAuth: true,
     },
   },
 
-  /*******************************  admin   ***************************************/
+  /** *****************************  admin   ***************************************/
   {
-    path: "/admin",
-    name: "admin",
-    component: () => import("./pages/admin/Index.vue"),
+    path: '/admin',
+    name: 'admin',
+    component: () => import('./pages/admin/Index.vue'),
     meta: {
       keepAlive: true, // 需要被缓存
-      title: "管理后台",
-      nav: nav,
+      title: '管理后台',
+      nav,
       footer: false,
       header: false,
       requireAuth: true,
     },
   },
-  /**************************** 404 ****************/
-];
+  /** ************************** 404 ****************/
+]
 
 export const router = createRouter({
   history: createWebHistory(),
   routes,
-});
+})
 
-export function routerPush(
+export function routerPush (
   name: AppRouteNames,
-  params?: RouteParams
+  params?: RouteParams,
 ): ReturnType<typeof router.push> {
   if (params !== undefined) {
     return router.push({
       name,
       params,
-    });
+    })
   } else {
-    return router.push({ name });
+    return router.push({ name })
   }
 }
 
-/**************************** admin 相关权限页面  ******************************** */
-const whiteList: string[] = []; // 链接白名单
+/** ************************** admin 相关权限页面  ******************************** */
+const whiteList: string[] = [] // 链接白名单
 
 export const dynamicalRoutes: RouteRecordRaw[] = [
 
 ]
 
-function traverseMenu(route:Menu){
-  let r:RouteRecordRaw = {
+function traverseMenu (route: Menu) {
+  const r: RouteRecordRaw = {
     path: route.menu_url,
     name: route.menu_route_name,
     component: () => import(`./pages/admin/${route.menu_view_path}`),
-    meta:{
+    meta: {
       keepAlive: false, // 需要被缓存
       title: route.menu_name,
       footer: false,
       header: false,
       requireAuth: true,
-      nav:nav
+      nav,
     },
-    children:[]
+    children: [],
   }
-  if (route.children?.length>0){
-    route.children.forEach((route)=>{
-        r.children?.push(traverseMenu(route))
+  if (route.children?.length > 0) {
+    route.children.forEach((route) => {
+      r.children?.push(traverseMenu(route))
     })
   }
   return r
 }
 
-
-router.beforeEach(async (to,from, next) => {
-
+router.beforeEach(async (to, from, next) => {
   // Start progress bar
-  NProgress.start();
+  NProgress.start()
 
   // let index = useAuthStore().userInfo?.permissions.menu.findIndex((i) => i.menu_url === to.path)
   // if (index !== -1) {
   //   next({...useAuthStore().userInfo?.permissions.menu[index as number], replace: true })
   //   return
-  // } 
+  // }
 
-  console.log("urt to ---> ",to,router.getRoutes().length==routes.length)
+  console.log('urt to ---> ', to, router.getRoutes().length == routes.length)
 
-  if (to.meta.title) { 
+  if (to.meta.title) {
     document.title = to.meta.title as string
   }
 
   if (to.path == '/login') {
-      //方便登录后跳转
-      console.log("登录页,登陆前",router.currentRoute.value.fullPath)
-      localStorage.setItem("preRoute", router.currentRoute.value.fullPath)
+    // 方便登录后跳转
+    console.log('登录页,登陆前', router.currentRoute.value.fullPath)
+    localStorage.setItem('preRoute', router.currentRoute.value.fullPath)
   }
 
-  if (to.meta.requireAuth){
-    if (!useAuthStore().isLogin.value){
-      ElMessage.error("请先登录...")
-      console.log(`${to.path}需要登录,当前未登录`,useAuthStore().userInfo)
-      next(`/login`)
+  if (to.meta.requireAuth) {
+    if (!useAuthStore().isLogin.value) {
+      ElMessage.error('请先登录...')
+      console.log(`${to.path}需要登录,当前未登录`, useAuthStore().userInfo)
+      next('/login')
       return
     }
   }
   // let menus = localStorage.getItem("menu")
-  if (router.getRoutes().length==routes.length && useAuthStore().userInfo?.permissions.menu)
-  {
+  if (router.getRoutes().length == routes.length && useAuthStore().userInfo?.permissions.menu) {
     // dynamicalRoutes.length=0
     // let _menus:Menu[] = JSON.parse(menus)
-    console.log("check if need to add dynamical routes",useAuthStore().userInfo?.permissions.menu)
+    console.log('check if need to add dynamical routes', useAuthStore().userInfo?.permissions.menu)
     useAuthStore().userInfo?.permissions.menu.forEach((route) => {
-      console.log(`add dynamical menu to route:${route}`);
-      let r = traverseMenu(route)
-      console.log(">>>>traverse menu result",r)
-      router.addRoute("admin",r)
-    });
-    console.log("after add dynamical routes",useAuthStore().userInfo?.permissions.menu)
-    console.log("get routes",router.getRoutes())
-    next({ ...to, replace: true }) //@https://blog.csdn.net/qq_41912398/article/details/109231418
+      console.log(`add dynamical menu to route:${route}`)
+      const r = traverseMenu(route)
+      console.log('>>>>traverse menu result', r)
+      router.addRoute('admin', r)
+    })
+    console.log('after add dynamical routes', useAuthStore().userInfo?.permissions.menu)
+    console.log('get routes', router.getRoutes())
+    next({ ...to, replace: true }) // @https://blog.csdn.net/qq_41912398/article/details/109231418
   // return
-  }else{
+  } else {
     next()
     const route = document.getElementsByClassName('route-content')[0]
     if (route) {
-        route.classList.remove('route-filter')
+      route.classList.remove('route-filter')
     }
   }
-
-});
+})
 
 router.afterEach(() => {
   NProgress.done()
 })
-

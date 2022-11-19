@@ -1,18 +1,17 @@
 <template>
   <div class="home">
-    <blog-info :count="count"></blog-info>
+    <blog-info :count="count" />
     <div class="blog-right">
       <div v-if="loading">
-        <new-loading v-for="item of 6" :key="item"></new-loading>
+        <new-loading v-for="item of 6" :key="item" />
       </div>
-      <blog-list v-else :list="list"></blog-list>
+      <blog-list v-else :list="list" />
       <el-pagination
         v-if="list.length > 0"
         :background="true"
         layout="prev, pager, next"
         :page-count="last_page"
         :current-page="current_page"
-        @current-change="getList"
         style="
           width: 100%;
           display: flex;
@@ -20,117 +19,113 @@
           margin-bottom: 10px;
           flex-wrap: wrap;
         "
-      >
-      </el-pagination>
-      <index-footer class="index-foot"></index-footer>
+        @current-change="getList"
+      />
+      <index-footer class="index-foot" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
-  import BlogInfo from "src/components/BlogInfo.vue";
-  import BlogList from "src/components/BlogList.vue";
-  import IndexFooter from "src/pages/IndexFooter.vue";
-  import {ElNotification} from 'element-plus';
-  import NewLoading from "src/components/NewLoading.vue";
-  import {ref,watch} from "vue"
-  import { useRouter } from 'vue-router'
-  import {ArticlesApis} from "src/services/apis/articles"
-  import type {Article} from "src/services/apis/articles"
+import BlogInfo from 'src/components/BlogInfo.vue'
+import BlogList from 'src/components/BlogList.vue'
+import IndexFooter from 'src/pages/IndexFooter.vue'
+import { ElNotification } from 'element-plus'
+import NewLoading from 'src/components/NewLoading.vue'
+import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { ArticlesApis } from 'src/services/apis/articles'
+import type { Article } from 'src/services/apis/articles'
 
-  const  current_page=ref(1) //当前页
-  const  last_page=ref(1) //最后一页
-  const  list=ref<Article[]>([]) //文章数据
-  const  loading=ref(true)
-  const  count=ref(0) //文章总数
-  const  router = useRouter()
+const current_page = ref(1) // 当前页
+const last_page = ref(1) // 最后一页
+const list = ref<Article[]>([]) // 文章数据
+const loading = ref(true)
+const count = ref(0) // 文章总数
+const router = useRouter()
 
+// 标签点击查询跳转
+function change (item: string) {
+  console.log(item)
+  current_page.value = 1
+  router.push({
+    path: '/blog',
+    query: {
+      label: item,
+    },
+  })
+}
 
-
-      // 标签点击查询跳转
-  function change(item:string) {
-        console.log(item);
-        current_page.value = 1;
-        router.push({
-          path: "/blog",
-          query: {
-            label: item,
-          },
-        });
-      }
-  
-    // 分页获取，防止刷新丢失
-  function  getList(page:number) {
-      console.log(page);
-      current_page.value = page;
-      let type = {};
-      if (router.currentRoute.value.query.label) {
-        type = {
-          page: page,
-          label: router.currentRoute.value.query.label,
-        };
-      } else if (router.currentRoute.value.query.type) {
-        type = {
-          page: page,
-          type: router.currentRoute.value.query.type,
-        };
-      } else if (router.currentRoute.value.query.title) {
-        type = {
-          page: page,
-          title: router.currentRoute.value.query.title,
-        };
-      } else {
-        type = {
-          page: page,
-        };
-      }
-      console.log(">>> push router",type)
-      router.push({
-        query: type,
-      });
+// 分页获取，防止刷新丢失
+function getList (page: number) {
+  console.log(page)
+  current_page.value = page
+  let type = {}
+  if (router.currentRoute.value.query.label) {
+    type = {
+      page,
+      label: router.currentRoute.value.query.label,
+    }
+  } else if (router.currentRoute.value.query.type) {
+    type = {
+      page,
+      type: router.currentRoute.value.query.type,
+    }
+  } else if (router.currentRoute.value.query.title) {
+    type = {
+      page,
+      title: router.currentRoute.value.query.title,
+    }
+  } else {
+    type = {
+      page,
+    }
   }
+  console.log('>>> push router', type)
+  router.push({
+    query: type,
+  })
+}
 
-
-  function getArticle() {
-      current_page.value = router.currentRoute.value.query.page? parseInt(router.currentRoute.value.query.page.toString()): 1;
-      let type = {};
-      if (router.currentRoute.value.query.label) {
-        type = {"label":router.currentRoute.value.query.label};
-      } else if (router.currentRoute.value.query.type) {
-        type = {"type" :router.currentRoute.value.query.type};
-      } else if (router.currentRoute.value.query.title) {
-        type = {"title" : router.currentRoute.value.query.title};
-      }
-      loading.value = true;
-      ArticlesApis.getArticles({
-        params:{
-          page:current_page.value,
-          ...type
-        }
-      }).then(function(res){
-          list.value = res.results
-          loading.value= false
-          last_page.value=res.last_page
-          count.value = res.count
-      }).catch(function(err){
-        console.log(">>> get articles error",err)
-        ElNotification.error({
-                      title: '请求错误 ',
-                      message: err.message,
-        })
-      })
+function getArticle () {
+  current_page.value = router.currentRoute.value.query.page ? parseInt(router.currentRoute.value.query.page.toString()) : 1
+  let type = {}
+  if (router.currentRoute.value.query.label) {
+    type = { label: router.currentRoute.value.query.label }
+  } else if (router.currentRoute.value.query.type) {
+    type = { type: router.currentRoute.value.query.type }
+  } else if (router.currentRoute.value.query.title) {
+    type = { title: router.currentRoute.value.query.title }
   }
-
-    watch(() => router.currentRoute.value.path,(toPath) => {
-            //要执行的方法
-            console.log(toPath,"toPath");
-          if (toPath=="NewHome") {
-            getArticle();
-          }
+  loading.value = true
+  ArticlesApis.getArticles({
+    params: {
+      page: current_page.value,
+      ...type,
+    },
+  }).then(function (res) {
+    list.value = res.results
+    loading.value = false
+    last_page.value = res.last_page
+    count.value = res.count
+  }).catch(function (err) {
+    console.log('>>> get articles error', err)
+    ElNotification.error({
+      title: '请求错误 ',
+      message: err.message,
     })
+  })
+}
 
+watch(() => router.currentRoute.value.path, (toPath) => {
+  // 要执行的方法
+  console.log(toPath, 'toPath')
+  if (toPath == 'NewHome') {
     getArticle()
-</script>
+  }
+})
 
+getArticle()
+</script>
 
 <style lang="stylus" scoped>
 .home-blog {
