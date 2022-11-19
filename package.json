@@ -32,6 +32,7 @@
     "particles.vue3": "^1.22.0",
     "path-to-regexp": "^6.2.1",
     "pinia": "^2.0.14",
+    "pinia-plugin-persistedstate": "^2.4.0",
     "qrcode.vue": "^3.3.3",
     "rxjs": "^7.5.5",
     "sass": "^1.53.0",

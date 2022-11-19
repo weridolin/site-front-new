@@ -126,7 +126,7 @@
           if (toPath=="NewHome") {
             getArticle();
           }
-    },{immediate: true,deep: true})
+    })
 
     getArticle()
 </script>

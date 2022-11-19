@@ -107,6 +107,13 @@ export interface BaseResponse {
 }
 
 
+export interface BasePaginationResponse{
+    count:number,
+    next:string,
+    previous:null,
+    results:any
+}
+
 // 定义 AXIOS 拦截器
 // interface InterceptorHooks {
 //     userRequestInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig;

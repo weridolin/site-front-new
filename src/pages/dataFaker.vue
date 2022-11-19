@@ -7,7 +7,7 @@
     element-loading-background="rgba(0, 0, 0, 0.8)"  
     >
     <el-aside> 
-        <plane> </plane>
+        <Plane> </Plane>
         <div class="downForm">
             <el-form :model="downForm" class="downForm" >
             <el-form-item>

@@ -37,6 +37,7 @@
     import dataBaseImg from "src/assets/dataBase.png"
     import DrugImg from "src/assets/drug.png"
     import URLImg from "src/assets/URL.png"
+    import BackendImg from "src/assets/backend.png"
     import ApiImg from "src/assets/API.png"
     // const fileUploadImg =ref("src/assets/fileUpload.png")
 
@@ -70,6 +71,12 @@
             "title":"Api信息汇总",
             "desc":"汇总网上各种常用API调用信息,不定时更新",
             "route":"/apiInfoCollector"
+        },
+        {
+            "img":BackendImg,
+            "title":"管理后台",
+            "desc":"该网站对应的管理后台",
+            "route":"/admin"
         },
     ])
 

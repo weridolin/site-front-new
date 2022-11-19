@@ -23,7 +23,9 @@ export type AppRouteNames =
   | "Drug"
   | "Message"
   | "GrowthRoute"
-  | "third_shortUrl";
+  | "third_shortUrl"
+  | "login"
+  | string
 
 const name = "werido";
 export const nav = {
@@ -105,19 +107,19 @@ export const routes: RouteRecordRaw[] = [
   //         title: '哎呀页面不见了-' + name
   //     }
   // },
-  {
-    path: "/blog",
-    name: "NewHome",
-    component: () => import("./pages/NewHome.vue"),
-    meta: {
-      keepAlive: false, // 需要被缓存
-      title: "文章-" + name,
-      nav: nav1,
-      footer: false,
-      header: true,
-      requireAuth: false,
-    },
-  },
+  // {
+  //   path: "/blog",
+  //   name: "NewHome",
+  //   component: () => import("./pages/NewHome.vue"),
+  //   meta: {
+  //     keepAlive: false, // 需要被缓存
+  //     title: "文章-" + name,
+  //     nav: nav1,
+  //     footer: false,
+  //     header: true,
+  //     requireAuth: false,
+  //   },
+  // },
   {
     path: "/oauth",
     name: "oauth",
@@ -264,8 +266,8 @@ export const routes: RouteRecordRaw[] = [
 
   /*******************************  admin   ***************************************/
   {
-    path: "/adminTest",
-    name: "adminTest",
+    path: "/admin",
+    name: "admin",
     component: () => import("./pages/admin/Index.vue"),
     meta: {
       keepAlive: true, // 需要被缓存
@@ -340,6 +342,7 @@ router.beforeEach(async (to,from, next) => {
   //   return
   // } 
 
+  console.log("urt to ---> ",to,router.getRoutes().length==routes.length)
 
   if (to.meta.title) { 
     document.title = to.meta.title as string
@@ -359,18 +362,21 @@ router.beforeEach(async (to,from, next) => {
       return
     }
   }
-  if (router.getRoutes().length==routes.length && useAuthStore().userInfo?.permissions){
+  // let menus = localStorage.getItem("menu")
+  if (router.getRoutes().length==routes.length && useAuthStore().userInfo?.permissions.menu)
+  {
     // dynamicalRoutes.length=0
-    console.log("check if need to add dynamical routes",useAuthStore().userInfo?.permissions)
+    // let _menus:Menu[] = JSON.parse(menus)
+    console.log("check if need to add dynamical routes",useAuthStore().userInfo?.permissions.menu)
     useAuthStore().userInfo?.permissions.menu.forEach((route) => {
       console.log(`add dynamical menu to route:${route}`);
       let r = traverseMenu(route)
       console.log(">>>>traverse menu result",r)
       router.addRoute("admin",r)
-  });
-  console.log("after add dynamical routes",useAuthStore().userInfo?.permissions.menu)
-  console.log("get routes",router.getRoutes())
-  next({ ...to, replace: true }) //@https://blog.csdn.net/qq_41912398/article/details/109231418
+    });
+    console.log("after add dynamical routes",useAuthStore().userInfo?.permissions.menu)
+    console.log("get routes",router.getRoutes())
+    next({ ...to, replace: true }) //@https://blog.csdn.net/qq_41912398/article/details/109231418
   // return
   }else{
     next()

@@ -342,6 +342,7 @@
   }
 
   function GetThirdLoginUrl(type:string){
+    ElMessage.error("建设中...")
     AuthApis.getThirdLoginUrl(type,{
       timeout:2*60*1000
     }).then(function(res){

@@ -1,8 +1,13 @@
 import { defineStore } from "pinia";
-import type { Profile, Permissions, userInfo } from "src/services/apis/auth";
-import Storage from "src/utils/storage";
-import { computed, ref,reactive } from "vue";
-import { router,nav } from "src/router";
+import type {
+  Profile,
+  Permissions,
+  userInfo,
+  Menu,
+} from "src/services/apis/auth";
+// import Storage from "src/utils/storage";
+import { computed, ref, reactive } from "vue";
+// import { router,nav } from "src/router";
 // import {AuthApis} from 'src/services/apis/auth'
 
 // export interface userInfo {
@@ -10,19 +15,19 @@ import { router,nav } from "src/router";
 //     permissions:Permissions[]
 // }
 
-export interface tokens {
+export interface Tokens {
   accessToken: string;
   refreshToken: string;
 }
 
-const userInfoStorage = new Storage<userInfo>("userInfo");
-const tokenStorage = new Storage<tokens>("token");
+// export const userInfoStorage = new Storage<userInfo>("userInfo");
+// const tokenStorage = new Storage<tokens>("token");
 
 export const useAuthStore = defineStore("auth", {
   state: () => {
     return {
-      userInfo: ref(userInfoStorage.get()).value,
-      tokens: ref(tokenStorage.get()).value,
+      userInfo: null as userInfo | null,
+      tokens: null as Tokens | null,
     };
   },
   getters: {
@@ -37,8 +42,6 @@ export const useAuthStore = defineStore("auth", {
     clearAuthInfo() {
       this.userInfo = null;
       this.tokens = null;
-      userInfoStorage.remove();
-      tokenStorage.remove();
     },
     /**
      * 更新token
@@ -49,17 +52,16 @@ export const useAuthStore = defineStore("auth", {
       this.tokens = {
         accessToken: accessToken,
         refreshToken: refreshToken,
-      }
-      console.log("set token.")
+      };
+      console.log("set token.");
     },
     /**
      * 更新用户信息
      */
     updateUserInfo(_userInfo: userInfo) {
-      this.userInfo = _userInfo
+      this.userInfo = _userInfo;
+      // localStorage.setItem("menu",JSON.stringify(_userInfo.permissions.menu))
       console.log("set user info ", _userInfo);
-      // userInfoStorage.set(_userInfo);
-      // this.updateRouter();
     },
     /**
      * 更新动态路由
@@ -85,4 +87,5 @@ export const useAuthStore = defineStore("auth", {
     // console.log("now router",router.getRoutes())
     // }
   },
+  persist: true,
 });
