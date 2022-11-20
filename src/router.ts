@@ -369,7 +369,7 @@ router.beforeEach(async (to, from, next) => {
       console.log(`add dynamical menu to route:${route}`)
       const r = traverseMenu(route)
       console.log('>>>>traverse menu result', r)
-      router.addRoute('admin', r)
+      router.addRoute('admin', r) 
     })
     console.log('after add dynamical routes', useAuthStore().userInfo?.permissions.menu)
     console.log('get routes', router.getRoutes())

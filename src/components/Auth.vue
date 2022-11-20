@@ -202,20 +202,22 @@
 
 
   // ####################################### 更新用户信息,如果token失效,则清楚localStorage
-  onMounted(() => {
-    if (useAuthStore().isLogin.value){
-      AuthApis.getUserProfile()
-      .then(function(res){
-        console.log(">>> token 未过期",res)
-      }).catch(function(err){
-        console.log(">>> 登录过期",err)
-        if (err.status==401){
-          console.log("登录过期,清除本地信息")
-          useAuthStore().clearAuthInfo()
-        }
-      })
-    }
-  })
+  // onMounted(
+  //   () => {
+  //   if (useAuthStore().isLogin.value){
+  //     AuthApis.getUserProfile()
+  //     .then(function(res){
+  //       console.log(">>> token 未过期",res)
+  //     }).catch(function(err){
+  //       console.log(">>> 登录过期",err)
+  //       if (err.status==401){
+  //         console.log("登录过期,清除本地信息")
+  //         useAuthStore().clearAuthInfo()
+  //       }
+  //     })
+  //   }
+  // }
+  // )
 
 </script>
 
