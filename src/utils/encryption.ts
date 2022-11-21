@@ -1,4 +1,3 @@
-
 import {Md5} from 'ts-md5/dist/md5'
 
 export function pwdEncrypt(pwd:string){
@@ -7,4 +6,3 @@ export function pwdEncrypt(pwd:string){
     md5.appendStr(pwd).appendAsciiStr("werido")
     return md5.end()
 }
-

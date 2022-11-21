@@ -14,20 +14,6 @@
             <!-- {{state =='login'?"登录":"注册"}} -->
             {{ title }}
           </h1>
-          <!-- <p class="text-xs-center">
-            <AppLink name="register">
-              Need an account?
-            </AppLink>
-          </p> -->
-
-          <!-- <ul class="error-messages">
-            <li
-              v-for="(error, field) in errors"
-              :key="field"
-            >
-              {{ field }} {{ error ? error[0] : '' }}
-            </li>
-          </ul> -->
 
           <form
             ref="formRef"

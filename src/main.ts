@@ -11,7 +11,7 @@ import 'src/assets/iconfont/iconfont.css'
 import { createPinia } from 'pinia'
 import Chat from 'vue3-beautiful-chat'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-import registerGlobalComponents from './plugins/global-components'
+// import registerGlobalComponents from './plugins/global-components'
 import { router } from './router'
 
 const app = createApp(App)
@@ -28,6 +28,6 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 // setAuthorizationToken()
-registerGlobalComponents(app)
+// registerGlobalComponents(app)
 
 app.mount('#app')
