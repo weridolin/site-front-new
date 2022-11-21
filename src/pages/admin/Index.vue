@@ -17,8 +17,14 @@
 <script lang="ts" setup>
 import SideBar from "src/components/admin/Sidebar/index.vue";
 import NavBar from 'src/components/admin/NavBar/Index.vue'
-import { defineProps,ref,watch} from "vue";
 import {SideBarState} from 'src/components/admin/models'
+
+import MenuManager from 'src/pages/admin/MenuManager.vue'
+import ModelOpManager from 'src/pages/admin/ModelOpManager.vue'
+import PermissionManager from 'src/pages/admin/PermissionManager.vue'
+import RoleManager from 'src/pages/admin/RoleManager.vue'
+import UserManager from 'src/pages/admin/UserManager.vue'
+import UserProfile from 'src/pages/admin/UserProfile.vue'
 // import { useRouter } from "vue-router";
 
 
