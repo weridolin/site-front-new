@@ -28,6 +28,7 @@ export type AppRouteNames =
   | string
 
 const name = 'werido'
+
 export const nav = {
   navNoQuiet: {
     boxShadow: ' 0px 10px 20px 4px  rgba(195,199, 199,0.4)',
@@ -302,16 +303,18 @@ export function routerPush (
 
 /** ************************** admin 相关权限页面  ******************************** */
 const whiteList: string[] = [] // 链接白名单
+//导入所有的权限相关的页面
+const modules = import.meta.glob("./pages/admin/**.vue")
 
 export const dynamicalRoutes: RouteRecordRaw[] = [
-
 ]
 
 function traverseMenu (route: Menu) {
   const r: RouteRecordRaw = {
     path: route.menu_url,
     name: route.menu_route_name,
-    component: () => import(`./pages/admin/${route.menu_view_path}`),
+    // component: () => import(`./pages/admin/${route.menu_view_path}`),
+    component:modules[`./pages/admin/${route.menu_view_path}`],
     meta: {
       keepAlive: false, // 需要被缓存
       title: route.menu_name,
@@ -364,7 +367,7 @@ router.beforeEach(async (to, from, next) => {
   if (router.getRoutes().length == routes.length && useAuthStore().userInfo?.permissions.menu) {
     // dynamicalRoutes.length=0
     // let _menus:Menu[] = JSON.parse(menus)
-    console.log('check if need to add dynamical routes', useAuthStore().userInfo?.permissions.menu)
+    console.log('check if need to add dynamical routes',modules)
     useAuthStore().userInfo?.permissions.menu.forEach((route) => {
       console.log(`add dynamical menu to route:${route}`)
       const r = traverseMenu(route)
