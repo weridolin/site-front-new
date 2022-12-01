@@ -28,6 +28,7 @@ export const useAuthStore = defineStore('auth', {
     return {
       userInfo: null as userInfo | null,
       tokens: null as Tokens | null,
+      has_update_routes:false
     }
   },
   getters: {
@@ -42,6 +43,7 @@ export const useAuthStore = defineStore('auth', {
     clearAuthInfo () {
       this.userInfo = null
       this.tokens = null
+      this.has_update_routes=false
     },
     /**
      * 更新token

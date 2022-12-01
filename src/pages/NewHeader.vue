@@ -85,22 +85,22 @@ export default {
         {
           id: "2",
           tag: "留言",
-          link: "/message",
+          link: "/home/message",
         },
         {
           id: "4",
           tag: "友链",
-          link: "/link",
+          link: "/home/link",
         },
         {
           id: "5",
           tag: "更新轨迹",
-          link: "/route",
+          link: "/home/route",
         },
         {
           id: "6",
           tag: "疯狂实验室",
-          link: "/alinLab",
+          link: "/lab",
         },
         // {
         //   id: "7",

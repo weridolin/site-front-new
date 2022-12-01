@@ -19,11 +19,15 @@
     "generate:api": "sta -p https://raw.githubusercontent.com/gothinkster/realworld/main/api/openapi.yml -o ./src/services -n api.ts"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
+    "@amap/amap-jsapi-types": "^0.0.10",
     "@element-plus/icons-vue": "^2.0.6",
     "@types/nprogress": "^0.2.0",
     "@types/scrollreveal": "^0.0.8",
+    "amap-js": "^2.4.0",
     "axios": "^0.27.2",
     "clipboard": "^2.0.11",
+    "echarts": "^5.4.0",
     "element-plus": "^2.2.6",
     "insane": "^2.6.2",
     "marked": "^4.0.17",
@@ -49,6 +53,7 @@
     "vue-baidu-map": "^0.21.22",
     "vue-particles": "^1.0.9",
     "vue-router": "^4.0.15",
+    "vue-seamless-scroll": "^1.1.23",
     "vue3-beautiful-chat": "^3.2.0",
     "vuex": "^4.0.2",
     "yarn": "^1.22.19"
