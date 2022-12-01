@@ -43,7 +43,7 @@
 </template>
 <script>
 import {marked}  from 'marked' 
-import hljs   from 'src/utils/highlight.min.js' 
+// import hljs   from 'src/utils/highlight.min.js' 
 import { ElNotification } from 'element-plus'
 let rendererMD = new marked.Renderer();
 const TAG_NAME = 'demo-mobai'

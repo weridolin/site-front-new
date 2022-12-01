@@ -341,7 +341,7 @@ export function routerPush(
 const whiteList: string[] = []; // 链接白名单
 
 //导入所有的权限相关的页面,不然打包的时候不会导动态路由对应的组件
-const modules = import.meta.glob("./pages/**/**.vue");
+const modules = import.meta.glob("./pages/admin/**.vue");
 
 export const dynamicalRoutes: RouteRecordRaw[] = [];
 

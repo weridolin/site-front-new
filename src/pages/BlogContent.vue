@@ -147,7 +147,6 @@
   import QrCode from 'src/components/QrCode.vue'
   import MessCard from "src/components/MessCard.vue"
   import NewComment from "src/components/NewComment.vue"
-  import MyMarked from 'src/components/MyMarked.vue'
   import {ref,reactive,computed,watch } from "vue"
   import {ArticlesApis} from "src/services/apis/articles"
   import type {Article,ArticleType,updateArticleStatusForm} from "src/services/apis/articles"
