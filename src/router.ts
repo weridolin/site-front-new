@@ -230,6 +230,19 @@ export const routes: RouteRecordRaw[] = [
           requireAuth: true,
         },
       },
+      {
+        path: "chatGPT",
+        name: "chatGPT",
+        component: () => import("./pages/chatGPT.vue"),
+        meta: {
+          keepAlive: true, // 需要被缓存
+          title: "chatGPT",
+          // nav,
+          // footer: true,
+          // header: false,
+          requireAuth: false,
+        },
+      },
       /************************** oauth *****************************/
       {
         path: "oauth",

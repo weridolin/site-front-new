@@ -282,16 +282,6 @@ function build_conn(){
     }
 }
 
-// function submitForm(formName) {
-//     $refs[formName].validate((valid) => {
-//         if (valid) {
-//             alert('submit!');
-//         } else {
-//         console.log('error submit!!');
-//             return false;
-//         }
-// });
-// }
 
 function resetForm(domain:Item) {
     // this.$refs[formName].resetFields();

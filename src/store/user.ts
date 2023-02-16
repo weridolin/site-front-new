@@ -20,9 +20,6 @@ export interface Tokens {
   refreshToken: string
 }
 
-// export const userInfoStorage = new Storage<userInfo>("userInfo");
-// const tokenStorage = new Storage<tokens>("token");
-
 export const useAuthStore = defineStore('auth', {
   state: () => {
     return {

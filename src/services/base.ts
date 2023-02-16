@@ -9,6 +9,7 @@ import { useAuthStore } from 'src/store/user'
 // const {updateUserInfo,updateToken} = useAuthStore()
 import { CONFIG } from 'src/config'
 import { ElMessage } from 'element-plus'
+import {router} from 'src/router'
 
 const axiosInstance = axios.create(
   {
@@ -67,6 +68,10 @@ axiosInstance.interceptors.response.use(
               // 为啥 this.client.request(config) 抛出的异常会被 catch到
               ElMessage.info('登录已经过期,请重新登录')
               useAuthStore().clearAuthInfo()
+              router.replace({
+                path:"/login",
+                query:{redirect:router.currentRoute.value.fullPath}
+              })
             }
             isRefreshToken = false
             return Promise.reject(err)
@@ -85,6 +90,11 @@ axiosInstance.interceptors.response.use(
       } else {
         useAuthStore().clearAuthInfo()
         ElMessage.error('请先登录')
+        console.log(router.currentRoute.value.fullPath)
+        router.replace({
+          path:"/login",
+          query:{redirect:router.currentRoute.value.fullPath}
+        })
         return Promise.reject(error)
       }
     }
@@ -112,6 +122,8 @@ export interface BasePaginationResponse{
   previous: null
   results: any
 }
+
+
 
 // 定义 AXIOS 拦截器
 // interface InterceptorHooks {
