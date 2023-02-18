@@ -72,7 +72,11 @@
               </li>
             </ul>
           </div>
-          <div class="message-input">
+          <div 
+            class="message-input"
+            v-loading="querying"
+            :element-loading-text="loadingText"
+          >
             <div class="query-message-input">
               <el-input
                 v-model="queryContent"
@@ -82,7 +86,7 @@
               />
             </div>
             <div class="query-submit-button">
-              <el-button type="primary" :loading="querying" @click="submit">发送</el-button>
+              <el-button type="primary"  @click="submit">发送</el-button>
             </div>
           </div>
         </div>
@@ -105,6 +109,7 @@ import {
   getAllConversation,
   queryContent,
   querying,
+  loadingText,
   submit
 } from "src/pages/chatGPT";
 

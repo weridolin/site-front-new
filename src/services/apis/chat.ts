@@ -44,21 +44,22 @@ export interface ChatGPTConversationItem {
 }
 
 export interface ChatGPTMessageItem {
-  query_content: string; //查询内容
+  query_content?: string; //查询内容
   parent_message_uuid: string; //上一条ID
-  reply_content: string; //回复内容
+  reply_content?: string; //回复内容
   uuid: string; //当前消息的UUID
-  conversation_uuid: string; //会话ID
+  conversation_id: number; //会话ID
   content_type: string; //
   role: ChatGPTWSMessageRole;
-  created: string;
-  updated: string;
-  children_message_uuid: string;
+  created?: string;
+  updated?: string;
+  children_message_uuid?: string;
 }
 
 export interface ChatGPTWSMessage {
   type: ChatGPTWSType;
   data: ChatGPTMessageItem;
+  // reply:ChatGPTMessageItem
 }
 
 interface ChatGPTPaginationResponse extends BasePaginationResponse {
@@ -71,7 +72,7 @@ interface GetConversationsResponse extends BaseResponse {
 
 interface ChatGPTMessagePaginationResponse extends BasePaginationResponse {
   results: ChatGPTMessageItem[];
-  conversation_uuid: string;
+  conversation_id: number;
 }
 
 interface GetChatGPTMessagePaginationResponse extends BaseResponse {

@@ -6,25 +6,24 @@ import {
   type ChatGPTConversationItem,
   type ChatGPTMessageItem,
   type ChatGPTWSMessage,
+  ChatGPTWSType, ChatGPTWSMessageRole,
   ChatApis,
 } from "src/services/apis/chat";
 
-import { ChatGPTWSType } from "src/services/apis/chat";
-import ChatWindowVue from "src/components/ChatWindow.vue";
 
 /***************** 变量    **********************/
-var chatGPTWS: WebSocket;
+let chatGPTWS: WebSocket;
 
 // 会话列表
 const conversationList = ref<ChatGPTConversationItem[]>([]);
 //当前需要显示的对话内容
 const chatMessageList = ref<ChatGPTMessageItem[]>([]);
 //会话列表 -- 对话内容的MAP映射
-const conversationMessageMap = ref<Map<string, ChatGPTMessageItem[]>>();
+const conversationMessageMap = ref<Map<number, ChatGPTMessageItem[]>>();
 // const chatConversationMessageMapper=todo
 
 const currentOpenIndex = ref(-4); //当前打开的会话,默认第一个
-const currentOpenConversationID = ref(""); //当前打开的会话ID
+const currentOpenConversationID = ref(-1); //当前打开的会话ID
 
 watch(currentOpenIndex, (newValue, oldValue) => {
   if (
@@ -34,10 +33,10 @@ watch(currentOpenIndex, (newValue, oldValue) => {
     chatMessageList.value =
       conversationMessageMap.value.get(currentOpenConversationID.value) || [];
   } else {
-    ChatApis.getChatMessage()
+    ChatApis.getChatMessage({conversation_id:currentOpenConversationID.value})
       .then((res) => {
         conversationMessageMap.value?.set(
-          res.data.conversation_uuid,
+          res.data.conversation_id,
           res.data.results
         );
         chatMessageList.value = res.data.results;
@@ -52,6 +51,7 @@ watch(currentOpenIndex, (newValue, oldValue) => {
 // 查询相关
 const queryContent = ref(""); //查询内容
 const querying = ref(false); //查询中？。。。
+const loadingText=ref("生成回复中...") //查询中显示文字
 
 /***********   WS method     *************/
 function build() {
@@ -69,6 +69,7 @@ function build() {
     ElMessage.error(`ws链接出错`);
     console.log("ws on error", event);
     console.log("an error raise an in ws");
+    querying.value=false
   };
   chatGPTWS.onopen = (event) => {
     ElMessage.success("链接已经建立");
@@ -84,26 +85,32 @@ function onMessage(data: string) {
     }
     case ChatGPTWSType.error: {
       console.log(">>> chatGPT raise an error", _data);
+      ElMessage.error("生成回复出错.请刷新页面重试.")
+      querying.value=false
       break;
     }
     case ChatGPTWSType.reply: {
       console.log("chatGPT get reply message", _data);
+      querying.value=false
       /**add chatMessageItem */
       let msg = _data.data;
-      if (currentOpenConversationID.value == msg.conversation_uuid) {
+      if (currentOpenConversationID.value == msg.conversation_id) {
         /**添加到当前的列表中 */
         chatMessageList.value.push(msg);
+
+        /**添加到conversation-message-map列表中 */
         if (
           conversationMessageMap.value &&
-          conversationMessageMap.value.has(msg.conversation_uuid)
+          conversationMessageMap.value.has(msg.conversation_id)
         ) {
           conversationMessageMap.value
             .get(currentOpenConversationID.value)
             ?.push(msg);
         } else {
+          /**conversation-message-map没有的话,生成对应的item */
           console.log(
             "conversationMessageMap 里面找不到对应conversation id",
-            msg.conversation_uuid
+            msg.conversation_id
           );
         }
       }
@@ -142,10 +149,18 @@ function submit() {
       parent_message_uuid: p_uuid,
       reply_content: "",
       uuid: crypto.randomUUID(),
-      conversation_uuid: currentOpenConversationID.value,
+      content_type:"text",
+      role:ChatGPTWSMessageRole.query,
+      conversation_id: currentOpenConversationID.value,
     },
   };
+  /**将发送到消息添加到当前的消息列表里面 */
+  _list?.push(data.data)
+  chatMessageList.value.push(data.data)
   chatGPTWS.send(JSON.stringify(data))
+  querying.value=true
+  queryContent.value=""
+
 }
 
 /*************    HTTP METHODS                ************/
@@ -175,6 +190,10 @@ function delConversation(all: boolean) {
         ElMessage.success("删除会话成功");
         currentOpenConversationID.value = -1;
         currentOpenIndex.value = -4;
+        chatMessageList.value = [];
+        if (conversationMessageMap.value?.has(currentOpenConversationID.value)){
+            conversationMessageMap.value.delete(currentOpenConversationID.value)
+        }
       })
       .catch((error) => {
         console.log("删除所有会话失败", error);
@@ -187,7 +206,7 @@ function openConversation(index: number, item: ChatGPTConversationItem) {
   if (!chatGPTWS) {
     build();
   }
-  currentOpenConversationID.value = item.uuid;
+  currentOpenConversationID.value = item.id;
   currentOpenIndex.value = index;
   console.log("current open conversation index:", index, " id:", item.id);
 }
@@ -202,15 +221,6 @@ function createConversation() {
     .then((res) => {
       console.log("create conversation", res, title);
       conversationList.value.push(res.data);
-      // currentOpenConversationID.value = res.data.id;
-      // currentOpenIndex.value = conversationList.value.length - 1;
-      // console.log(
-      //   "current open conversation index:",
-      //   currentOpenIndex.value,
-      //   " id:",
-      //   res.data.id,
-      //   currentOpenIndex.value + 4 + 1
-      // );
     })
     .catch((error) => {
       console.log(`创建新会话失败:${error}`);
@@ -235,6 +245,7 @@ export {
   currentOpenIndex,
   queryContent,
   querying,
+  loadingText,
   openConversation,
   delConversation,
   createConversation,
