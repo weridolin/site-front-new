@@ -1,4 +1,4 @@
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { create_conn } from "src/services/ws";
 import { useAuthStore } from "src/store/user";
 import { ref, reactive, watch } from "vue";
@@ -6,10 +6,10 @@ import {
   type ChatGPTConversationItem,
   type ChatGPTMessageItem,
   type ChatGPTWSMessage,
-  ChatGPTWSType, ChatGPTWSMessageRole,
+  ChatGPTWSType,
+  ChatGPTWSMessageRole,
   ChatApis,
 } from "src/services/apis/chat";
-
 
 /***************** 变量    **********************/
 let chatGPTWS: WebSocket;
@@ -33,7 +33,9 @@ watch(currentOpenIndex, (newValue, oldValue) => {
     chatMessageList.value =
       conversationMessageMap.value.get(currentOpenConversationID.value) || [];
   } else {
-    ChatApis.getChatMessage({conversation_id:currentOpenConversationID.value})
+    ChatApis.getChatMessage({
+      conversation_id: currentOpenConversationID.value,
+    })
       .then((res) => {
         conversationMessageMap.value?.set(
           res.data.conversation_id,
@@ -51,7 +53,7 @@ watch(currentOpenIndex, (newValue, oldValue) => {
 // 查询相关
 const queryContent = ref(""); //查询内容
 const querying = ref(false); //查询中？。。。
-const loadingText=ref("生成回复中...") //查询中显示文字
+const loadingText = ref("生成回复中..."); //查询中显示文字
 
 /***********   WS method     *************/
 function build() {
@@ -69,10 +71,14 @@ function build() {
     ElMessage.error(`ws链接出错`);
     console.log("ws on error", event);
     console.log("an error raise an in ws");
-    querying.value=false
+    querying.value = false;
   };
   chatGPTWS.onopen = (event) => {
     ElMessage.success("链接已经建立");
+  };
+  chatGPTWS.onclose = (event) => {
+    console.log("后台ws关闭");
+    ElMessage.error("后台WS服务关闭，请刷新页面!");
   };
 }
 
@@ -85,13 +91,13 @@ function onMessage(data: string) {
     }
     case ChatGPTWSType.error: {
       console.log(">>> chatGPT raise an error", _data);
-      ElMessage.error("生成回复出错.请刷新页面重试.")
-      querying.value=false
+      ElMessage.error("生成回复出错.请刷新页面重试.");
+      querying.value = false;
       break;
     }
     case ChatGPTWSType.reply: {
       console.log("chatGPT get reply message", _data);
-      querying.value=false
+      querying.value = false;
       /**add chatMessageItem */
       let msg = _data.data;
       if (currentOpenConversationID.value == msg.conversation_id) {
@@ -127,7 +133,7 @@ function submit() {
     ElMessage.error("请先打开一个会话");
     return;
   }
-  if (currentOpenConversationID.value==-1) {
+  if (currentOpenConversationID.value == -1) {
     ElMessage.error("请先新建一个会话~");
     return;
   }
@@ -153,57 +159,70 @@ function submit() {
       parent_message_uuid: p_uuid,
       reply_content: "",
       uuid: crypto.randomUUID(),
-      content_type:"text",
-      role:ChatGPTWSMessageRole.query,
+      content_type: "text",
+      role: ChatGPTWSMessageRole.query,
       conversation_id: currentOpenConversationID.value,
     },
   };
   /**将发送到消息添加到当前的消息列表里面 */
-  _list?.push(data.data)
-  chatMessageList.value.push(data.data)
-  chatGPTWS.send(JSON.stringify(data))
-  querying.value=true
-  queryContent.value=""
-
+  _list?.push(data.data);
+  chatMessageList.value.push(data.data);
+  chatGPTWS.send(JSON.stringify(data));
+  querying.value = true;
+  queryContent.value = "";
 }
 
 /*************    HTTP METHODS                ************/
 
 function delConversation(all: boolean) {
-  if (all) {
-    ChatApis.delConversation(-1)
-      .then(() => {
-        conversationList.value = [];
-        conversationMessageMap.value?.clear();
-        ElMessage.success("删除会话成功");
-        currentOpenConversationID.value = -1;
-        currentOpenIndex.value = -4;
-      })
-      .catch((error) => {
-        console.log("删除所有会话失败", error);
-        ElMessage.error(`删除所有会话失败`);
-      });
-  } else {
-    if (currentOpenIndex.value == -4) {
-      ElMessage.error("请先选择一个会话!");
-      return;
+  ElMessageBox.confirm(
+    all ? "是否删除所有会话?" : "是否删除所选会话?",
+    "提示",
+    {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
     }
-    ChatApis.delConversation(currentOpenConversationID.value)
-      .then(() => {
-        conversationList.value.splice(currentOpenIndex.value, 1);
-        ElMessage.success("删除会话成功");
-        currentOpenConversationID.value = -1;
-        currentOpenIndex.value = -4;
-        chatMessageList.value = [];
-        if (conversationMessageMap.value?.has(currentOpenConversationID.value)){
-            conversationMessageMap.value.delete(currentOpenConversationID.value)
-        }
-      })
-      .catch((error) => {
-        console.log("删除所有会话失败", error);
-        ElMessage.error(`删除所有会话失败`);
-      });
-  }
+  ).then(() => {
+    if (all) {
+      ChatApis.delConversation(-1)
+        .then(() => {
+          conversationList.value = [];
+          conversationMessageMap.value?.clear();
+          ElMessage.success("删除会话成功");
+          currentOpenConversationID.value = -1;
+          currentOpenIndex.value = -4;
+        })
+        .catch((error) => {
+          console.log("删除所有会话失败", error);
+          ElMessage.error(`删除所有会话失败`);
+        });
+    } else {
+      if (currentOpenIndex.value == -4) {
+        ElMessage.error("请先选择一个会话!");
+        return;
+      }
+      ChatApis.delConversation(currentOpenConversationID.value)
+        .then(() => {
+          conversationList.value.splice(currentOpenIndex.value, 1);
+          ElMessage.success("删除会话成功");
+          currentOpenConversationID.value = -1;
+          currentOpenIndex.value = -4;
+          chatMessageList.value = [];
+          if (
+            conversationMessageMap.value?.has(currentOpenConversationID.value)
+          ) {
+            conversationMessageMap.value.delete(
+              currentOpenConversationID.value
+            );
+          }
+        })
+        .catch((error) => {
+          console.log("删除所有会话失败", error);
+          ElMessage.error(`删除所有会话失败`);
+        });
+    }
+  });
 }
 
 function openConversation(index: number, item: ChatGPTConversationItem) {
