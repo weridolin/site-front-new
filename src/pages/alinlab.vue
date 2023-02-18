@@ -42,6 +42,8 @@ import DrugImg from 'src/assets/drug.png'
 import URLImg from 'src/assets/URL.png'
 import BackendImg from 'src/assets/backend.png'
 import ApiImg from 'src/assets/API.png'
+import Robot from 'src/assets/robot.png'
+
 // const fileUploadImg =ref("src/assets/fileUpload.png")
 
 const menus = ref([
@@ -80,6 +82,12 @@ const menus = ref([
     title: '管理后台',
     desc: '该网站对应的管理后台',
     route: '/admin',
+  },
+  {
+    img: Robot,
+    title: 'chatGPT',
+    desc: 'chatGPT测试',
+    route: '/lab/chatGPT',
   },
 ])
 
