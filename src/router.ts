@@ -240,7 +240,7 @@ export const routes: RouteRecordRaw[] = [
           // nav,
           // footer: true,
           // header: false,
-          requireAuth: false,
+          requireAuth: true,
         },
       },
       /************************** oauth *****************************/
