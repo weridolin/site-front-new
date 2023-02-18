@@ -127,6 +127,10 @@ function submit() {
     ElMessage.error("请先打开一个会话");
     return;
   }
+  if (currentOpenConversationID.value==-1) {
+    ElMessage.error("请先新建一个会话~");
+    return;
+  }
   if (!queryContent.value) {
     ElMessage.error("请先输入咨询内容");
     return;
