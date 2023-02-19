@@ -32,6 +32,9 @@ export const useAuthStore = defineStore('auth', {
     isLogin (state) {
       return computed(() => state.userInfo != null)
     },
+    isAdmin (state) {
+      return computed(() => state.userInfo != null && state.userInfo.profile.user.is_superuser)
+    },
   },
   actions: {
     /**

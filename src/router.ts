@@ -98,6 +98,7 @@ export const routes: RouteRecordRaw[] = [
           header: true,
           keepAlive: false,
           requireAuth: false,
+          requireAdmin:false,
         },
       },
       {
@@ -111,6 +112,8 @@ export const routes: RouteRecordRaw[] = [
           footer: true,
           header: true,
           requireAuth: false,
+          requireAdmin:false,
+
         },
       },
       {
@@ -125,6 +128,8 @@ export const routes: RouteRecordRaw[] = [
           header: true,
           keepAlive: true,
           requireAuth: false,
+          requireAdmin:false,
+
         },
       },
       {
@@ -138,6 +143,8 @@ export const routes: RouteRecordRaw[] = [
           footer: true,
           header: true,
           requireAuth: false,
+          requireAdmin:false,
+
         },
       },
     ],
@@ -174,6 +181,8 @@ export const routes: RouteRecordRaw[] = [
           // footer: false,
           // header: false,
           requireAuth: false,
+          requireAdmin:false,
+
         },
       },
       /*********************** file broker **************************/
@@ -187,6 +196,8 @@ export const routes: RouteRecordRaw[] = [
           // footer: false,
           // header: false,
           requireAuth: false,
+          requireAdmin:false,
+
         },
       },
       /******************* data faker***********************/
@@ -200,6 +211,8 @@ export const routes: RouteRecordRaw[] = [
           // footer: false,
           // header: false,
           requireAuth: false,
+          requireAdmin:false,
+
         },
       },
       /** *********************  third apis   *****************************/
@@ -214,6 +227,8 @@ export const routes: RouteRecordRaw[] = [
           // footer: true,
           // header: false,
           requireAuth: false,
+          requireAdmin:false,
+
         },
       },
       /** *********************  apisInfoCollections   *****************************/
@@ -228,6 +243,8 @@ export const routes: RouteRecordRaw[] = [
           // footer: true,
           // header: false,
           requireAuth: true,
+          requireAdmin:false,
+
         },
       },
       {
@@ -241,6 +258,8 @@ export const routes: RouteRecordRaw[] = [
           // footer: true,
           // header: false,
           requireAuth: true,
+          requireAdmin:false,
+
         },
       },
       /************************** oauth *****************************/
@@ -255,6 +274,8 @@ export const routes: RouteRecordRaw[] = [
           footer: false,
           header: false,
           requireAuth: false,
+          requireAdmin:false,
+
         },
       },
       /****************************drug ************************ */
@@ -269,6 +290,8 @@ export const routes: RouteRecordRaw[] = [
           footer: false,
           header: false,
           requireAuth: false,
+          requireAdmin:false,
+
         },
       },
     ],
@@ -284,6 +307,8 @@ export const routes: RouteRecordRaw[] = [
       footer: false,
       header: true,
       requireAuth: false,
+      requireAdmin:false,
+
     },
   },
 
@@ -299,6 +324,7 @@ export const routes: RouteRecordRaw[] = [
       footer: false,
       header: false,
       requireAuth: true,
+      requireAdmin:true,
     },
   },
   /**************************** covid ****************/
@@ -324,6 +350,7 @@ export const routes: RouteRecordRaw[] = [
           nav,
           keepAlive: false,
           requireAuth: false,
+          requireAdmin:true,
         },
       },
     ]
@@ -420,6 +447,11 @@ router.beforeEach(async (to, from, next) => {
       console.log(`${to.path}需要登录,当前未登录`, useAuthStore().userInfo);
       next("/login");
       return;
+    }
+    if (to.meta.requireAdmin){
+      ElMessage.error("当前账户没有权限!")
+      next(from.path)
+      return
     }
   }
   console.log(getRouteArrayLength(routes), ">>>>", router.getRoutes().length);

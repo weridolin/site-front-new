@@ -71,6 +71,14 @@
                 </div>
               </li>
             </ul>
+            <!-- <el-pagination
+              v-show="chatMessageList.length>10"
+              small
+              background
+              layout="prev, pager, next"
+              :total="50"
+              class="chat-pagination"
+            /> -->
           </div>
           <div 
             class="message-input"

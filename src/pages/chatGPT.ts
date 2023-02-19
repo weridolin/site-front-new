@@ -50,10 +50,18 @@ watch(currentOpenIndex, (newValue, oldValue) => {
   }
 });
 
+
 // 查询相关
 const queryContent = ref(""); //查询内容
 const querying = ref(false); //查询中？。。。
 const loadingText = ref("生成回复中..."); //查询中显示文字
+const chatMessagePagination =  ref({
+  "count":1,
+  "previous":"",
+  "next":"",
+  "page_size":10,
+  "page":1
+})
 
 /***********   WS method     *************/
 function build() {
