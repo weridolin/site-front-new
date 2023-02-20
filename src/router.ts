@@ -258,7 +258,7 @@ export const routes: RouteRecordRaw[] = [
           // footer: true,
           // header: false,
           requireAuth: true,
-          requireAdmin:false,
+          requireAdmin:true,
 
         },
       },
