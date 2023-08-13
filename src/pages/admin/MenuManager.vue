@@ -168,7 +168,7 @@
     <!-- 表格分页 -->
     <div class="menu-pagination-block">
       <div class="pagination-container">
-        <el-config-provider :locale="locale">
+        <!-- <el-config-provider :locale="locale"> -->
           <el-pagination
             v-model:current-page="listQuery.page"
             v-model:page-size="listQuery.page_size"
@@ -180,7 +180,7 @@
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
           />
-        </el-config-provider>
+        <!-- </el-config-provider> -->
       </div>
     </div>
 
@@ -293,7 +293,7 @@ import { AuthApis } from 'src/services/apis/auth'
 import type { Menu } from 'src/services/apis/auth'
 import { ElMessage } from 'element-plus'
 import { Edit, Search } from '@element-plus/icons-vue'
-import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文
+// import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文
 
 // 是否正在加载菜单列表
 const listLoading = ref<boolean>(false)

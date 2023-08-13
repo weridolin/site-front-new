@@ -2,7 +2,7 @@ import {
     ApiBase,
     } from "src/services/base"
 
-
+import { SiteApis } from "src/services/api"
 import type {RequestParams,BaseResponse} from "src/services/base"
 
 
@@ -22,8 +22,9 @@ export interface DrugWordResponse extends BaseResponse {
 export class Api extends ApiBase {
 
     public getDrugWord(last_id:number,params: RequestParams = {}){
-        return this.get<DrugWordResponse>({
-            url:`api/v1/drug/words/random/?${last_id}`,
+        return this.request<DrugWordResponse>({
+            method:SiteApis.drug.getRandomWord.method,
+            url:`${SiteApis.drug.getRandomWord.url}?${last_id}`,
             ...params
         })
     }

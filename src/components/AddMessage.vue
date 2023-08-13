@@ -23,7 +23,7 @@
 
 
 <script setup lang="ts">
-  import { vueBaberrage } from "vue-baberrage";
+  // import { vueBaberrage } from "vue-baberrage";
   import NewComment from "src/components/NewComment.vue";
   import {
       barrageIsShow,

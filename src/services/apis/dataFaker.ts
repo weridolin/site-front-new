@@ -11,6 +11,7 @@ import type {
     RequestParams
 } from "src/services/base"
 
+import {SiteApis} from "src/services/api"
 
 
 export interface initFileInfo {
@@ -52,22 +53,27 @@ export interface initFormData {
 export class Api extends ApiBase {
 
     public getFileInfoByDownCode(downCode:string,params: RequestParams = {}){
-        return this.get<fileDownInfoResponse>({
-            url:`api/v1/dataFaker/search/${downCode}`,
+        return this.request<fileDownInfoResponse>({
+            method:SiteApis.dataFaker.searchDataFaker.method,
+            url:`${SiteApis.dataFaker.searchDataFaker.url}/${downCode}`,
             ...params
         })
     }
 
     public initDataInfo(dataForm:initFormData,params: RequestParams = {}){
-        return this.post<initFileInfoResponse>({
-            url:`api/v1/dataFaker`,
+        return this.request<initFileInfoResponse>({
+            method:SiteApis.dataFaker.dataPreUpload.method,
+            url:SiteApis.dataFaker.searchDataFaker.url,
             data:dataForm,
             ...params
         })
     }
 
-    public downFile(){
-        
+    public downFile(downCode:string,params: RequestParams = {}){
+        return this.request<initFileInfoResponse>({
+            method:SiteApis.dataFaker.downloadDataFaker.method,
+            url:SiteApis.dataFaker.downloadDataFaker.url,
+        })
     }
 }
 

@@ -8,23 +8,6 @@
 <div     
     class="zone2"
   >
-
-    <!-- <el-upload
-      class="upload"
-      :multiple ="false"
-      :auto-upload="false"
-      :drag="true"
-      :on-change="fileCheck"
-      enctype="multipart/form-data"
-      :file-list="fileState.fileList"
-      :action="fileState.uploadUrl"
-      :show-file-list ="false"
-      >
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将文件拖到此处，或<em>点击选择文件</em></div>
-      <div class="el-upload__text" id="selectFile" >请先选择文件</div>
-      <div class="el-upload__tip" >由于服务器网速的原因,不建议上传太大文件🤣</div>
-    </el-upload> -->
     <el-upload
       class="upload"
       drag="true"
@@ -208,7 +191,7 @@ body {
     copyDownCode,
     closeDrawer,
     getFileInfoByDownCode
-  } from 'src/pages/fileBroker'
+  } from 'src/pages/alinlab/fileBroker'
 
   import {onMounted,onUnmounted} from  "vue"
 

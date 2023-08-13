@@ -10,8 +10,10 @@ import { useAuthStore } from 'src/store/user'
 import { CONFIG } from 'src/config'
 import { ElMessage } from 'element-plus'
 import {router} from 'src/router'
+import {SiteApis} from "src/services/api"
 
-const axiosInstance = axios.create(
+const axiosInstance = axios
+.create(
   {
     baseURL: `${CONFIG.API_HOST}`,
     timeout: 5 * 60 * 1000,
@@ -20,7 +22,12 @@ const axiosInstance = axios.create(
 
 // 刷新TOKEN返回类型
 export interface refreshTokenResponse {
-  access: string
+  code: string,
+  msg: string,
+  data: {
+      access_token: string,
+      refresh_token: string,
+  }
 }
 
 // 是否正在刷新token
@@ -36,7 +43,7 @@ axiosInstance.interceptors.response.use(
   error => {
     // 出现异常时的拦截
     console.log('默认的异常拦截器', isRefreshToken)
-    if (error.response.status == 401 && !error.config.url.includes('auth/token/refresh/')) {
+    if (error.response.status == 401 && !error.config.url.includes(SiteApis.usercenter.refreshToken.url)) {
       // 只有在非刷新Token的接口时才需要重新刷新TOKEN
       // 如果调用了刷新TOKEN接口后出现401,说明refresh token,此时不应该再去刷新Token
       console.log(useAuthStore().isLogin.value, useAuthStore().tokens?.refreshToken)
@@ -46,15 +53,16 @@ axiosInstance.interceptors.response.use(
           console.log('>>> 刷新token....')
           return axiosInstance.request<refreshTokenResponse, any>({
             method: 'post',
-            url: 'api/v1/auth/token/refresh/',
-            data: {
-              refresh: useAuthStore().tokens?.refreshToken,
-            },
+            url: SiteApis.usercenter.refreshToken.url,
+            headers: {
+              "Authorization": `Bearer ${useAuthStore().tokens?.refreshToken}`,
+            }
+            ,
           }).then((res) => {
-            useAuthStore().updateToken(res.data.access, useAuthStore().tokens?.refreshToken as string)
+            useAuthStore().updateToken(res.data.access_token, useAuthStore().tokens?.refreshToken as string)
             console.log('刷新token成功', res)
             // 已经刷新了token，将所有队列中的请求进行重试
-            requests.forEach(cb => cb(res.data.access))
+            requests.forEach(cb => cb(res.data.access_token))
             requests = []
             // 重新发送请求
             const config = error.config
@@ -62,7 +70,7 @@ axiosInstance.interceptors.response.use(
             isRefreshToken = false
             return axiosInstance(config)
           }, err => {
-            if (err.config.url.includes('auth/token/refresh/')) {
+            if (err.config.url.includes(SiteApis.usercenter.refreshToken.url)) {
               console.log('>>>刷新token失效', err)
               // 调用刷新token接口时出现401 说明refresh token过期,否则为 this.client.request(config) 抛出的异常,
               // 为啥 this.client.request(config) 抛出的异常会被 catch到

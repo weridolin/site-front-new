@@ -90,7 +90,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "index",
         name: "home",
-        component: () => import("./pages/Index.vue"),
+        component: () => import("./pages/home/Index.vue"),
         meta: {
           title: `首页-${name}`,
           nav,
@@ -104,7 +104,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "link",
         name: "Link",
-        component: () => import("./pages/Link.vue"),
+        component: () => import("./pages/home/Link.vue"),
         meta: {
           keepAlive: false, // 需要被缓存
           title: `友情链接-${name}`,
@@ -119,7 +119,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "message",
         name: "Message",
-        component: () => import("./pages/Message.vue"),
+        component: () => import("./pages/home/Message.vue"),
         meta: {
           // keepAlive: true, // 需要被缓存
           title: `留言区-${name}`,
@@ -135,7 +135,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "route",
         name: "GrowthRoute",
-        component: () => import("./pages/GrowthRoute.vue"),
+        component: () => import("./pages/home/GrowthRoute.vue"),
         meta: {
           keepAlive: true, // 需要被缓存
           title: `更新日志`,
@@ -174,7 +174,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "index",
         name: "lab",
-        component: () => import("./pages/alinlab.vue"),
+        component: () => import("./pages/home/alinlab.vue"),
         meta: {
           title: "疯狂实验室",
           // nav,
@@ -189,7 +189,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "fileBroker",
         name: "fileBroker",
-        component: () => import("./pages/fileBroker.vue"),
+        component: () => import("./pages/alinlab/fileBroker.vue"),
         meta: {
           title: "文件中转站",
           // nav,
@@ -204,7 +204,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "dataFaker",
         name: "dataFaker",
-        component: () => import("./pages/dataFaker.vue"),
+        component: () => import("./pages/alinlab/dataFaker.vue"),
         meta: {
           title: "数据生成器",
           // nav,
@@ -219,7 +219,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "shortUrl",
         name: "shortUrl",
-        component: () => import("./pages/ShortUrlChange.vue"),
+        component: () => import("./pages/alinlab/ShortUrlChange.vue"),
         meta: {
           keepAlive: true, // 需要被缓存
           title: "短链接生成",
@@ -235,7 +235,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "apiInfoCollector",
         name: "apiInfoCollector",
-        component: () => import("./pages/ApisCollections.vue"),
+        component: () => import("./pages/alinlab/ApisCollections.vue"),
         meta: {
           keepAlive: true, // 需要被缓存
           title: "Apis合集",
@@ -250,7 +250,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "chatGPT",
         name: "chatGPT",
-        component: () => import("./pages/chatGPT.vue"),
+        component: () => import("./pages/alinlab/chatGPT.vue"),
         meta: {
           keepAlive: true, // 需要被缓存
           title: "chatGPT",
@@ -282,7 +282,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: "drug",
         name: "Drug",
-        component: () => import("./pages/Drug.vue"),
+        component: () => import("./pages/home/Drug.vue"),
         meta: {
           keepAlive: true, // 需要被缓存
           title: "毒",

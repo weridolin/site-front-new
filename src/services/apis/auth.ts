@@ -5,6 +5,7 @@ import type {
   BasePaginationResponse,
 } from "src/services/base";
 import { pwdEncrypt } from "src/utils/encryption";
+import { SiteApis } from "src/services/api";
 
 export interface Profile {
   id: number;
@@ -15,7 +16,7 @@ export interface Profile {
   QQ: string;
   telephone: string;
   gender: string;
-  avator: string;
+  avatar: string;
   first_login: true;
   user: User;
   // "roles": [] # TODO
@@ -30,6 +31,7 @@ export interface User {
   last_name: string;
   email: string;
   created: string;
+  avatar: string;
 }
 
 /** ***   permission  ******/
@@ -130,16 +132,19 @@ export class Apis extends ApiBase {
       email: loginForm.email,
       telephone: loginForm.telephone,
     };
-    return this.post<loginResponse>({
-      url: "api/v1/auth/login/",
+    return this.request<loginResponse>({
+      method: SiteApis.usercenter.login.method,
+      url: SiteApis.usercenter.login.url,
+      requiredLogin: false,
       data: temForm,
       ...params,
     });
   }
 
   public logout(params: RequestParams = {}) {
-    return this.post<loginResponse>({
-      url: "api/v1/auth/logout/",
+    return this.request<loginResponse>({
+      method: SiteApis.usercenter.logout.method,
+      url: SiteApis.usercenter.logout.url,
       requiredLogin: true,
       ...params,
     });
@@ -164,8 +169,10 @@ export class Apis extends ApiBase {
       email: registerForm.email,
       telephone: registerForm.telephone,
     };
-    return this.post<registerResponse>({
-      url: "/api/v1/auth/register/",
+    return this.request<registerResponse>({
+      method: SiteApis.usercenter.register.method,
+      url: SiteApis.usercenter.register.url,
+      requiredLogin: false,
       data: temForm,
       ...params,
     });

@@ -10,16 +10,18 @@ const friends=ref<FriendsLink[]>([])
 
 
 async function getFriends(){
-    let res = await HomeApi.friendLink.getFriendLinkList(
+    await HomeApi.friendLink.getFriendLinkList(
         {
             timeout:2*60*1000
         }
-    )
-    console.log(">>> 获取友链列表",res)
-    friends.value = res.data
+    ).then((res)=>{
+        friends.value = res.data
+        console.log(">>> 获取友链列表",res)
+    }).catch((err)=>{
+        console.log(">>> 获取友链列表失败",err)
+    })    
 
 }
-
 
 export {
     getFriends,

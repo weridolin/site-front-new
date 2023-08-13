@@ -37,12 +37,11 @@
       loading,
       getMessList,
       next,
-  } from "src/pages/Message"
+  } from "src/pages/home/Message"
 
 
   const initMessList = async () => {
-    await getMessList()
-    console.log("获取评论列表",list.value)
+    getMessList()
     return list.value
   }
 

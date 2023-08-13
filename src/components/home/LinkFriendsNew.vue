@@ -1,13 +1,3 @@
-<!--
- * @Description: 
- * @email: 359066432@qq.com
- * @Author: lhj
- * @software: vscode
- * @Date: 2021-10-02 16:28:06
- * @platform: windows 10
- * @LastEditors: lhj
- * @LastEditTime: 2021-10-05 19:15:19
--->
 <template>
   <div class="container link-frie">
     <h1 class="mess-title" id="next">
@@ -19,27 +9,15 @@
         :span="6"
         class="link-cat"
         v-for="(item,index) in friends"
-        :key="item.id"
+        :key="index"
         :offset="index > 0 ?1 : 0">
         <el-card :body-style="{ padding: '10px' }" shadow="hover">
-          <!-- <img 
-            :src="item.cover?item.cover:
-            'https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light'"
-            class="image">
-          <div class="card-content" style="">
-            <i class="summmary">{{item.author}}</i>
-            <div class="bottom clearfix">
-              <i class="author">{{item.author}}</i>
-              <el-button class="button" type="text" icon="el-icon-share">前往主页</el-button>
-            </div>
-          </div> -->
               <div class="card-header">
                 <img             
                 :src="item.cover?item.cover:'https://c0.wallpaperflare.com/preview/483/210/436/car-green-4x4-jeep.jpg'"
                 class="image" >
               </div>
               <div class="card-body">
-                <!-- <span class="tag tag-pink">前往主页</span> -->
                 <h6 class="title">
                   {{item.title}}
                 </h6>
@@ -47,14 +25,13 @@
                   {{item.intro}}
                 </p>
                 <div class="user">
-                  <!-- <img src="https://studyinbaltics.ee/wp-content/uploads/2020/03/3799Ffxy.jpg" alt="user" /> -->
                   <el-avatar 
-                    :src="item.avatar?item.avatar:'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"></el-avatar>
+                    :src="item.author?  
+                      (item.author?item.author.avatar:'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png')
+                      :'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"></el-avatar>
                   <div class="user-info">
-
                     <h5>{{item.author}}</h5>
                     <small>更新于:{{item.updated}}</small>
-                    <!-- <el-button class="button" type="text" icon="el-icon-share">前往</el-button> -->
                   </div>
                   <el-button class="button" type="text" icon="el-icon-share" @click="openNewWindow(item.site)">前往</el-button>
                 </div>
@@ -64,18 +41,21 @@
     </el-row>
   </div>
 </template>
-<script>
-export default {
-  name: "LinkFriendsNew",
-  props: {
-    friends: Array,
+<script  setup lang="ts">
+import type {FriendsLink} from 'src/services/apis/home'
+import {defineProps} from  'vue'
+
+const friends = defineProps({
+  friends: {
+    type: Array as () => FriendsLink[]|undefined,
+    default: undefined,
   },
-  methods: {
-      openNewWindow(url){
+})
+
+function openNewWindow(url:string){
           window.open(url,"_blank")
       }
-  },
-};
+
 </script>
 <style lang="stylus" scoped>
   

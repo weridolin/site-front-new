@@ -22,7 +22,7 @@
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { compile } from 'path-to-regexp'
-import { pa } from "element-plus/es/locale";
+// import { pa } from "element-plus/es/locale";
 
 const breadcrumbs = ref();
 

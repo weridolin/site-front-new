@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import {HomeApi} from 'src/services/apis/home'
 import type {
-    SiteCommentResponsePagination,
+    
     SiteCommentResponse
 } from 'src/services/apis/home'
 
@@ -11,21 +11,23 @@ const last_page=ref()
 const loading= ref()
 const count=ref()
 
-
-
-async function getMessList(){
-    let res:SiteCommentResponsePagination = await HomeApi.siteComment.getCommentList(
+function getMessList(){
+    HomeApi.siteComment.getCommentList(
         {
             params:{
                 "size":12,
                 "page":current_page.value
             }
         }
-    )
-    list.value = res.results
-    console.log(">>> get comments list >>>> ",list.value)
-    last_page.value = res.last_page
-    count.value = res.count
+    ).then(res=>{
+			list.value = res.results
+			console.log("get comments list ",list.value)
+			last_page.value = res.last_page
+			count.value = res.count
+    }).catch(err=>{
+				console.log("get comments list err",err)
+		})
+
 }
 
 async function next(){
@@ -33,19 +35,23 @@ async function next(){
     if (current_page.value < last_page.value ){
         current_page.value+=1
     }
-
-    let res:SiteCommentResponsePagination = await HomeApi.siteComment.getCommentList(
+		
+		await HomeApi.siteComment.getCommentList(
         {
             params:{
                 "size":12,
                 "page":current_page.value
             }
         }
-    )
-    list.value = res.results
-    console.log(">>> get comments list >>>> ",list.value)
-    last_page.value = res.last_page
-    count.value = res.count
+    ).then(res=>{
+			list.value = res.results
+			console.log(">>> get comments list ",list.value)
+			last_page.value = res.last_page
+			count.value = res.count
+		}).catch(err=>{
+				console.log("get comments list error ",err)
+		})
+
     return 
 }
 

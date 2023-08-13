@@ -1,13 +1,3 @@
-<!--
- * @Description: 
- * @email: 359066432@qq.com
- * @Author: lhj
- * @software: vscode
- * @Date: 2021-10-02 16:28:06
- * @platform: windows 10
- * @LastEditors: lhj
- * @LastEditTime: 2021-10-05 16:15:02
--->
 <template>
   <div class="route">
     <el-row>

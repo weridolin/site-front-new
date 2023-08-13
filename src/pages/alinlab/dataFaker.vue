@@ -199,7 +199,7 @@ import {
   initInfo,
   startGenerateFakeData,
   downFile,
-} from 'src/pages/dataFaker'
+} from 'src/pages/alinlab/dataFaker'
 if (window.screen.availWidth < 768) {
   // 移动端
   ElMessage({

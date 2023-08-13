@@ -6,6 +6,9 @@ import {
     ApiBase
     } from "src/services/base"
 
+import {
+    SiteApis
+} from "src/services/api"
 import type {RequestParams} from "src/services/base"
 
 //  跑马灯背景图
@@ -31,7 +34,6 @@ export type SiteCommentSubmitForm ={
 
 export type SiteCommentResponse  ={
     id:number,
-    user:User, // TODO
     body:string,
     likes:number,
     qq:string,
@@ -41,7 +43,12 @@ export type SiteCommentResponse  ={
     province:string,
     country:string,
     city:string,
-    // replay_to:User // TODO
+    updated:string,
+    name:string, //用户名
+    user_id:number,//用户id
+    replay_to:number,//回复给哪条评论
+    avatar:string, //头像链接
+    gender:number //0女性 1男性
 }
 
 
@@ -74,8 +81,9 @@ export type FriendsLink ={
     intro:string,
     url:string,
     cover:string,
-    author:User|string
+    author:User
     is_show:boolean
+    updated:string
 }
 
 export type FriendsLinkResponse ={
@@ -92,10 +100,24 @@ export interface updateLog {
     finish_time:string
 }
 
+
 // 对话框消息
 export interface ChatMessage {
     type:"sender"|"receiver", //sender在右边(客户端发送) receiver在左边（服务端响应）
     content:string
+}
+
+// 背景图片
+
+export interface BackGroundImage {
+    id:number,
+    url:string,
+    is_used:boolean
+    type:string
+}
+
+export type BackGroundImageResponse ={
+    data:BackGroundImage[]
 }
 
 
@@ -109,8 +131,10 @@ export class Api extends ApiBase {
         */
         getBackGroundPic:(params: RequestParams = {}) =>
             {   
-                this.get<BackGroundInfoResponse>({
-                        url:"/api/v1/home/bglist",
+                this.request<BackGroundInfoResponse>({
+                        url:SiteApis.home.getBackGroundImages.url,
+                        method:SiteApis.home.getBackGroundImages.method,
+                        requiredLogin:SiteApis.home.getBackGroundImages.authenticated,
                         ...params
                     })
         }
@@ -121,9 +145,11 @@ export class Api extends ApiBase {
          * 获取背景音乐
         */
         getBackGroundMusic:(params: RequestParams = {}) =>
-            this.get<BackGroundMusicResponse>(
-                {
-                    url:"/api/v1/home/bglist",
+            this.request<BackGroundMusicResponse>(
+                {   
+                    method:SiteApis.home.getBackGroundMusic.method,
+                    requiredLogin:SiteApis.home.getBackGroundMusic.authenticated,
+                    url:SiteApis.home.getBackGroundMusic.url,
                     ...params
                 }
             ),
@@ -135,9 +161,11 @@ export class Api extends ApiBase {
          *  获取评论列表
          */
         getCommentList:(params: RequestParams = {}) =>
-            this.get<SiteCommentResponsePagination>(
-                {
-                    url:"/api/v1/home/comments",
+            this.request<SiteCommentResponsePagination>(
+                {   
+                    method:SiteApis.home.getSiteComments.method,
+                    url:SiteApis.home.getSiteComments.url,
+                    requiredLogin:SiteApis.home.getSiteComments.authenticated,
                     ...params,
                 }
             ),
@@ -145,11 +173,12 @@ export class Api extends ApiBase {
          *  提交评论
          */
         submit:(data:SiteCommentSubmitForm,params:RequestParams={}) => 
-            this.post(
-                {
-                    url:"/api/v1/home/comments",
+            this.request(
+                {   
+                    method:SiteApis.home.submitSiteComment.method,
+                    url:SiteApis.home.submitSiteComment.url,
                     data:data,
-                    requiredLogin:true,
+                    requiredLogin:SiteApis.home.submitSiteComment.authenticated,
                     ...params
                 }
             ),
@@ -161,9 +190,11 @@ export class Api extends ApiBase {
          *  获取友链列表
          */
         getFriendLinkList:(params: RequestParams = {}) =>
-            this.get<FriendsLinkResponse>(
-                {
-                    url:"/api/v1/home/friendslinks",
+            this.request<FriendsLinkResponse>(
+                {   
+                    method:SiteApis.home.getFriendLinks.method,
+                    url:SiteApis.home.getFriendLinks.url,
+                    requiredLogin:SiteApis.home.getFriendLinks.authenticated,
                     ...params
                 }
             ),
@@ -174,13 +205,30 @@ export class Api extends ApiBase {
          *  获取更新日志列表
          */
         getUpdateLogList:(params: RequestParams = {}) =>
-            this.get<Array<updateLog>>(
+            this.request<Array<updateLog>>(
                 {
-                    url:"/api/v1/home/updatelog",
+                    url:SiteApis.home.getSiteUpdateLog.url,
+                    method:SiteApis.home.getSiteUpdateLog.method,
+                    requiredLogin:SiteApis.home.getSiteUpdateLog.authenticated,
                     ...params
                 }
             ),
-    }
+    };
+
+    background = {
+        /**
+         * 获取背景图片列表
+         */
+        getBackgroundImageList:(params: RequestParams = {}) =>
+            this.request<BackGroundImageResponse>(
+                {   
+                    url:SiteApis.home.getBackGroundImages.url,
+                    method:SiteApis.home.getBackGroundImages.method,
+                    requiredLogin:SiteApis.home.getBackGroundImages.authenticated,
+                    ...params
+                }
+            ),
+            }   
 }
 
 const HomeApi = new Api({})

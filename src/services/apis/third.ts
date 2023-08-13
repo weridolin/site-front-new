@@ -11,7 +11,7 @@ import type {
     RequestParams
 } from "src/services/base"
 
-
+import {SiteApis} from "src/services/api"
 
 export interface CreateShortUrlResponse extends BaseResponse {
     data:{
@@ -94,8 +94,10 @@ export class Api extends ApiBase {
      */
     public createShortUrl(data:CreateShortUrlForm,params: RequestParams = {}){
         console.log(">>> create short url ",data)
-        return this.post<CreateShortUrlResponse>({
-            url:`api/v1/third/shortUrl/create/`,
+        return this.request<CreateShortUrlResponse>({
+            method:SiteApis.shortUrl.getShortUrl.method,
+            url:SiteApis.shortUrl.getShortUrl.url,
+            requiredLogin:SiteApis.shortUrl.getShortUrl.authenticated,
             data:data,
             ...params
     })}
@@ -108,8 +110,10 @@ export class Api extends ApiBase {
      */
     public getApiInfoList(params: RequestParams = {}){
         console.log(">>> get all api info list")
-        return this.get<GetApiInfoResponse>({
-            url:`api/v1/third/apiCollector/apiInfo`,
+        return this.request<GetApiInfoResponse>({
+            method:SiteApis.apiCollector.getApiInfo.method,
+            url:SiteApis.apiCollector.getApiInfo.url,
+            requiredLogin:SiteApis.apiCollector.getApiInfo.authenticated,
             ...params
     })}
 
@@ -118,8 +122,10 @@ export class Api extends ApiBase {
      */
     public apiSearch(condition:conditionSelectForm,params:RequestParams={}){
         console.log(">>> search apis ",condition)
-        return this.post<GetApiInfoResponse>({
-            url:`api/v1/third/apiCollector/apiInfo/search`,
+        return this.request<GetApiInfoResponse>({
+            method:SiteApis.apiCollector.searchApiInfo.method,
+            url:SiteApis.apiCollector.searchApiInfo.url,
+            requiredLogin:SiteApis.apiCollector.searchApiInfo.authenticated,
             data:condition,
             ...params
         })
@@ -129,13 +135,14 @@ export class Api extends ApiBase {
      */
     public startSpiderScript(spider_name:string,params:RequestParams={}){
         console.log(">>> start spider script")
-        return this.post<BaseResponse>({
-            url:`api/v1/third/apiCollector/task`,
+        return this.request<BaseResponse>({
+            method:SiteApis.apiCollector.startSpiderTask.method,
+            url:SiteApis.apiCollector.startSpiderTask.url,
             data:{
                 "spider_name":spider_name
             },
             ...params,
-            requiredLogin:true
+            requiredLogin:SiteApis.apiCollector.startSpiderTask.authenticated
         })
     }
     /**
@@ -143,8 +150,9 @@ export class Api extends ApiBase {
      */
     public getSpiderResource(params:RequestParams={}){
         console.log(">>> get spider resource")
-        return this.get<GetApiResourceResponse>({
-            url:`api/v1/third/apiCollector/apiResource`,
+        return this.request<GetApiResourceResponse>({
+            method:SiteApis.apiCollector.getSpiderTask.method,
+            url:SiteApis.apiCollector.getSpiderTask.url,
             requiredLogin:true,
             ...params
         })

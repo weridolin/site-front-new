@@ -28,7 +28,7 @@
     "axios": "^0.27.2",
     "clipboard": "^2.0.11",
     "echarts": "^5.4.0",
-    "element-plus": "^2.2.6",
+    "element-plus": "^2.3.8",
     "insane": "^2.6.2",
     "marked": "^4.0.17",
     "msgdown": "^1.0.2",

@@ -6,6 +6,7 @@ import analyzer from 'rollup-plugin-analyzer'
 // https://vitejs.dev/config/
 export default defineConfig({
   // base:"/",
+  root:"./",
   resolve: {
     alias: {
       src: fileURLToPath(new URL('./src', import.meta.url)),
@@ -28,10 +29,10 @@ export default defineConfig({
       proxy: {
         //配置自定义代理规则
         // 字符串简写写法
-        '^/api': {
-          target: 'http://127.0.0.1:8000',
+        '/home': {
+          target: 'http://127.0.0.1:80/',
           changeOrigin: true, //是否跨域
-          rewrite: path => path.replace(/^\/api/, 'api')
+          rewrite: path => path
         }
       }
       // hmr: {

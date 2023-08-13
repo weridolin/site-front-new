@@ -2,17 +2,14 @@ import { ref,computed, reactive } from 'vue';
 import type  {
     Profile
 } from 'src/services/apis/auth'
+import type {SiteCommentResponse} from "src/services/apis/home"
 
-export type Card = {
-    pattern: boolean, //留言模式
-    left: boolean, //left模式
-}
+// export type Card = {
+//     pattern: boolean, //留言模式
+//     left: boolean, //left模式
+// }
 
 
-const card= ref<Card>({
-    pattern: false, //留言模式
-    left: true, //left模式
-})
 
 const siteCommentList =ref({})
 
@@ -302,7 +299,6 @@ export {
     userInfo,
     getDateDiff,
     setColor,
-    card,
     siteCommentList,
     formatReply,
     deleteComment

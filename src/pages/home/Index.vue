@@ -2,7 +2,7 @@
   <div class="screenAll">
 
       <el-carousel :interval="3000" height="100vh">
-        <el-carousel-item v-for="item in list" :key="item.id">
+        <el-carousel-item v-for="item in imageList" :key="item.id">
           <div class="index">
             <div
               class="index-bg"
@@ -61,40 +61,10 @@ import scrollReveal from "scrollreveal";
 import  XRouteLink from "src/components/XRouteLink.vue"
 import {onMounted,ref} from 'vue';
 import {
-  hello
-  } from "src/pages/Index"
+  hello,getBackGroundImages,imageList
+  } from "src/pages/home/Index"
 
-import bg1 from 'src/assets/bg1.jpg'
-import bg2 from 'src/assets/bg2.jpg'
-import bg3 from 'src/assets/bg3.jpg'
 
-const list = [
-    {
-      id: "1",
-      title: "werido",
-      info:
-        "H,e,l,l,o,!&nbsp;&nbsp;,W,e,l,c,o,m,e&nbsp;&nbsp;,t,o&nbsp;&nbsp;,b,l,o,g.",
-      link: "www.baidu.com",
-      img_url:bg1,
-    },
-    {
-      id: "2",
-      title: "werido",
-      info:
-        "H,e,l,l,o,!&nbsp;&nbsp;,W,e,l,c,o,m,e&nbsp;&nbsp;,t,o&nbsp;&nbsp;,b,l,o,g.",
-      link: "www.baidu.com",
-      img_url:bg2,
-    },
-    {
-      id: "3",
-      title: "werido",
-      info:
-        "H,e,l,l,o,!&nbsp;&nbsp;,W,e,l,c,o,m,e&nbsp;&nbsp;,t,o&nbsp;&nbsp;,b,l,o,g.",
-      link: "www.baidu.com",
-      img_url:bg3,
-    },
-];
-const imgList:any = [];
 const scroll = scrollReveal()
 
 //运行时间
@@ -102,14 +72,6 @@ const daysOld = ref();
 const hrsOld  = ref();
 const minsOld = ref();
 const seconds =ref();
-
-// function getImagePath(path:str){
-//   return url(path)
-// }
-
-// function getCarouselBg(url:string){
-//   new URL(url, import.meta.url).href;
-// }
 
 onMounted(() => {
   setTimeout(() => {
@@ -223,7 +185,14 @@ onMounted(() => {
       ? "0" + Math.floor((minsOld.value - e_minsold) * -60)
       : Math.floor((minsOld.value - e_minsold) * -60);
   }, 1000);
-},)
+
+  // getBackGroundImages()
+
+  console.log("bg list -> ",imageList,import.meta.url)
+},
+
+
+)
       
 
 </script>
@@ -303,7 +272,7 @@ onMounted(() => {
     z-index: -1;
     display: block;
     visibility: visible;
-    -webkit-mask-image: url('../assets/circle.png');
+    -webkit-mask-image: url('src/assets/circle.png');
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center center;
     -webkit-mask-size: 300%;

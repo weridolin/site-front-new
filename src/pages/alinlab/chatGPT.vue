@@ -119,7 +119,7 @@ import {
   querying,
   loadingText,
   submit
-} from "src/pages/chatGPT";
+} from "src/pages/alinlab/chatGPT";
 
 const isCollapse = ref(false);
 const chatWin = ref(null);

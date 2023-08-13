@@ -6,8 +6,8 @@ import {
     ApiBase,
     } from "src/services/base"
 
-
-
+import {SiteApis} from "src/services/api"
+ 
 import type {RequestParams,BaseResponse} from "src/services/base"
 
 
@@ -69,23 +69,26 @@ export interface getDownCodeResponse extends BaseResponse {
 export class Api extends ApiBase {
 
     public getFileInfoByDownCode(downCode:string,params: RequestParams = {}){
-        return this.get<fileSearchInfoResponse>({
-            url:`api/v1/fileBroker/search/${downCode}`,
+        return this.request<fileSearchInfoResponse>({
+            method:SiteApis.fileBroker.searchFileUpload.method,
+            url:`${SiteApis.fileBroker.searchFileUpload.url}/${downCode}`,
             ...params
         })
     }
 
     public fileUploadSetup(dataForm:FileUploadSetupForm,params: RequestParams = {}){
-        return this.post<FileUploadInfoResponse>({
-            url:`api/v1/fileBroker`,
+        return this.request<FileUploadInfoResponse>({
+            method:SiteApis.fileBroker.filePreUpload.method,
+            url:SiteApis.fileBroker.filePreUpload.url,
             data:dataForm,
             ...params
         })
     }
 
     public sendChunk(form:FormData,params: RequestParams = {}){
-        return this.put({
-            url:"api/v1/fileBroker",
+        return this.request({
+            method:SiteApis.fileBroker.uploadFile.method,
+            url:SiteApis.fileBroker.uploadFile.url,
             data: form,
             headers: { "Content-Type": "multipart/form-data" },
             timeout:0,
@@ -94,8 +97,9 @@ export class Api extends ApiBase {
     }
 
     public uploadedCallback(data:any,params:RequestParams = {}){
-        return this.post<getDownCodeResponse>({
-            url:"api/v1/fileBroker/downCode",
+        return this.request<getDownCodeResponse>({
+            method:SiteApis.fileBroker.generateDownCode.method,
+            url:SiteApis.fileBroker.generateDownCode.url,
             data:data,
             ...params
         })
