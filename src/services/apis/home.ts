@@ -1,15 +1,8 @@
-import type {
-    User
-    } from "src/services/apis/auth"
-
-import {
-    ApiBase
-    } from "src/services/base"
-
-import {
-    SiteApis
-} from "src/services/api"
-import type {RequestParams} from "src/services/base"
+import type {User} from "src/services/apis/auth"
+import {ApiBase} from "src/services/base"
+import type {BasePaginationResponse} from "src/services/base"
+import {SiteApis} from "src/services/api"
+import type {BaseResponse, RequestParams} from "src/services/base"
 
 //  跑马灯背景图
 export type BackGroundInfoResponse ={
@@ -32,7 +25,7 @@ export type SiteCommentSubmitForm ={
 }
 
 
-export type SiteCommentResponse  ={
+export type SiteComment  ={
     id:number,
     body:string,
     likes:number,
@@ -47,19 +40,19 @@ export type SiteCommentResponse  ={
     name:string, //用户名
     user_id:number,//用户id
     replay_to:number,//回复给哪条评论
+    root_id:number,//根评论id
     avatar:string, //头像链接
     gender:number //0女性 1男性
 }
 
 
-export type SiteCommentResponsePagination = {
-    count:number,
-    next:string,
-    previous:string,
-    last_page:number,
-    results:Array<SiteCommentResponse>
+export interface CommentsPayload extends BasePaginationResponse  {
+    results:Array<SiteComment>
 }
 
+export interface GetCommentsResponse extends BaseResponse  {
+    data:CommentsPayload
+}
 
 
 // 背景音乐
@@ -161,7 +154,7 @@ export class Api extends ApiBase {
          *  获取评论列表
          */
         getCommentList:(params: RequestParams = {}) =>
-            this.request<SiteCommentResponsePagination>(
+            this.request<GetCommentsResponse>(
                 {   
                     method:SiteApis.home.getSiteComments.method,
                     url:SiteApis.home.getSiteComments.url,
@@ -182,7 +175,18 @@ export class Api extends ApiBase {
                     ...params
                 }
             ),
-        
+        /**
+         * 获取评论回复
+         */
+        getCommentReply:(commentId:number,params:RequestParams={}) =>
+            this.request<GetCommentsResponse>(
+                {   
+                    method:SiteApis.home.getCommentReply.method,
+                    url:SiteApis.home.getCommentReply.url(commentId),
+                    requiredLogin:SiteApis.home.getCommentReply.authenticated,
+                    ...params
+                }
+        )
     };
 
     friendLink = {

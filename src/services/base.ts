@@ -129,6 +129,7 @@ export interface BasePaginationResponse{
   next: string
   previous: null
   results: any
+  last_page:number
 }
 
 

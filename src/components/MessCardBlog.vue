@@ -4,11 +4,17 @@
       ><img
         class="img-circle img-sm"
         alt="Profile Picture"
-        :src="$props.comment.avatar?$props.comment.avatar:$props.comment.gender?man:woman"
+        :src="
+          $props.comment.avatar
+            ? $props.comment.avatar
+            : $props.comment.gender
+            ? man
+            : woman
+        "
     /></a>
     <div class="media-body">
       <div class="mar-btm">
-        <a  class="btn-link text-semibold media-heading box-inline">{{
+        <a class="btn-link text-semibold media-heading box-inline">{{
           $props.comment.name
         }}</a>
         <p class="text-muted text-sm">
@@ -21,17 +27,6 @@
       <p>{{ $props.comment.body }}</p>
 
       <div class="pad-ver">
-        <!-- <span class="tag tag-sm"
-          ><i class="fa fa-heart text-danger"></i> 250 Likes</span
-        >
-        <div class="btn-group">
-          <a class="btn btn-sm btn-default btn-hover-success" href="#"
-            ><i class="fa fa-thumbs-up"></i
-          ></a>
-          <a class="btn btn-sm btn-default btn-hover-danger" href="#"
-            ><i class="fa fa-thumbs-down"></i
-          ></a>
-        </div> -->
         <a class="btn btn-sm btn-default btn-hover-primary">
           <el-button size="small" :icon="ChatDotRound" class="reply-btn" round
             >回复</el-button
@@ -40,68 +35,128 @@
       </div>
       <hr />
 
-      
       <!-- 对话回复 -->
-      <!-- <div>
-        <div class="media-block pad-all">
-          <a class="media-left" href="#"
+      <div v-for=" item in commentReplyList" :key="item.id">
+        <div class="media-block pad-all comment-reply">
+          <a class="media-left"
             ><img
               class="img-circle img-sm"
               alt="Profile Picture"
-              src="https://bootdey.com/img/Content/avatar/avatar2.png"
+              :src="item.avatar ? item.avatar : item.gender ? man : woman"
           /></a>
           <div class="media-body">
             <div class="mar-btm">
               <a
-                href="#"
-                class="btn-link text-semibold media-heading box-inline"
-                >Maria Leanz</a
+                class="btn-link text-semibold media-heading box-inline reply-name"
+                >{{ item.name }}
+                <span class="huifu">&nbsp;回复:&nbsp;</span>
+                <span
+                  class="text-primary"
+                  style="
+                     {
+                      color: blue;
+                    }
+                  "
+                  >{{
+                    GetReplyName(
+                      item.replay_to,
+                      $props.comment.id,
+                      $props.comment.name
+                    )
+                  }}</span
+                ></a
               >
               <p class="text-muted text-sm">
-                <i class="fa fa-globe fa-lg"></i> - From Web - 2 min ago
+                <i class="fa fa-mobile fa-lg"
+                  ><el-icon><Calendar /></el-icon
+                ></i>
+                - {{ item.updated }}
               </p>
             </div>
-            <p>Duis autem vel eum iriure dolor in hendrerit in vulputate ?</p>
-            <div>
-              <div class="btn-group">
-                <a class="btn btn-sm btn-default btn-hover-success" href="#"
-                  ><i class="fa fa-thumbs-up"></i
-                ></a>
-                <a class="btn btn-sm btn-default btn-hover-danger" href="#"
-                  ><i class="fa fa-thumbs-down"></i
-                ></a>
-              </div>
-              <a class="btn btn-sm btn-default btn-hover-primary" href="#"
-                >Comment</a
-              >
+            <p>{{ item.body }}</p>
+
+            <div class="pad-ver">
+              <a class="btn btn-sm btn-default btn-hover-primary">
+                <el-button
+                  size="small"
+                  :icon="ChatDotRound"
+                  class="reply-btn"
+                  round
+                  >回复</el-button
+                >
+              </a>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
+      <el-divider v-show="commentReplyList.length>0 && next_page!='' && next_page!=null">
+        更多👇<el-icon><star-filled /></el-icon>
+      </el-divider>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import {
-  replyFormData,
-  deleteComment,
-  formatReply,
-  userInfo,
-  getDateDiff,
-  setColor,
-  siteCommentList,
-} from "src/components/MessCardBlog";
+import { ref, computed, reactive } from "vue";
+import type { SiteComment } from "src/services/apis/home";
+import { HomeApi } from "src/services/apis/home";
 import { ChatDotRound, Calendar } from "@element-plus/icons-vue";
 import { emotion } from "src/components/AddMessage";
-import type { SiteCommentResponse } from "src/services/apis/home";
 import man from "src/assets/man.png";
 import woman from "src/assets/woman.png";
 interface Props {
-  comment: SiteCommentResponse;
+  comment: SiteComment;
   // list:any[]
 }
-const props = withDefaults(defineProps<Props>(), {});
+const propsComment = defineProps<Props>();
+const count = ref<number>()
+const next_page = ref<string>("")
 
+let commentReplyList = ref<Array<SiteComment>>([]);
+
+function GetCommentReply(rootId: number) {
+  HomeApi.siteComment
+    .getCommentReply(rootId)
+    .then((res) => {
+      commentReplyList.value = res.data.results;
+      count.value = res.data.count
+      next_page.value = res.data.next
+      //过滤掉回复的评论不存在此次查询结果中的
+      // commentReplyList.value = commentReplyList.value.filter((item) => {
+      //   return item.replay_to != rootId;
+      // });
+      let tempIds: number[] = [propsComment.comment.id];
+      for (let i = 0; i < commentReplyList.value.length; i++) {
+        tempIds.push(commentReplyList.value[i].id);
+      }
+      commentReplyList.value.filter((item) => {
+        return tempIds.indexOf(item.replay_to) == -1;
+      });
+      console.log("get comment reply -> ", commentReplyList.value);
+    })
+    .catch((err) => {
+      console.log("get comment reply error -> ", err);
+    });
+}
+
+// 获取回复的评论ID
+function GetReplyName(
+  replyCommentID: number,
+  rootId: number,
+  rootName: string
+) {
+  let name = "";
+  if (replyCommentID == rootId) {
+    name = rootName;
+    return name;
+  }
+  commentReplyList.value.forEach((item) => {
+    if (item.id == replyCommentID) {
+      name = item.name;
+    }
+  });
+  return name;
+}
+GetCommentReply(propsComment.comment.id);
 </script>
 
 <style scoped>
@@ -113,6 +168,17 @@ body {
 .img-sm {
   width: 46px;
   height: 46px;
+}
+.huifu {
+  font-size: small;
+  white-space: pre;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.reply-name {
+  font-size: small;
+  white-space: pre;
 }
 
 .panel {
@@ -195,7 +261,7 @@ a.text-muted:focus {
 }
 .text-sm {
   font-size: 0.9em;
-  margin-top: .5%;
+  margin-top: 0.5%;
 }
 .text-5x,
 .text-4x,

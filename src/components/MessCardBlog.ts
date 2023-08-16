@@ -1,36 +1,6 @@
 import { ref,computed, reactive } from 'vue';
-import type  {
-    Profile
-} from 'src/services/apis/auth'
-import type {SiteCommentResponse} from "src/services/apis/home"
-
-// export type Card = {
-//     pattern: boolean, //留言模式
-//     left: boolean, //left模式
-// }
-
-
-
-const siteCommentList =ref({})
-
-const open = ref(false)
-const flicker =ref("0")
-const pattern = ref("mess")
-
-const id =ref(0)
-const reply_id =ref(0)
-
-const url =ref("https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3656238279,115253853&fm=26&gp=0.jpg")
-const boo = ref(false)
-
-const replyFormData = reactive({
-    mess_id: "",
-    reply: "",
-})
-
-const userInfo = computed<Profile|any>(()=>{
-    return {}
-})
+import type  {SiteComment} from "src/services/apis/home"
+import {HomeApi} from "src/services/apis/home"
 
 export type Address={
     loc_country:string;
@@ -40,20 +10,8 @@ export type Address={
 
 
 /*********************   method  *****************  */
-function roll(target:string) {
-    flicker.value = target;
-    target = "#reply" + String(target);
-    let toElement = document.querySelector(target);
-    if( toElement !==null){
-        toElement.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "nearest",
-        });
-    }else{
-        console.log(`can not find element`)
-    }
-}
+
+const commentReplyList = ref<Array<SiteComment>>([]);
 
 
 function formatReply(address:Address) {
@@ -285,23 +243,29 @@ function getDateDiff(dateTimeStamp:number) {
     return result;
     }
 
+function GetCommentReply(rootId:number){
+    HomeApi.siteComment.getCommentReply(rootId).then((res)=>{
+        console.log("get comment reply -> ",res)
+        commentReplyList.value = res.data.results
+    }).catch((err)=>{
+        console.log("get comment reply error -> ",err)
+    })
+}
 
+// 获取回复的评论ID
+function GetReplyName(replyCommentID:number,rootId:number,rootName:string){
+    let name = "";
+    commentReplyList.value.forEach((item)=>{
+        if(item.id == replyCommentID){
+            name = item.name
+        }
+    })
+    return name;
+}
 
 export {
-    open,
-    flicker,
-    pattern,
-    id,
-    reply_id,
-    url,
-    boo,
-    replyFormData,
-    userInfo,
-    getDateDiff,
-    setColor,
-    siteCommentList,
-    formatReply,
-    deleteComment
-    // replyMess
+    GetCommentReply,
+    GetReplyName,
+    commentReplyList
 }
 

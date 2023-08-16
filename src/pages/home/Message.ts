@@ -1,11 +1,10 @@
 import { ref } from 'vue';
 import {HomeApi} from 'src/services/apis/home'
 import type {
-    
-    SiteCommentResponse
+    SiteComment
 } from 'src/services/apis/home'
 
-const list = ref<Array<SiteCommentResponse>>([])
+const list = ref<Array<SiteComment>>([])
 const current_page = ref(1)
 const last_page=ref()
 const loading= ref()
@@ -20,10 +19,10 @@ function getMessList(){
             }
         }
     ).then(res=>{
-			list.value = res.results
-			console.log("get comments list ",list.value)
-			last_page.value = res.last_page
-			count.value = res.count
+			list.value = res.data.results
+			console.log("get comments list success",list.value,res)
+			last_page.value = res.data.last_page
+			count.value = res.data.count
     }).catch(err=>{
 				console.log("get comments list err",err)
 		})
@@ -44,10 +43,10 @@ async function next(){
             }
         }
     ).then(res=>{
-			list.value = res.results
+			list.value = res.data.results
 			console.log(">>> get comments list ",list.value)
-			last_page.value = res.last_page
-			count.value = res.count
+			last_page.value = res.data.last_page
+			count.value = res.data.count
 		}).catch(err=>{
 				console.log("get comments list error ",err)
 		})

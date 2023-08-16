@@ -14,7 +14,7 @@
             </div>
             <div class="panel">
               <div class="panel-body"
-                  v-for="item in commentsTree"
+                  v-for="item in propComments.list"
                   :key="item.id">
                 <MessCardBlog
                   :comment="item"
@@ -41,37 +41,17 @@ import { computed } from "vue";
 //   right,
 //   getMess,
 // } from "src/components/MessageList";
-import type { SiteCommentResponse } from "src/services/apis/home";
+import type { SiteComment } from "src/services/apis/home";
 
 interface Props {
-  list: SiteCommentResponse[];
+  list: SiteComment[];
 }
 
-interface SiteCommentsTree extends SiteCommentResponse {
+interface SiteCommentsTree extends SiteComment {
   children:SiteCommentsTree[]
 }
 
 const propComments = defineProps<Props>();
-console.log(">>>> message list get list", propComments.list);
-
-const commentsTree = computed(() => {
-  let tree = [];
-  for (let index = 0; index < propComments.list.length; index++) {
-    let element = propComments.list[index];
-
-  }
-  return propComments.list
-});
-
-// const MessListRight = computed(() => {
-//   if (isShow) {
-//     return propComments.list;
-//   }
-//   console.log(propComments.list);
-//   return propComments.list.filter(function (item) {
-//     return item.id % 2 == 0;
-//   });
-// });
 </script>
 
 

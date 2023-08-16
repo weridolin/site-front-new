@@ -11,10 +11,10 @@ const right= {
 }
 
 import type {
-    SiteCommentResponse
+    SiteComment
 } from 'src/services/apis/home'
 
-const commentsList = ref<Array<SiteCommentResponse>>([])
+const commentsList = ref<Array<SiteComment>>([])
 
 /** computed */
 

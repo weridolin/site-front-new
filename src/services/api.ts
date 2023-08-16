@@ -11,6 +11,12 @@ export const  SiteApis={
             url:"/home/api/v1/comments",
             authenticated:true
         },
+        getCommentReply:{
+            method:'get',
+            url:(rootID:number)=>{return `/home/api/v1/comments/${rootID}/reply`},
+            authenticated:false
+        }
+        ,
         getFriendLinks:{
             method:'get',
             url:"/home/api/v1/friendslinks",
