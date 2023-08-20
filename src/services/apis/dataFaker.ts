@@ -55,7 +55,7 @@ export class Api extends ApiBase {
     public getFileInfoByDownCode(downCode:string,params: RequestParams = {}){
         return this.request<fileDownInfoResponse>({
             method:SiteApis.dataFaker.searchDataFaker.method,
-            url:`${SiteApis.dataFaker.searchDataFaker.url}/${downCode}`,
+            url:`${SiteApis.dataFaker.searchDataFaker.url}${downCode}`,
             ...params
         })
     }
@@ -63,7 +63,7 @@ export class Api extends ApiBase {
     public initDataInfo(dataForm:initFormData,params: RequestParams = {}){
         return this.request<initFileInfoResponse>({
             method:SiteApis.dataFaker.dataPreUpload.method,
-            url:SiteApis.dataFaker.searchDataFaker.url,
+            url:SiteApis.dataFaker.dataPreUpload.url,
             data:dataForm,
             ...params
         })

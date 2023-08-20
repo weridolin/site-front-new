@@ -1,208 +1,173 @@
 <template>
-  <div class="container link-frie">
-    <h1 class="mess-title" id="next">
-      <el-icon><Link /></el-icon>优秀的小伙伴们！
-    </h1>
-    <el-row>
-      <el-col
-        :xs="24"
-        :span="6"
-        class="link-cat"
-        v-for="(item,index) in friends"
-        :key="index"
-        :offset="index > 0 ?1 : 0">
-        <el-card :body-style="{ padding: '10px' }" shadow="hover">
-              <div class="card-header">
-                <img             
-                :src="item.cover?item.cover:'https://c0.wallpaperflare.com/preview/483/210/436/car-green-4x4-jeep.jpg'"
-                class="image" >
+  <div class="slider-wrapper">
+    <div class="slider-track">
+      <div class="slide"
+      v-for="(link,index) in friendsLinks.links"
+      :key="index">
+        <div class="flex justify-center items-center h-screen">
+          <div class="max-w-sm rounded overflow-hidden shadow-lg">
+            <img
+              class="w-full"
+              src="https://source.unsplash.com/random/1600x900"
+              alt="Sunset in the mountains"
+            />
+            <div class="px-6 py-4">
+              <div class="font-bold text-xl mb-2 title">{{link.title}}</div>
+              <p class="text-gray-700 text-base">
+                {{link.intro}}
+              </p>
+            </div>
+            <div class="footer">
+              <div class="link-date">
+                <i class="icon" @click="openNewWindow(link.url)"><el-icon size="16px"><Calendar /></el-icon>
+                  </i><span class="text">{{ link.updated }}</span>
               </div>
-              <div class="card-body">
-                <h6 class="title">
-                  {{item.title}}
-                </h6>
-                <p class="intro">
-                  {{item.intro}}
-                </p>
-                <div class="user">
-                  <el-avatar 
-                    :src="item.author?  
-                      (item.author?item.author.avatar:'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png')
-                      :'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"></el-avatar>
-                  <div class="user-info">
-                    <h5>{{item.author}}</h5>
-                    <small>更新于:{{item.updated}}</small>
-                  </div>
-                  <el-button class="button" type="text" icon="el-icon-share" @click="openNewWindow(item.site)">前往</el-button>
-                </div>
+              <div class="link-project">
+                <el-icon><Position /></el-icon>
               </div>
-        </el-card>
-      </el-col>
-    </el-row>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
 <script  setup lang="ts">
-import type {FriendsLink} from 'src/services/apis/home'
-import {defineProps} from  'vue'
+import type { FriendsLink } from "src/services/apis/home";
+import { defineProps } from "vue";
 
-const friends = defineProps({
-  friends: {
-    type: Array as () => FriendsLink[]|undefined,
-    default: undefined,
-  },
-})
 
-function openNewWindow(url:string){
-          window.open(url,"_blank")
-      }
+interface Props {
+  links: FriendsLink[];
+}
 
+const friendsLinks = defineProps<Props>();
+
+function openNewWindow(url: string) {
+  window.open(url, "_blank");
+}
 </script>
-<style lang="stylus" scoped>
-  
-  h1 {
-      text-align: center;
-      padding-bottom: .3em;
-      font-size: 2em;
-      line-height: 1.2;
-      margin: 1.2em auto 1.2em;
-      font-weight: 700
-  }
-  .time {
-    font-size: 13px;
-    color: #999;
+
+<style lang="scss" scoped>
+
+.title {
+  font-size: 1.25rem;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+  font-weight: 700;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 垂直居中对齐 */
+  position: relative;
+  vertical-align: middle;
+}
+.icon {
+  vertical-align: -10%;
+  margin-right: 5px;
+}
+
+.link-date{
+  // display: flex;
+  // justify-content: center; /* 水平居中 */
+  // align-items: center; /* 垂直居中 */
+
+}
+.link-project{
+	opacity: 1;
+	// position: absolute;
+	// right: 0;
+	// top: 50%;
+	// margin-top: -1em;
+	// transform: translateX(-20%);
+	// width: 2em;
+	// height: 2em;
+	transition: all .3s ease-in-out;
+	:hover{
+    transform: translateX(0);
+    opacity: 1;
   }
 
-  
-  .bottom {
-    margin-top: 13px;
-    line-height: 12px;
-  }
-  .button {
-    padding: 0;
-    float: right;
-  }
+}
 
-  .clearfix:before,
-  .clearfix:after {
-      display: table;
-      content: "";
-  }
-  
-  .clearfix:after {
-      clear: both
-  }
+</style>
 
 
-.card-header img {
-  width: 100%;
-  // height: 200px;
+<style lang="scss" scoped>
+.slider-wrapper {
+  position: relative;
+  height: 500px;
+  width: 90%;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.slider-track {
+  display: flex;
+  width: calc(350 * 10);
+  animation: slideauto 25s linear infinite;
+}
+
+.slider-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes slideauto {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-350px * 8));
+  }
+}
+
+.slide {
+  width: 350px;
+  height: 420px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  overflow: hidden;
+  perspective: 100px;
+  cursor: pointer;
+}
+
+.slide img {
+  max-width: 100%;
+  min-height: 100%;
   object-fit: cover;
 }
-.card-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 10px;
+
+/* * Shaddow * */
+.slider-wrapper::before,
+.slider-wrapper::after {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 15%;
+  z-index: 2;
 }
 
-.tag {
-  background: #cccccc;
-  border-radius: 50px;
-  font-size: 12px;
-  margin: 0;
-  color: #fff;
-  padding: 2px 10px;
-  text-transform: uppercase;
-  cursor: pointer;
-  text-align :right;
-  float: right;
-}
-.tag-teal {
-  background-color: #47bcd4;
-}
-.tag-purple {
-  background-color: #5e76bf;
-}
-.tag-pink {
-  background-color: #cd5b9f;
+.slider-wrapper::before {
+  left: 0;
+  top: 0;
 }
 
-.card-body p {
-  font-size: 13px;
-  margin: 0 0 30px;
-}
-
-.button {
-    // margin-top :10px;
-    // margin-left :70%;
-    margin-bottom: 10px;
-    float: right;
-    text-align:right;
-  }
-.user {
-  display: flex;
-  margin-top: auto;
-  width: 100%;
-  justify-content: space-around;
-}
-.el-avatar {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-right: 10px
-}
-.user img {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-}
-.user-info {
-  margin-left: -15px
-}
-.user-info h5 {
-  margin: 0;
-  font-size :15px
-}
-.user-info small {
-  color: #545d7a;
-}
-
-
-
-
-.el-card{
-  margin-bottom:20px;
-
-  .img {
-    max-width: 100%;
-  }
-}
-
-.link-frie {
-    position: relative;
-    padding: 10px 0;
-    background: #eaf1f51f;
-    background-image :url('src/assets/link_bg.jpg');
-
-  &:hover {
-    .mess-title {
-      color: #5adcce;
-    }
-  }
-}
-
-
-@media (max-width: 992px){
-  .el-card{
-    padding: 5px,5px,5px,5px;
-    margin-bottom:30px;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
-  }
-  .el-col-offset-1 {
-    // 取消offset
-    margin-left: 0px; 
-  }
+.slider-wrapper::after {
+  right: 0;
+  top: 0;
+  transform: rotateZ(180deg);
 }
 </style>    

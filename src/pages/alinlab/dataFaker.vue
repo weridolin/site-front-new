@@ -151,29 +151,13 @@
               </el-button>
             </el-col>
             <el-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16">
-              <!-- <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
-                <span style="text-align:left;">生成数据进度➡️➡️</span>
-            </el-col>
-            <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20"> -->
               <el-progress :text-inside="true" :stroke-width="24" :percentage="progress_percent" status="success" class="progress" />
-            <!-- </el-col> -->
             </el-col>
           </el-row>
           <el-divider />
-        <!-- <el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>
-        <el-button @click="resetForm('dynamicValidateForm')">全部重置</el-button> -->
         </el-footer>
       </el-container>
     </el-container>
-
-    <!-- <div id="clouds">
-	<div class="cloud1 x1"></div>
-	<div class="cloud1 x2"></div>
-	<div class="cloud1 x3"></div>
-	<div class="cloud1 x4"></div>
-	<div class="cloud1 x5"></div>
-</div> -->
-    <!-- <a style="position: fixed; bottom: 10px; right: 10px;color:#CCC" href="https://plus.google.com/111052275277622928148?rel=me">Google+</a> -->
   </div>
 </template>
 

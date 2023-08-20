@@ -118,14 +118,6 @@ h1{padding:1.2em; text-align:center;}
 }
 </style>
 
-<script>
-    export default {
-    name: "Plane",
-    data() {
-        
-        return {
+<script setup lang="ts">
 
-        };
-    },
-    };
 </script>

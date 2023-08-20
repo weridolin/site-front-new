@@ -474,7 +474,7 @@ function downFile(){
      * 所以，对于.txt,.png,.pdf等的预览功能我们就可以直接不设置download属性(前提是后端响应头的Content-Type: application/octet-stream，如果为application/pdf浏览器则会判断文件为 pdf ，自动执行预览的策略)
      */  
     let _ = downForm.downCode && el.setAttribute('download', downForm.downFileName);
-    el.href =`${import.meta.env.VITE_API_HOST}/api/v1/fileBroker?down_code=${downForm.downCode}`;
+    el.href =`${import.meta.env.VITE_API_HOST}/fileBroker/api/v1/?down_code=${downForm.downCode}`;
     console.log(el,">>>> ADD DOWN HREF");
     document.body.appendChild(el);
     el.click();

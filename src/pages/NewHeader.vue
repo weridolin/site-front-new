@@ -225,13 +225,14 @@ export default {
 
 .nav-quiet {
   color: #fff;
+  color: white;
 }
 
 .nav-no-quiet {
   // backdrop-filter: blur(6px);
   box-shadow: 0px 10px 20px 4px rgba(195, 199, 199, 0.4);
   background-color: rgba(255, 255, 255, 0.85);
-  color: #515151;
+  color: white;
 }
 
     .navbar-header-werido {

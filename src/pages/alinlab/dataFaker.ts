@@ -2,6 +2,7 @@ import { ElMessage } from 'element-plus'
 import { ref,reactive } from 'vue'
 import {dataFakerApis} from 'src/services/apis/dataFaker'
 import { CONFIG } from 'src/config'
+import {SiteApis} from 'src/services/api'
 
 const formLabelWidth =ref("120px")
 
@@ -258,10 +259,12 @@ function build_conn(){
     let ws_url = "ws://127.0.0.1:8000"
     // HTMLFormControlsCollection
     if (process.env.NODE_ENV == "production"){
-        ws_url = "wss://www.weridolin.cn"  // another way
+        // ws_url = "wss://www.weridolin.cn"  // another way
+        ws_url = "wss://127.0.0.1"  // another way
+
     }
     console.log(">>>>>>>>ws url",ws_url,process.env.NODE_ENV )
-    ws_conn = new WebSocket(`${ws_url}/ws/dataFaker/${key.value}`)
+    ws_conn = new WebSocket(`${ws_url}/dataFaker/ws/${key.value}`)
     ws_conn.onmessage = function(event) {
         console.log("get message from ws server >>>",event.data);
         handleWsData(event.data)
@@ -474,10 +477,10 @@ function downFile(){
      */  
 
     if (process.env.NODE_ENV == "production"){
-        el.href =`http://127.0.0.1:8000/api/v1/dataFaker?download_code=${downForm.down_code}`;
+        el.href =`http://127.0.0.1${SiteApis.dataFaker.downloadDataFaker.url}?download_code=${downForm.down_code}`;
     }
     downForm.down_fileName && el.setAttribute('download', downForm.down_fileName);
-    el.href =`${CONFIG.API_HOST}/api/v1/dataFaker?download_code=${downForm.down_code}`;
+    el.href =`${CONFIG.API_HOST}${SiteApis.dataFaker.downloadDataFaker.url}?download_code=${downForm.down_code}`;
     console.log(el);
     document.body.appendChild(el);
     el.click();
