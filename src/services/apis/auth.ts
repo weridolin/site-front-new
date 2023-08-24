@@ -24,25 +24,32 @@ export interface Profile {
 
 export interface User {
   id: number;
-  is_superuser: boolean;
-  last_login: string;
-  first_name: string;
   username: string;
-  last_name: string;
-  email: string;
-  created: string;
-  avatar: string;
+  email:  string;
+  phone:  string;
+  avatar:  string | null;
+  role: string;
+  is_super_admin:boolean;
+  age: number;
+  gender: number;
 }
+
+export interface loginResponsePayload extends User {
+  refresh_token:string;
+  access_token:string;
+}
+
+
 
 /** ***   permission  ******/
 export interface Menu {
-  menu_name: string;
-  menu_url: string;
-  menu_icon: string;
-  menu_type: number;
-  menu_view_path: string;
-  menu_route_name: string;
-  p_id: Menu;
+  name: string;
+  url: string;
+  icon: string;
+  type: number;
+  component: string;
+  route_name: string;
+  parent_id: number;
   id: number;
   children: Menu[];
 }
@@ -65,10 +72,11 @@ export interface loginFormOrRegisterForm {
 }
 
 export interface loginResponse extends BaseResponse {
-  access_token: string;
-  refresh_token: string;
-  profile: Profile;
-  permissions_dict?: any; // TODO
+  data: loginResponsePayload;
+}
+
+export interface RegisterResponse extends BaseResponse {
+  data:Profile
 }
 
 export interface GetUserProfileResponse extends BaseResponse {
@@ -105,11 +113,11 @@ export interface LoginByThirdResponse extends BaseResponse {
 
 export type BindAccountResponse = LoginByThirdResponse;
 
-export interface GenuListPagination extends BasePaginationResponse {
-  results: Menu[];
-}
+// export interface GenuListPagination extends BasePaginationResponse {
+//   results: Menu[];
+// }
 export interface GetMenuListResponse extends BaseResponse {
-  data: GenuListPagination;
+  data: Menu[];
 }
 
 export interface GetMenuDetailResponse extends BaseResponse {
@@ -127,7 +135,7 @@ export class Apis extends ApiBase {
   public login(loginForm: loginFormOrRegisterForm, params: RequestParams = {}) {
     const pwd = pwdEncrypt(loginForm.password);
     const temForm = {
-      username: loginForm.username,
+      count: loginForm.username,
       password: pwd,
       email: loginForm.email,
       telephone: loginForm.telephone,
@@ -138,6 +146,9 @@ export class Apis extends ApiBase {
       requiredLogin: false,
       data: temForm,
       ...params,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
     });
   }
 
@@ -164,7 +175,7 @@ export class Apis extends ApiBase {
   ) {
     const pwd = pwdEncrypt(registerForm.password);
     const temForm = {
-      username: registerForm.username,
+      count: registerForm.username,
       password: pwd,
       email: registerForm.email,
       telephone: registerForm.telephone,
@@ -175,6 +186,9 @@ export class Apis extends ApiBase {
       requiredLogin: false,
       data: temForm,
       ...params,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
     });
   }
 
@@ -182,8 +196,10 @@ export class Apis extends ApiBase {
     requestForm: refreshTokenForm,
     params: RequestParams = {}
   ) {
-    await this.post<refreshTokenResponse>({
-      url: "/api/v1/auth/token/refresh/",
+    await this.request<refreshTokenResponse>({
+      url: SiteApis.usercenter.refreshToken.url,
+      method: SiteApis.usercenter.refreshToken.method,
+      requiredLogin: SiteApis.usercenter.refreshToken.authenticated,
       data: requestForm,
       ...params,
     });
@@ -195,11 +211,12 @@ export class Apis extends ApiBase {
    * 获取所有的菜单
    */
   public getMenuList(query_params: any, requestParams: RequestParams = {}) {
-    return this.get<GetMenuListResponse>({
-      url: "/api/v1/rbac/menus/",
+    return this.request<GetMenuListResponse>({
+      url: SiteApis.usercenter.getMenus.url,
       ...requestParams,
       params: query_params,
-      requiredLogin: true,
+      requiredLogin: SiteApis.usercenter.getMenus.authenticated,
+      method: SiteApis.usercenter.getMenus.method,
     });
   }
 

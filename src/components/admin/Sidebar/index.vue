@@ -15,7 +15,7 @@
           v-for="menu in getDynamicalRoutes()"
           :key="menu.id"
           :menu="menu"
-          :base-path="menu.menu_url"
+          :base-path="menu.url"
         />
       </el-menu>
     </el-scrollbar>
@@ -27,7 +27,8 @@ import SidebarItem from 'src/components/admin/Sidebar/SiteBarItem.vue'
 import {SideBarState} from 'src/components/admin/models'
 
 function getDynamicalRoutes(){
-  return useAuthStore().userInfo?.permissions.menu
+  console.log("当前路由 -> ",useAuthStore().dynamicalRoutes)
+  return useAuthStore().dynamicalRoutes
 }
 
   // get activeMenu() {

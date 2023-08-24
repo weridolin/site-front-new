@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use(
       if (useAuthStore().isLogin.value && useAuthStore().tokens?.refreshToken) {
         if (!isRefreshToken) {
           isRefreshToken = true
-          console.log('>>> 刷新token....')
+          console.log('刷新token....')
           return axiosInstance.request<refreshTokenResponse, any>({
             method: 'post',
             url: SiteApis.usercenter.refreshToken.url,
@@ -71,8 +71,9 @@ axiosInstance.interceptors.response.use(
             return axiosInstance(config)
           }, err => {
             if (err.config.url.includes(SiteApis.usercenter.refreshToken.url)) {
-              console.log('>>>刷新token失效', err)
-              // 调用刷新token接口时出现401 说明refresh token过期,否则为 this.client.request(config) 抛出的异常,
+              console.log('刷新token失效', err)
+              // 调用刷新token接口时出现401 说明refresh token过期,
+              // 否则为 this.client.request(config) 抛出的异常,
               // 为啥 this.client.request(config) 抛出的异常会被 catch到
               ElMessage.info('登录已经过期,请重新登录')
               useAuthStore().clearAuthInfo()

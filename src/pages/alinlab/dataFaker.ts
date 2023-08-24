@@ -477,7 +477,7 @@ function downFile(){
      */  
 
     if (process.env.NODE_ENV == "production"){
-        el.href =`http://127.0.0.1${SiteApis.dataFaker.downloadDataFaker.url}?download_code=${downForm.down_code}`;
+        el.href =`${CONFIG.API_HOST}${SiteApis.dataFaker.downloadDataFaker.url}?download_code=${downForm.down_code}`;
     }
     downForm.down_fileName && el.setAttribute('download', downForm.down_fileName);
     el.href =`${CONFIG.API_HOST}${SiteApis.dataFaker.downloadDataFaker.url}?download_code=${downForm.down_code}`;

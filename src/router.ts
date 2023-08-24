@@ -1,4 +1,8 @@
-import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+} from "vue-router";
 import type { RouteParams, RouteRecordRaw } from "vue-router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
@@ -98,7 +102,7 @@ export const routes: RouteRecordRaw[] = [
           header: true,
           keepAlive: false,
           requireAuth: false,
-          requireAdmin:false,
+          requireAdmin: false,
         },
       },
       {
@@ -112,8 +116,7 @@ export const routes: RouteRecordRaw[] = [
           footer: true,
           header: true,
           requireAuth: false,
-          requireAdmin:false,
-
+          requireAdmin: false,
         },
       },
       {
@@ -128,8 +131,7 @@ export const routes: RouteRecordRaw[] = [
           header: true,
           keepAlive: true,
           requireAuth: false,
-          requireAdmin:false,
-
+          requireAdmin: false,
         },
       },
       {
@@ -143,8 +145,7 @@ export const routes: RouteRecordRaw[] = [
           footer: true,
           header: true,
           requireAuth: false,
-          requireAdmin:false,
-
+          requireAdmin: false,
         },
       },
     ],
@@ -181,8 +182,7 @@ export const routes: RouteRecordRaw[] = [
           // footer: false,
           // header: false,
           requireAuth: false,
-          requireAdmin:false,
-
+          requireAdmin: false,
         },
       },
       /*********************** file broker **************************/
@@ -196,8 +196,23 @@ export const routes: RouteRecordRaw[] = [
           // footer: false,
           // header: false,
           requireAuth: false,
-          requireAdmin:false,
+          requireAdmin: false,
+        },
+      },
 
+      /**************************** webhook ************************ */
+      {
+        path: "webhook",
+        name: "webhook",
+        component: () => import("./pages/alinlab/webhook.vue"),
+        meta: {
+          keepAlive: true, // 需要被缓存
+          title: "webhook测试",
+          // nav,
+          footer: false,
+          header: false,
+          requireAuth: false,
+          requireAdmin: false,
         },
       },
       /******************* data faker***********************/
@@ -211,8 +226,7 @@ export const routes: RouteRecordRaw[] = [
           // footer: false,
           // header: false,
           requireAuth: false,
-          requireAdmin:false,
-
+          requireAdmin: false,
         },
       },
       /** *********************  third apis   *****************************/
@@ -227,8 +241,7 @@ export const routes: RouteRecordRaw[] = [
           // footer: true,
           // header: false,
           requireAuth: false,
-          requireAdmin:false,
-
+          requireAdmin: false,
         },
       },
       /** *********************  apisInfoCollections   *****************************/
@@ -243,10 +256,10 @@ export const routes: RouteRecordRaw[] = [
           // footer: true,
           // header: false,
           requireAuth: true,
-          requireAdmin:false,
-
+          requireAdmin: false,
         },
       },
+      /************************** ChatGpt  ************************************* */
       {
         path: "chatGPT",
         name: "chatGPT",
@@ -258,8 +271,7 @@ export const routes: RouteRecordRaw[] = [
           // footer: true,
           // header: false,
           requireAuth: true,
-          requireAdmin:true,
-
+          requireAdmin: true,
         },
       },
       /************************** oauth *****************************/
@@ -274,8 +286,7 @@ export const routes: RouteRecordRaw[] = [
           footer: false,
           header: false,
           requireAuth: false,
-          requireAdmin:false,
-
+          requireAdmin: false,
         },
       },
       /****************************drug ************************ */
@@ -290,8 +301,7 @@ export const routes: RouteRecordRaw[] = [
           footer: false,
           header: false,
           requireAuth: false,
-          requireAdmin:false,
-
+          requireAdmin: false,
         },
       },
     ],
@@ -307,8 +317,7 @@ export const routes: RouteRecordRaw[] = [
       footer: false,
       header: true,
       requireAuth: false,
-      requireAdmin:false,
-
+      requireAdmin: false,
     },
   },
 
@@ -324,7 +333,7 @@ export const routes: RouteRecordRaw[] = [
       footer: false,
       header: false,
       requireAuth: true,
-      requireAdmin:true,
+      requireAdmin: true,
     },
   },
   /**************************** covid ****************/
@@ -340,7 +349,7 @@ export const routes: RouteRecordRaw[] = [
     //   title: "新冠数据",
     //   requireAuth: false,
     // },
-    children:[
+    children: [
       {
         path: "index",
         name: "covidIndex",
@@ -350,10 +359,10 @@ export const routes: RouteRecordRaw[] = [
           nav,
           keepAlive: false,
           requireAuth: false,
-          requireAdmin:true,
+          requireAdmin: true,
         },
       },
-    ]
+    ],
   },
   /** ************************** 404 ****************/
 ];
@@ -386,14 +395,15 @@ const modules = import.meta.glob("./pages/admin/**.vue");
 export const dynamicalRoutes: RouteRecordRaw[] = [];
 
 function traverseMenu(route: Menu) {
+  console.log(">>", modules);
   const r: RouteRecordRaw = {
-    path: route.menu_url,
-    name: route.menu_route_name,
+    path: route.url,
+    name: route.name,
     // component: () => import(`./pages/admin/${route.menu_view_path}`),
-    component: modules[`./pages/admin/${route.menu_view_path}`],
+    component: modules[`./pages/admin/${route.component}.vue`],
     meta: {
       keepAlive: false, // 需要被缓存
-      title: route.menu_name,
+      title: route.name,
       footer: false,
       header: false,
       requireAuth: true,
@@ -430,7 +440,6 @@ const staticRoutesLength = getRouteArrayLength(routes);
 router.beforeEach(async (to, from, next) => {
   // Start progress bar
   NProgress.start();
-
   if (to.meta.title) {
     document.title = to.meta.title as string;
   }
@@ -448,29 +457,29 @@ router.beforeEach(async (to, from, next) => {
       next("/login");
       return;
     }
-    if (to.meta.requireAdmin){
-      ElMessage.error("当前账户没有权限!")
-      next(from.path)
-      return
+    if (to.meta.requireAdmin) {
+      if (!useAuthStore().userInfo?.is_super_admin) {
+        ElMessage.error("当前账户没有权限,请联系管理员");
+        next(from.path);
+        return;
+      }
     }
   }
-  console.log(getRouteArrayLength(routes), ">>>>", router.getRoutes().length);
+  console.log(getRouteArrayLength(routes), router.getRoutes().length);
   if (
     staticRoutesLength === router.getRoutes().length &&
-    useAuthStore().userInfo?.permissions.menu
+    useAuthStore().dynamicalRoutes.length !== 0
   ) {
+    /* 添加管理页面动态路由 */
     console.log("check if need to add dynamical routes", modules);
-    useAuthStore().userInfo?.permissions.menu.forEach((route) => {
+    useAuthStore().dynamicalRoutes.forEach((route) => {
       console.log(`add dynamical menu to route:${route}`);
       const r = traverseMenu(route);
-      console.log(">>>>traverse menu result", r);
+      console.log("traverse menu result", r);
       router.addRoute("admin", r);
       useAuthStore().has_update_routes = true;
     });
-    console.log(
-      "after add dynamical routes",
-      useAuthStore().userInfo?.permissions.menu
-    );
+    console.log("after add dynamical routes", useAuthStore().dynamicalRoutes);
     console.log("get routes", router.getRoutes());
     next({ ...to, replace: true }); // @https://blog.csdn.net/qq_41912398/article/details/109231418
     // return

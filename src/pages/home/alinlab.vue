@@ -43,6 +43,8 @@ import URLImg from 'src/assets/URL.png'
 import BackendImg from 'src/assets/backend.png'
 import ApiImg from 'src/assets/API.png'
 import Robot from 'src/assets/robot.png'
+import Webhook from 'src/assets/webhook.png'
+
 
 // const fileUploadImg =ref("src/assets/fileUpload.png")
 
@@ -88,6 +90,12 @@ const menus = ref([
     title: 'chatGPT',
     desc: 'chatGPT测试',
     route: '/lab/chatGPT',
+  },
+  {
+    img: Webhook,
+    title: 'webhook',
+    desc: '一个webhook的在线测试网站  ',
+    route: '/lab/webhook',
   },
 ])
 

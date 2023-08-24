@@ -14,7 +14,7 @@
 
 
 function create_conn(ws_path:string){
-    let base_url = "ws://127.0.0.1:8000"
+    let base_url = "ws://127.0.0.1"
     if (process.env.NODE_ENV == "production"){
         base_url = "wss://www.weridolin.cn"  // another way
     }

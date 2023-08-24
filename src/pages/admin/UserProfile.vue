@@ -1,3 +1,5 @@
 <template>
-    开发中....
+    <span>  
+        开发中...
+    </span>
 </template>
