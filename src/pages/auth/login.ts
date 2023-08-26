@@ -1,213 +1,41 @@
-<template>
-  <div
-    v-loading="isLoginOrRegister"
-    class="auth-page"
-    :element-loading-text="loadingContent"
-    :element-loading-spinner="svg"
-    element-loading-svg-view-box="-10, -10, 50, 50"
-    element-loading-background="rgba(122, 122, 122, 0.8)"
-  >
-    <div class="container page">
-      <div class="row">
-        <div class="col-md-6 offset-md-3 col-xs-12">
-          <h1 class="text-xs-center">
-            <!-- {{state =='login'?"登录":"注册"}} -->
-            {{ title }}
-          </h1>
 
-          <form ref="formRef" @submit.prevent="submit">
-            <fieldset class="form-group">
-              <input
-                v-if="state == 'register'"
-                v-model="form.email"
-                class="form-control form-control-lg"
-                type="email"
-                required
-                placeholder="email"
-              />
-            </fieldset>
-            <fieldset class="form-group" aria-required="true">
-              <input
-                v-model="form.username"
-                class="form-control form-control-lg"
-                required
-                placeholder="username"
-              />
-            </fieldset>
-            <fieldset class="form-group">
-              <input
-                v-model="form.password"
-                class="form-control form-control-lg"
-                type="password"
-                required
-                placeholder="Password"
-              />
-            </fieldset>
-            <button
-              class="btn btn-lg btn-primary pull-xs-right"
-              :disabled="!form.username || !form.password"
-              type="submit"
-            >
-              <!-- {{state =='login'?"登录":"注册"}} -->
-              {{ title }}
-            </button>
-            <el-link
-              type="primary"
-              style="
-                 {
-                  font-weight: 500;
-                  text-decoration: underline;
-                  font-style: italic;
-                  padding-top: 15px;
-                  padding-left: 5px;
-                }
-              "
-              @click="changeRegister"
-            >
-              {{
-                state == "login"
-                  ? "没有账号?"
-                  : "bind"
-                  ? "没有账号?"
-                  : "已有账号!"
-              }}
-            </el-link>
-
-            <!-- <el-button
-                type="primary"
-                class="iconfont tianji-icongithub"
-                circle
-                style="{padding-top: 15px;padding-left: 25px;}"
-              ></el-button> -->
-
-            <el-link
-              ref="buttonRef"
-              v-click-outside="onClickOutside"
-              style="
-                 {
-                  font-weight: 500;
-                  text-decoration: underline;
-                  font-style: italic;
-                  padding-top: 15px;
-                  padding-left: 25px;
-                }
-              "
-            >
-              其他登录方式 ->
-            </el-link>
-
-            <el-popover
-              ref="popoverRef"
-              :virtual-ref="buttonRef"
-              trigger="click"
-              title="第三方登录"
-              virtual-triggering
-            >
-              <el-row>
-                <el-button
-                  size="small"
-                  type="primary"
-                  class="iconfont icongithub"
-                  circle
-                  @click="GetThirdLoginUrl('github')"
-                />
-                <el-button
-                  size="small"
-                  type="success"
-                  class="iconfont iconweixin1"
-                  circle
-                  @click="GetThirdLoginUrl('wechat')"
-                />
-                <el-button
-                  type="info"
-                  size="small"
-                  class="iconfont iconQQ1"
-                  circle
-                  @click="GetThirdLoginUrl('qq')"
-                />
-              </el-row>
-            </el-popover>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { routerPush } from "src/router";
+import { routerPush,router } from "src/router";
 import { AuthApis } from "src/services/apis/auth";
 import type { Menu } from "src/services/apis/auth";
 import { useAuthStore } from "src/store/user";
-import { reactive, ref, unref, onMounted, computed } from "vue";
+import { ref } from "vue";
 import { ElMessage, ClickOutside as vClickOutside } from "element-plus";
-import { useRouter } from "vue-router";
 import type { loginFormOrRegisterForm } from "src/services/apis/auth";
-
-const buttonRef = ref();
-const popoverRef = ref();
-const onClickOutside = () => {
-  unref(popoverRef).popperRef?.delayHide?.();
-};
 
 // 状态
 const state = ref<"register" | "login" | "bind">("login");
 const isLoginOrRegister = ref(false);
 const loadingContent = ref("正在登录...");
-const svg = `
-          <path class="path" d="
-            M 30 15
-            L 28 17
-            M 25.61 25.61
-            A 15 15, 0, 0, 1, 15 30
-            A 15 15, 0, 1, 1, 27.99 7.5
-            L 15 15
-          " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
-        `;
-const bind_id = ref();
+export const status = ref("登录");
 
-const form = reactive<loginFormOrRegisterForm>({
-  username: "",
-  password: "",
-  telephone: "",
-  email: "",
-});
+// function submit() {
+//   switch (state.value) {
+//     case "register":
+//       register();
+//       break;
+//     case "login":
+//       login();
+//       break;
+//     case "bind":
+//       bindAccount();
+//       break;
+//   }
+// }
 
-// const {updateUserInfo,updateToken} = useAuthStore()
-
-const title = computed(() => {
-  switch (state.value) {
-    case "register":
-      return "注册";
-    case "bind":
-      return "绑定账号";
-    default:
-      return "登录";
-  }
-});
-
-function submit() {
-  switch (state.value) {
-    case "register":
-      register();
-      break;
-    case "login":
-      login();
-      break;
-    case "bind":
-      bindAccount();
-      break;
-  }
-}
-
-function login() {
+export function login(form: loginFormOrRegisterForm) {
   isLoginOrRegister.value = true;
   loadingContent.value = "正在登录...";
   AuthApis.login(form, {
     timeout: 1000 * 2 * 60,
   })
     .then(function (res) {
-      if (res.code != -1) {
+      console.log(">>> 登录结果", res)
+      if (res.code == 0) {
         ElMessage.success("登录成功!");
         console.log(">>> 登录成功", res.data);
         useAuthStore().updateUserInfo(res.data);
@@ -228,7 +56,7 @@ function login() {
         if (prePage == null || prePage == "/login") {
           routerPush("Index");
         } else {
-          // console.log('>>curr', prePage)
+          console.log('>>curr', prePage)
           router.push({ path: prePage });
         }
       } else {
@@ -246,13 +74,13 @@ function login() {
     });
 }
 
-function changeRegister() {
+export function changeRegister() {
   state.value == "register"
     ? (state.value = "login")
     : (state.value = "register");
 }
 
-function register() {
+export function register(form: loginFormOrRegisterForm) {
   isLoginOrRegister.value = true;
   loadingContent.value = "正在注册...";
   AuthApis.register(form, {
@@ -267,12 +95,14 @@ function register() {
       console.log(">>> 注册成功", res);
       ElMessage.success("注册成功!");
       isLoginOrRegister.value = false;
-      if (bind_id.value) {
-        state.value = "bind";
-        bindAccount();
-      } else {
-        state.value = "login";
-      }
+			status.value = "登录";
+			router.push({path:'/login'})
+      // if (bind_id.value) {
+      //   state.value = "bind";
+      //   bindAccount();
+      // } else {
+      //   state.value = "login";
+      // }
     })
     .catch(function (err) {
       ElMessage.error(`T T 注册失败:${err.data.message}!`);
@@ -281,7 +111,7 @@ function register() {
     });
 }
 
-function Menu2Tree(
+export function Menu2Tree(
   menu_list: Menu[],
   parent_id: number,
   cached: Array<number>
@@ -320,37 +150,37 @@ function getMenus() {
 }
 
 // ############################## thirdLogin ###############################
-const router = useRouter();
-onMounted(() => {
-  // 打印
-  console.log("router:", router.currentRoute.value.query);
-  const queryParmas = router.currentRoute.value.query;
-  if (queryParmas && queryParmas.type) {
-    switch (queryParmas.type) {
-      case "github":
-        loginByGithub(queryParmas.code as string);
-        break;
-      case "wechat":
-        loginByWechat();
-        break;
-      case "qq":
-        loginByQQ();
-        break;
-      default:
-        break;
-    }
-  }
-});
+// const router = useRouter();
+// onMounted(() => {
+//   // 打印
+//   console.log("router:", router.currentRoute.value.query);
+//   const queryParmas = router.currentRoute.value.query;
+//   if (queryParmas && queryParmas.type) {
+//     switch (queryParmas.type) {
+//       case "github":
+//         loginByGithub(queryParmas.code as string);
+//         break;
+//       case "wechat":
+//         loginByWechat();
+//         break;
+//       case "qq":
+//         loginByQQ();
+//         break;
+//       default:
+//         break;
+//     }
+//   }
+// });
 
-function loginByWechat() {
+export function loginByWechat() {
   ElMessage.warning("建设中...");
 }
 
-function loginByQQ() {
+export function loginByQQ() {
   ElMessage.warning("建设中...");
 }
 
-function loginByGithub(authCode: string) {
+export function loginByGithub(authCode: string) {
   ElMessage.warning("建设中...");
   //   isLoginOrRegister.value=true
   //   loadingContent.value="正在登录..."
@@ -394,7 +224,7 @@ function loginByGithub(authCode: string) {
   //   console.log(">>> login by qq ")
 }
 
-function GetThirdLoginUrl(type: string) {
+export function GetThirdLoginUrl(type: string) {
   ElMessage.error("建设中...");
   AuthApis.getThirdLoginUrl(type, {
     timeout: 2 * 60 * 1000,
@@ -408,7 +238,7 @@ function GetThirdLoginUrl(type: string) {
     });
 }
 
-function bindAccount() {
+export function bindAccount() {
   // isLoginOrRegister.value=true
   // loadingContent.value="正在绑定账户..."
   // AuthApis.bindAccount(form,bind_id.value,{
@@ -436,4 +266,3 @@ function bindAccount() {
   //   ElMessage.error(`T T 绑定失败:${err.data.message}`)
   // })
 }
-</script>

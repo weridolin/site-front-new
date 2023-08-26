@@ -56,7 +56,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/login",
     name: "login",
-    component: () => import("./pages/Login.vue"),
+    component: () => import("./pages/auth/LoginPage.vue"),
     meta: {
       keepAlive: false, // 需要被缓存
       title: "登录",
@@ -66,6 +66,7 @@ export const routes: RouteRecordRaw[] = [
       requireAuth: false,
     },
   },
+  
   {
     path: "/",
     redirect: (to) => {

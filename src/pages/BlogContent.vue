@@ -145,7 +145,7 @@
 <script setup lang="ts">
   import NewLoading from "src/components/NewLoading.vue"
   import QrCode from 'src/components/QrCode.vue'
-  import MessCard from "src/components/MessCard.vue"
+  import MessCard from "src/components/home/MessCard.vue"
   import NewComment from "src/components/NewComment.vue"
   import {ref,reactive,computed,watch } from "vue"
   import {ArticlesApis} from "src/services/apis/articles"

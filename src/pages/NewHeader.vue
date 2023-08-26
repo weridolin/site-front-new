@@ -1,72 +1,45 @@
 <template>
   <div class="nav-top" :style="quiet ? navQuiet.navNoQuiet : navQuiet.navQuiet">
     <nav class="nav-container">
+      <div class="navbar-header-werido">
+        <div
+          class="navbar-toggler"
+          :class="{ change: isShow }"
+          @click="toggleMenu"
+        >
+          <div class="bar1"></div>
+          <div class="bar2"></div>
+          <div class="bar3"></div>
+        </div>
 
-          <div class="navbar-header-werido">
-            <!-- 确保无论是宽屏还是窄屏，navbar-brand都显示 -->
-                  <!-- <router-link to="/"  class="navbar-brand">
-                      werido
-                  </router-link> -->
-
-        <!-- 屏幕宽度小于768px时，div.navbar-responsive-collapse容器里的内容都会隐藏，显示icon-bar图标，当点击icon-bar图标时，再展开。屏幕大于768px时，默认显示。 -->
-            <div
-              class="navbar-toggler"
-              :class="{ change: isShow }"
-              @click="toggleMenu"
+        <!-- 导航栏 -->
+        <div
+          v-show="isShow"
+          class="navbar-collapse blog-animation"
+          @click="toggleMenu()"
+        >
+          <div class="nav_header navbar-nav_header">
+            <XRouteLink
+              v-for="item of list"
+              :key="item.id"
+              :class="{ active: $route.path == item.link }"
+              :to="item.link"
+              ><div>{{ item.tag }}</div></XRouteLink
             >
-              <div class="bar1"></div>
-              <div class="bar2"></div>
-              <div class="bar3"></div>
-            </div>
-
-            
-            <!-- 导航栏 -->
-            <div
-              v-show="isShow"
-              class="navbar-collapse blog-animation"
-              @click="toggleMenu()"
-            >
-
-              <div class="nav_header navbar-nav_header">
-                <XRouteLink
-                  v-for="item of list"
-                  :key="item.id"
-                  :class="{ active: $route.path == item.link }"
-                  :to="item.link"
-                  ><div>{{ item.tag }}</div></XRouteLink
-                >
-              </div>
-              
           </div>
-
-          <!-- <div>
-            <el-avatar shape="square" :size="size" :src="squareUrl"></el-avatar>
-          </div> -->
-          </div>
+        </div>
+      </div>
     </nav>
   </div>
 </template>
-<script>
-import { mapState } from "vuex";
-import  XRouteLink from "src/components/XRouteLink.vue"
-
-export default {
-  name: "NewHeader",
-  components:{
-    XRouteLink
-  },
-  data() {
-    return {
-      url: "https://p.pstatp.com/origin/febd000185ec2da4425e",
-      screenWidth: document.body.clientWidth,
-      navQuiet: {},
-      quiet: false,
-      isShow: false,
-      acitve: "/",
-      // userInfo:this.$store.state.user,
-      welcome: "Hello!欢迎登录哦！",
-      // down:false,
-      list: [
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+import XRouteLink from "src/components/XRouteLink.vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
+const navQuiet= ref<any>({})
+const quiet = ref(false)
+const isShow = ref(false)
+const list= [
         {
           id: "0",
           tag: "主页",
@@ -102,126 +75,59 @@ export default {
           tag: "疯狂实验室",
           link: "/lab",
         },
-        // {
-        //   id: "7",
-        //   tag: "文件中转站",
-        //   link: "/fileBroker",
-        // },
-        // {
-        //   id: "8",
-        //   tag: "数据生成器",
-        //   link: "/dataFaker",
-        // },
-      ],
-      success: [
-        {
-          id: "1",
-          tag: "个人信息",
-          link: "/user/info",
-        },
-        {
-          id: "2",
-          tag: "我的留言",
-          link: "/user/message",
-        },
-        {
-          id: "3",
-          tag: "发表文章",
-          link: "/user/add",
-        },
-        {
-          id: "4",
-          tag: "系统消息",
-          link: "/user/sysmess",
-        },
-        // {
-        // id:'5',
-        // tag:'退出登录',
-        // link:'/user/sign'
-        // }
-      ],
-      failure: [
-        {
-          id: "1",
-          tag: "登录",
-          link: "/login",
-        },
-        {
-          id: "2",
-          tag: "注册",
-          link: "/sign",
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState(["token"]),
-    isToken() {
-      return this.$store.state.user.token.length == 0
-        ? this.failure
-        : this.success;
-    },
-    userInfo() {
-      return this.$store.state.user.user;
-    },
-  },
-  methods: {
-    toggleMenu() {
-      this.isShow = !this.isShow;
+      ]
+const router = useRouter()
+
+/******* method ******/
+function toggleMenu() {
+      isShow.value = !isShow.value;
       const route = document.getElementsByClassName("route-content")[0];
-      if (this.isShow) {
+      if (isShow.value) {
         route.classList.add("route-filter");
       } else {
         route.classList.remove("route-filter");
       }
-    },
-    logOut() {
-      this.$store.dispatch("logOut");
-      this.$router.push("/login");
-      this.$message({
-        showClose: true,
-        message: "退出成功",
-        type: "success",
-      });
-    },
-    handleScroll() {
-      var scrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop;
-      // console.log(scrollTop)
-      if (scrollTop >= 100) {
-        this.quiet = true;
-      } else {
-        this.quiet = false;
-      }
-    },
-  },
-  watch: {
-    $route(to, from) {      
-      // 对路由变化作出响应...
-      if (to.meta){
-        this.navQuiet = to.meta.nav;
-        console.log("nav", to,from);
-      }
+    }
 
-      // if(to.name=='NewHome'){
-      //     console.log(to.name)
-      //     this.getArticle()
-      // }
-    },
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-    //  console.log(this.$route.path)
-  },
-  destroyed() {
-    window.removeEventListener("scroll", this.handleScroll); // 离开页面 关闭监听 不然会报错
-  },
-};
+function  handleScroll() {
+  var scrollTop =
+    window.pageYOffset ||
+    document.documentElement.scrollTop ||
+    document.body.scrollTop;
+  // console.log(scrollTop)
+  if (scrollTop >= 100) {
+    quiet.value = true;
+  } else {
+    quiet.value = false;
+  }
+}
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
+
+//监听路由变化
+watch(
+  () => router.currentRoute.value,
+  (to, from) => {
+    // 对路由变化作出响应...
+    if (to.meta) {
+      navQuiet.value = to.meta.nav;
+      console.log("nav", to, from);
+    }
+  }
+);
+
+
 </script>
+
+
 <style lang="stylus" scoped>
-@import '../assets/style/home.styl'
+@import '../assets/style/home.styl';
 
 .nav-quiet {
   color: #fff;
@@ -235,30 +141,30 @@ export default {
   color: white;
 }
 
-    .navbar-header-werido {
-      width: 100%;
-      display: flex;
-      flex-flow: row wrap;
-      justify-content: flex-end;
-      align-items: center;
-      margin:10px -5%;
+.navbar-header-werido {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 10px -5%;
 
-      .navbar-brand {
-        display: flex;
-        width: 110px;
-        height: 40px;
-        // background: url('~@/assets/logo.svg') no-repeat;
-        text-indent: -9999rem;
-        margin: 10px 0;
-        text-decoration: none;
-        flex-shrink: 0;
+  .navbar-brand {
+    display: flex;
+    width: 110px;
+    height: 40px;
+    // background: url('~@/assets/logo.svg') no-repeat;
+    text-indent: -9999rem;
+    margin: 10px 0;
+    text-decoration: none;
+    flex-shrink: 0;
 
-        .navbar-logo {
-          height: 50px;
-          margin: 5px;
-        }
-      }
+    .navbar-logo {
+      height: 50px;
+      margin: 5px;
     }
+  }
+}
 
 .nav-top {
   width: 100%;
@@ -276,29 +182,28 @@ export default {
     position: relative;
 
     // .navbar-header-werido {
-    //   width: 100%;
-    //   display: flex;
-    //   flex-flow: row wrap;
-    //   justify-content: flex-start;
-    //   align-items: center;
+    // width: 100%;
+    // display: flex;
+    // flex-flow: row wrap;
+    // justify-content: flex-start;
+    // align-items: center;
 
-    //   .navbar-brand {
-    //     display: flex;
-    //     width: 110px;
-    //     height: 40px;
-    //     // background: url('~@/assets/logo.svg') no-repeat;
-    //     text-indent: -9999rem;
-    //     margin: 10px 0;
-    //     text-decoration: none;
-    //     flex-shrink: 0;
+    // .navbar-brand {
+    // display: flex;
+    // width: 110px;
+    // height: 40px;
+    // // background: url('~@/assets/logo.svg') no-repeat;
+    // text-indent: -9999rem;
+    // margin: 10px 0;
+    // text-decoration: none;
+    // flex-shrink: 0;
 
-    //     .navbar-logo {
-    //       height: 50px;
-    //       margin: 5px;
-    //     }
-    //   }
+    // .navbar-logo {
+    // height: 50px;
+    // margin: 5px;
     // }
-
+    // }
+    // }
     .user-info {
       position: relative;
 

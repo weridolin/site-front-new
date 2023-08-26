@@ -14,9 +14,7 @@
       v-if="!$route.meta.keepAlive"
       class="route-content"
     ></router-view>
-    <el-backtop :right="20" :bottom="50" />
     <index-footer
-      :route="$route.path"
       v-show="$route.meta.footer && $route.path !== '/drug'"
     ></index-footer>
     <!-- APP.vue定义组件都是页面公用的App.vue是项目的主组件，页面入口文件 ，所有页面都在App.vue下进行切换，app.vue负责构建定义及页面组件归集 -->
@@ -31,8 +29,7 @@ import NewHeader from "src/pages/NewHeader.vue";
 import IndexFooter from "src/pages/IndexFooter.vue";
 // import Music from "./components/Music";
 // import MyMarked from "./components/MyMarked";
-import Auth from "src/components/Auth.vue";
-// import Auth2 from "src/components/Auth2.vue"
+import Auth from "src/components/home/Auth.vue";
 </script>
   
 <style>

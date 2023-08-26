@@ -15,7 +15,6 @@ const commentReplyList = ref<Array<SiteComment>>([]);
 
 
 function formatReply(address:Address) {
-    
     // console.log(adds)
     let country  = address.loc_country;
     let province = address.loc_province;

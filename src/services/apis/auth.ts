@@ -173,9 +173,10 @@ export class Apis extends ApiBase {
     registerForm: loginFormOrRegisterForm,
     params: RequestParams = {}
   ) {
+    console.log(">>>> register form", registerForm)
     const pwd = pwdEncrypt(registerForm.password);
     const temForm = {
-      count: registerForm.username,
+      username: registerForm.username,
       password: pwd,
       email: registerForm.email,
       telephone: registerForm.telephone,

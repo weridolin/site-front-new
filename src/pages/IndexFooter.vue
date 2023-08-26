@@ -7,7 +7,9 @@
           <li><router-link to="/lab">疯狂实验室</router-link></li>
           <li><router-link to="/home/link">友链</router-link></li>
           <li><router-link to="/home/message">留言</router-link></li>
-          <li><XRouteLink to="https://weridolin.github.io/#/">博客</XRouteLink></li>
+          <li>
+            <XRouteLink to="https://weridolin.github.io/#/">博客</XRouteLink>
+          </li>
           <li><router-link to="/">主页</router-link></li>
           <li><router-link to="/">💡💡</router-link></li>
         </ul>
@@ -21,31 +23,7 @@
             ></a
           ></span
         >
-        <div class="search-wrap">
-          <!--                    <form-->
-          <!--                        method="get"-->
-          <!--                        action="//google.com.hk/search"-->
-          <!--                        target="_blank"-->
-          <!--                        autocomplete="off"-->
-          <!--                    >-->
-          <!--                        <input type="hidden" name="oe" value="UTF-8" />-->
-          <!--                        <input type="hidden" name="hl" value="zh-CN" />-->
-          <!--                        <input type="hidden" name="domains" value="www.yunmobai.cn" />-->
-          <!--                        <input type="hidden" name="ie" value="UTF-8" />-->
-          <!--                        <input type="hidden" name="sitesearch" value="www.yunmobai.cn" />-->
-          <!--                        <input-->
-          <!--                            class="search-ipt"-->
-          <!--                            type="text"-->
-          <!--                            placeholder="find something…"-->
-          <!--                            name="q"-->
-          <!--                            spellcheck="false"-->
-          <!--                            maxlength="40"-->
-          <!--                        />-->
-          <!--                        <button type="submit" class="icon">-->
-          <!--                        <i class="icon-search  el-icon-search"></i>-->
-          <!--                        </button>-->
-          <!--                    </form>-->
-        </div>
+        <div class="search-wrap"></div>
       </div>
       <div class="foot-row publicity">
         <span
@@ -53,7 +31,6 @@
             >粤ICP备2020119623号</a
           ></span
         >
-        <!--                <span><a class="a-flex" target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=34030002020734" >皖公网安备 34030002020734号</a></span>-->
       </div>
       <div class="foot-row bottom">
         <p class="copyright">
@@ -69,26 +46,9 @@
     </div>
   </footer>
 </template>
-<script>
-import  XRouteLink from "src/components/XRouteLink.vue"
-export default {
-  name: "IndexFooter",
-  components:{
-    XRouteLink
-  },
-  props: {
-    route: String,
-  },
-  data() {
-    return {
-      year: 2020,
-    };
-  },
-  created() {
-    let date = new Date();
-    this.year = date.getFullYear();
-  },
-};
+<script setup lang="ts">
+import XRouteLink from "src/components/XRouteLink.vue";
+const year = new Date().getFullYear();
 </script>
 <style lang="stylus" scoped>
 .footer {
@@ -102,7 +62,7 @@ export default {
   padding: 10px;
   line-height: 26px;
   position: relative;
-  margin-top:0
+  margin-top: 0;
 
   a {
     color: #a7a7a7;
@@ -133,7 +93,7 @@ export default {
         li {
           float: right; // 靠右浮动
           margin: 0 20px;
-          list-style: none
+          list-style: none;
 
           a {
             font-size: 14px;
@@ -257,7 +217,7 @@ export default {
     letter-spacing: 2px;
     line-height: 24px;
     position: relative;
-    margin-top:0
+    margin-top: 0;
 
     .container {
       padding: 0 !important;

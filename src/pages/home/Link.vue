@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import LinkHeader from "src/components/LinkHeader.vue";
+import LinkHeader from "src/components/home/LinkHeader.vue";
 import LinkFriendsNew from "src/components/home/LinkFriendsNew.vue";
 
 import { getFriends, friends } from "src/pages/home/Link";

@@ -2,15 +2,8 @@
   <div class="link-header screen content-bg">
     <el-row class="link-top">
       <div class="link-info container">
-        <!-- <h1 class="mess-title blog-animation">
-          <i class="el-icon-collection"></i>今天你学习了吗？
-        </h1> -->
-        <!-- <learning class="load-text blog-animation"></learning> -->
       </div>
     </el-row>
-    <!-- <span @click="next('#next')" class="screen-next iconfont">
-      &#xe623;
-    </span> -->
   </div>
 </template>
 <script setup lang="ts">

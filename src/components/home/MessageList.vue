@@ -31,16 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import MessCardBlog from "src/components/MessCardBlog.vue";
-import { computed } from "vue";
-// import {
-//   // MessListLeft,
-//   // MessListRight,
-//   isShow,
-//   left,
-//   right,
-//   getMess,
-// } from "src/components/MessageList";
+import MessCardBlog from "src/components/home/MessCardBlog.vue";
 import type { SiteComment } from "src/services/apis/home";
 
 interface Props {

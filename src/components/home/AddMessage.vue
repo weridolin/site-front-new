@@ -23,48 +23,43 @@
 
 
 <script setup lang="ts">
-  // import { vueBaberrage } from "vue-baberrage";
-  import NewComment from "src/components/NewComment.vue";
-  import {
-      barrageIsShow,
-      barrageLoop,
-      messList,
-      propList,
-      next,
-  } from "src/components/AddMessage"
+// import { vueBaberrage } from "vue-baberrage";
+import NewComment from "src/components/NewComment.vue";
+import {
+  barrageIsShow,
+  barrageLoop,
+  messList,
+  propList,
+  next,
+} from "src/components/AddMessage";
 
-  import type {
-      SiteCommentResponse
-  } from 'src/services/apis/home'
+import type { SiteComment } from "src/services/apis/home";
 
-  interface Props {
-      list:SiteCommentResponse[]
-  }
+interface Props {
+  list: SiteComment[];
+}
 
+// 传参必须为 interface 类型
+const props = defineProps<Props>();
+propList.value = props.list;
 
-  // 传参必须为 interface 类型
-  const props = defineProps<Props>()
-  propList.value= props.list
-
-  // const testList = ref({
-  //   id:1,
-  //   avatar:"string",
-  //   msg:"弹幕升级中。。。",
-  //   barrageStyle:"blue"
-  // })
-
+// const testList = ref({
+//   id:1,
+//   avatar:"string",
+//   msg:"弹幕升级中。。。",
+//   barrageStyle:"blue"
+// })
 </script>
 <style scoped>
-h1,.h1{
-    text-align: center;
-    padding-bottom: .3em;
-    line-height: 1.2;
-  }
+h1,
+.h1 {
+  text-align: center;
+  padding-bottom: 0.3em;
+  line-height: 1.2;
+}
 </style>
 
 <style lang="stylus">
-
-
 .message {
   height: 100vh;
   min-height: 500px;
@@ -94,7 +89,7 @@ h1,.h1{
       font-size: 60px;
       color: #fff;
     }
- 
+
     .blog-animation {
       margin: 10px;
     }
@@ -117,42 +112,39 @@ h1,.h1{
     }
 
     .mess-body {
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-
-    &:hover {
-      .mess-title {
-        color: #5adcce;
-      }
-    }
-
-    .mess-title {
-      margin: 30px;
-      font-size: 60px;
-      color: #fff;
-    }
- 
-    .blog-animation {
-      margin: 10px;
-    }
-
-    .comment {
-      background: rgba(255, 255, 255, 0.2);
-      transition: all 0.5s;
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.8);
+        .mess-title {
+          color: #5adcce;
+        }
+      }
+
+      .mess-title {
+        margin: 30px;
+        font-size: 60px;
+        color: #fff;
+      }
+
+      .blog-animation {
+        margin: 10px;
+      }
+
+      .comment {
+        background: rgba(255, 255, 255, 0.2);
+        transition: all 0.5s;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.8);
+        }
       }
     }
   }
-  }
-
-
 }
-
 
 .barrages-drop >>> {
   .baberrage-item {

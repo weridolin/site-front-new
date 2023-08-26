@@ -26,8 +26,8 @@
   </div>
 </template>
 <script setup lang="ts">
-  import AddMessage from 'src/components/AddMessage.vue'
-  import MessageList from 'src/components/MessageList.vue'
+  import AddMessage from 'src/components/home/AddMessage.vue'
+  import MessageList from 'src/components/home/MessageList.vue'
   // import { reactive, ref,onBeforeMount } from 'vue';
 
   import {
