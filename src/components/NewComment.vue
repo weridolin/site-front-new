@@ -1,8 +1,8 @@
 <template>
   <div
+    v-loading="loading"
     class="valine_comment v"
     data-class="v"
-    v-loading="loading"
     element-loading-text="评论提交中..."
     :element-loading-spinner="svg"
     element-loading-svg-view-box="-10, -10, 50, 50"
@@ -47,17 +47,17 @@
           <div class="vedit" style="positon: relative">
             <el-form-item prop="content">
               <el-input
+                v-model="commentSubmitFormData.body"
                 type="textarea"
                 :rows="8"
                 :class="{ content: isLogin }"
-                v-model="commentSubmitFormData.body"
                 class="veditor vinput"
                 placeholder="留下你宝贵的意见 @~@ 😎"
-              ></el-input>
+              />
             </el-form-item>
 
             <div class="vrow">
-              <div class="vcol vcol-60 status-bar"></div>
+              <div class="vcol vcol-60 status-bar" />
               <div class="vcol vcol-40 vctrl text-right">
                 <!--            EMOJI 弹框 表情   #-->
                 <el-popover
@@ -130,8 +130,7 @@
                 {{ countCount > 500 ? "已超出" : "还可以输入" }}
                 <strong class="count-leng">{{
                   Math.abs(500 - countCount)
-                }}</strong
-                >字
+                }}</strong>字
               </span>
               <!--  确定框  -->
               <el-tooltip
@@ -143,8 +142,8 @@
                 <button
                   type="button"
                   title="Cmd|Ctrl+Enter"
-                  @click="post"
                   class="vsubmit vbtn"
+                  @click="post"
                 >
                   提交
                 </button>
@@ -157,14 +156,13 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import EmojiList from "src/components/EmojiList.vue";
-import MyMarked from "src/components/MyMarked.vue";
-import { ElMessage } from "element-plus";
-import { useAuthStore } from "src/store/user";
+import EmojiList from 'src/components/EmojiList.vue'
+import MyMarked from 'src/components/MyMarked.vue'
+import { ElMessage } from 'element-plus'
+import { useAuthStore } from 'src/store/user'
 // import EmojiL
-import { ref } from "vue";
+import { ref } from 'vue'
 
 import {
   commentSubmitFormData,
@@ -174,11 +172,11 @@ import {
   isLogin,
   countCount,
   initCommentSubmitFormData,
-} from "src/components/NewComment";
-import { HomeApi } from "src/services/apis/home";
-import { load } from "@amap/amap-jsapi-loader";
+} from 'src/components/NewComment'
+import { HomeApi } from 'src/services/apis/home'
+import { load } from '@amap/amap-jsapi-loader'
 
-const emit = defineEmits(["add-new-comment"]);
+const emit = defineEmits(['add-new-comment'])
 
 const svg = `
         <path class="path" d="
@@ -189,34 +187,32 @@ const svg = `
           A 15 15, 0, 1, 1, 27.99 7.5
           L 15 15
         " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
-      `;
-async function post() {
+      `
+async function post () {
   if (!useAuthStore().isLogin.value) {
-    ElMessage.error("请先登录！");
-    return;
+    ElMessage.error('请先登录！')
+    return
   }
   // this.comment.type = "siteComment";
-  loading.value = true;
+  loading.value = true
   await HomeApi.siteComment
     .submit(commentSubmitFormData, {
       timeout: 3 * 60 * 1000,
     })
     .then((res) => {
-      ElMessage.success("提交成功!");
-      initCommentSubmitFormData();
-      emit("add-new-comment");
+      ElMessage.success('提交成功!')
+      initCommentSubmitFormData()
+      emit('add-new-comment')
     })
     .catch((err) => {
-      ElMessage.error(`提交失败:${err}!`);
-      console.log(err);
+      ElMessage.error(`提交失败:${err}!`)
+      console.log(err)
       // initCommentSubmitFormData()
-    }).finally(()=>{
-      loading.value = false;
-    });
+    }).finally(() => {
+      loading.value = false
+    })
 }
 </script>
-
-
 
 <style lang="stylus" scoped>
 .v>>>.el-textarea__inner {

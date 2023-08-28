@@ -9,24 +9,24 @@ import { useAuthStore } from 'src/store/user'
 // const {updateUserInfo,updateToken} = useAuthStore()
 import { CONFIG } from 'src/config'
 import { ElMessage } from 'element-plus'
-import {router} from 'src/router'
-import {SiteApis} from "src/services/api"
+import { router } from 'src/router'
+import { SiteApis } from 'src/services/api'
 
 const axiosInstance = axios
-.create(
-  {
-    baseURL: `${CONFIG.API_HOST}`,
-    timeout: 5 * 60 * 1000,
-  },
-)
+  .create(
+    {
+      baseURL: `${CONFIG.API_HOST}`,
+      timeout: 5 * 60 * 1000,
+    },
+  )
 
 // 刷新TOKEN返回类型
 export interface refreshTokenResponse {
-  code: string,
-  msg: string,
+  code: string
+  msg: string
   data: {
-      access_token: string,
-      refresh_token: string,
+    access_token: string
+    refresh_token: string
   }
 }
 
@@ -55,7 +55,7 @@ axiosInstance.interceptors.response.use(
             method: 'post',
             url: SiteApis.usercenter.refreshToken.url,
             headers: {
-              "Authorization": `Bearer ${useAuthStore().tokens?.refreshToken}`,
+              Authorization: `Bearer ${useAuthStore().tokens?.refreshToken}`,
             }
             ,
           }).then((res) => {
@@ -78,8 +78,8 @@ axiosInstance.interceptors.response.use(
               ElMessage.info('登录已经过期,请重新登录')
               useAuthStore().clearAuthInfo()
               router.replace({
-                path:"/login",
-                query:{redirect:router.currentRoute.value.fullPath}
+                path: '/login',
+                query: { redirect: router.currentRoute.value.fullPath },
               })
             }
             isRefreshToken = false
@@ -101,8 +101,8 @@ axiosInstance.interceptors.response.use(
         ElMessage.error('请先登录')
         console.log(router.currentRoute.value.fullPath)
         router.replace({
-          path:"/login",
-          query:{redirect:router.currentRoute.value.fullPath}
+          path: '/login',
+          query: { redirect: router.currentRoute.value.fullPath },
         })
         return Promise.reject(error)
       }
@@ -134,10 +134,8 @@ export interface BasePaginationResponse{
   next: string
   previous: null
   results: any
-  last_page:number
+  last_page: number
 }
-
-
 
 // 定义 AXIOS 拦截器
 // interface InterceptorHooks {

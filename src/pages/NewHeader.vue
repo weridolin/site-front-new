@@ -7,9 +7,9 @@
           :class="{ change: isShow }"
           @click="toggleMenu"
         >
-          <div class="bar1"></div>
-          <div class="bar2"></div>
-          <div class="bar3"></div>
+          <div class="bar1" />
+          <div class="bar2" />
+          <div class="bar3" />
         </div>
 
         <!-- 导航栏 -->
@@ -24,8 +24,9 @@
               :key="item.id"
               :class="{ active: $route.path == item.link }"
               :to="item.link"
-              ><div>{{ item.tag }}</div></XRouteLink
             >
+              <div>{{ item.tag }}</div>
+            </XRouteLink>
           </div>
         </div>
       </div>
@@ -33,98 +34,96 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import XRouteLink from "src/components/XRouteLink.vue";
-import {onMounted, onUnmounted, ref, watch} from "vue";
-const navQuiet= ref<any>({})
+import { useRouter } from 'vue-router'
+import XRouteLink from 'src/components/XRouteLink.vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
+const navQuiet = ref<any>({})
 const quiet = ref(false)
 const isShow = ref(false)
-const list= [
-        {
-          id: "0",
-          tag: "主页",
-          link: "/",
-        },
-        // {
-        //   id: "1",
-        //   tag: "文章",
-        //   link: "/blog",
-        // },
-        {
-          id: "1",
-          tag: "文章",
-          link: "https://weridolin.github.io/#/",
-        },
-        {
-          id: "2",
-          tag: "留言",
-          link: "/home/message",
-        },
-        {
-          id: "4",
-          tag: "友链",
-          link: "/home/link",
-        },
-        {
-          id: "5",
-          tag: "更新轨迹",
-          link: "/home/route",
-        },
-        {
-          id: "6",
-          tag: "疯狂实验室",
-          link: "/lab",
-        },
-      ]
+const list = [
+  {
+    id: '0',
+    tag: '主页',
+    link: '/',
+  },
+  // {
+  //   id: "1",
+  //   tag: "文章",
+  //   link: "/blog",
+  // },
+  {
+    id: '1',
+    tag: '文章',
+    link: 'https://weridolin.github.io/#/',
+  },
+  {
+    id: '2',
+    tag: '留言',
+    link: '/home/message',
+  },
+  {
+    id: '4',
+    tag: '友链',
+    link: '/home/link',
+  },
+  {
+    id: '5',
+    tag: '更新轨迹',
+    link: '/home/route',
+  },
+  {
+    id: '6',
+    tag: '疯狂实验室',
+    link: '/lab',
+  },
+]
 const router = useRouter()
 
-/******* method ******/
-function toggleMenu() {
-      isShow.value = !isShow.value;
-      const route = document.getElementsByClassName("route-content")[0];
-      if (isShow.value) {
-        route.classList.add("route-filter");
-      } else {
-        route.classList.remove("route-filter");
-      }
-    }
+/** ***** method ******/
+function toggleMenu () {
+  isShow.value = !isShow.value
+  const route = document.getElementsByClassName('route-content')[0]
+  if (isShow.value) {
+    route.classList.add('route-filter')
+  } else {
+    route.classList.remove('route-filter')
+  }
+}
 
-function  handleScroll() {
-  var scrollTop =
+function handleScroll () {
+  const scrollTop =
     window.pageYOffset ||
     document.documentElement.scrollTop ||
-    document.body.scrollTop;
+    document.body.scrollTop
   // console.log(scrollTop)
   if (scrollTop >= 100) {
-    quiet.value = true;
+    quiet.value = true
   } else {
-    quiet.value = false;
+    quiet.value = false
   }
 }
 
 onMounted(() => {
-  window.addEventListener("scroll", handleScroll);
-});
+  window.addEventListener('scroll', handleScroll)
+})
 
 onUnmounted(() => {
-  window.removeEventListener("scroll", handleScroll);
-});
+  window.removeEventListener('scroll', handleScroll)
+})
 
-//监听路由变化
+// 监听路由变化
 watch(
   () => router.currentRoute.value,
   (to, from) => {
     // 对路由变化作出响应...
     if (to.meta) {
-      navQuiet.value = to.meta.nav;
-      console.log("nav", to, from);
+      navQuiet.value = to.meta.nav
+      console.log('nav', to, from)
     }
-  }
-);
-
+  },
+)
 
 </script>
-
 
 <style lang="stylus" scoped>
 @import '../assets/style/home.styl';

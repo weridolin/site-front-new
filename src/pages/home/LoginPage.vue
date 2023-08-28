@@ -2,54 +2,56 @@
   <div class="background">
     <div class="wrapper">
       <div class="logo">
-        <img :src="mine" alt="" />
+        <img :src="mine" alt="">
       </div>
-      <div class="text-center mt-4 name">林叔叔个怪蜀黍的小屋🏡</div>
+      <div class="text-center mt-4 name">
+        林叔叔个怪蜀黍的小屋🏡
+      </div>
       <form class="p-3 mt-3">
         <div class="form-field d-flex align-items-center input-info">
-          <span class="far fa-user"></span>
+          <span class="far fa-user" />
           <input
+            id="userName"
+            v-model="form.username"
             type="userName"
             name="userName"
-            id="userName"
             placeholder="用户名"
-            v-model="form.username"
-          />
+          >
         </div>
         <div
-          class="form-field d-flex align-items-center input-info"
           v-if="status == '注册'"
+          class="form-field d-flex align-items-center input-info"
         >
-          <span class="fas fa-key"></span>
+          <span class="fas fa-key" />
           <input
+            id="email"
+            v-model="form.email"
             type="email"
             name="email"
-            id="email"
             placeholder="输入邮箱"
-            v-model="form.email"
-          />
+          >
         </div>
         <div class="form-field d-flex align-items-center input-info">
-          <span class="fas fa-key"></span>
+          <span class="fas fa-key" />
           <input
+            id="pwd"
+            v-model="form.password"
             type="password"
             name="password"
-            id="pwd"
             placeholder="密码"
-            v-model="form.password"
-          />
+          >
         </div>
         <div
-          class="form-field d-flex align-items-center input-info"
           v-if="status == '注册'"
+          class="form-field d-flex align-items-center input-info"
         >
-          <span class="fas fa-key"></span>
+          <span class="fas fa-key" />
           <input
+            id="pwd2"
             type="password"
             name="password2"
-            id="pwd2"
             placeholder="再次输入密码"
-          />
+          >
         </div>
         <el-button
           class="btn mt-3"
@@ -60,8 +62,9 @@
               status == '登录' ? login(form) : register(form);
             }
           "
-          >{{ status == "登录" ? "登录" : "注册" }}</el-button
         >
+          {{ status == "登录" ? "登录" : "注册" }}
+        </el-button>
       </form>
       <div class="text-center footer fs-6">
         <a class="text-link">忘记密码?</a> or
@@ -72,14 +75,14 @@
 </template>
 
 <script setup lang="ts">
-import mine from "src/assets/mine.png";
-import { ref, computed } from "vue";
-import { login, register,status } from "src/pages/home/login";
-import type { loginFormOrRegisterForm } from "src/services/apis/auth";
-import { ElMessage } from "element-plus";
+import mine from 'src/assets/mine.png'
+import { ref, computed } from 'vue'
+import { login, register, status } from 'src/pages/home/login'
+import type { loginFormOrRegisterForm } from 'src/services/apis/auth'
+import { ElMessage } from 'element-plus'
 
 // const status = ref("登录");
-const statusText = ref("注册");
+const statusText = ref('注册')
 
 // export interface LoginForm {
 //   username: string;
@@ -88,35 +91,34 @@ const statusText = ref("注册");
 //   telephone: "",
 // }
 const form = ref<loginFormOrRegisterForm>({
-  username: "",
-  password: "",
-  email: "",
-  telephone: "",
-});
+  username: '',
+  password: '',
+  email: '',
+  telephone: '',
+})
 
 const changeStatus = () => {
-  if (status.value == "登录") {
-    status.value = "注册";
-    statusText.value = "已有账号,登录";
-    document.title = "注册";
+  if (status.value == '登录') {
+    status.value = '注册'
+    statusText.value = '已有账号,登录'
+    document.title = '注册'
   } else {
-    status.value = "登录";
-    statusText.value = "注册";
-    document.title = "登录";
+    status.value = '登录'
+    statusText.value = '注册'
+    document.title = '登录'
   }
-};
+}
 
 const pwdVerify = () => {
-  const pwd = document.getElementById("pwd") as HTMLInputElement;
-  const pwd2 = document.getElementById("pwd2") as HTMLInputElement;
+  const pwd = document.getElementById('pwd') as HTMLInputElement
+  const pwd2 = document.getElementById('pwd2') as HTMLInputElement
   if (pwd.value != pwd2.value) {
-    ElMessage.error("两次密码不一致");
-    return false;
+    ElMessage.error('两次密码不一致')
+    return false
   }
-  return true;
-};
+  return true
+}
 </script>
-
 
 <style scoped>
 /* Importing fonts from Google */
@@ -129,7 +131,6 @@ const pwdVerify = () => {
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
-
 
 .background {
   /* background: url("src/assets/cloud.jpg");

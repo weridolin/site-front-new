@@ -1,136 +1,133 @@
-import type { User } from "src/services/apis/auth";
-import { ApiBase } from "src/services/base";
-import type { BasePaginationResponse } from "src/services/base";
-import { SiteApis } from "src/services/api";
-import type { BaseResponse, RequestParams } from "src/services/base";
+import type { User } from 'src/services/apis/auth'
+import { ApiBase } from 'src/services/base'
+import type { BasePaginationResponse, BaseResponse, RequestParams } from 'src/services/base'
+import { SiteApis } from 'src/services/api'
 
 //  跑马灯背景图
 export type BackGroundInfoResponse = {
-  id: number;
-  title: string;
-  info: string;
-  link: string;
-  img_url: string;
-};
+  id: number
+  title: string
+  info: string
+  link: string
+  img_url: string
+}
 
 // 网站评论
 
 export type SiteCommentSubmitForm = {
-  body: string;
-  ip: string;
-  address: string;
-  name: string;
-  qq: string | number;
-  email: string;
-};
+  body: string
+  ip: string
+  address: string
+  name: string
+  qq: string | number
+  email: string
+}
 
 export type SiteComment = {
-  id: number;
-  body: string;
-  likes: number;
-  qq: string;
-  email: string;
-  is_valid: boolean;
-  ip: string;
-  province: string;
-  country: string;
-  city: string;
-  updated: string;
-  name: string; //用户名
-  user_id: number; //用户id
-  replay_to: number; //回复给哪条评论
-  root_id: number; //根评论id
-  avatar: string; //头像链接
-  gender: number; //0女性 1男性
-};
+  id: number
+  body: string
+  likes: number
+  qq: string
+  email: string
+  is_valid: boolean
+  ip: string
+  province: string
+  country: string
+  city: string
+  updated: string
+  name: string // 用户名
+  user_id: number // 用户id
+  replay_to: number // 回复给哪条评论
+  root_id: number // 根评论id
+  avatar: string // 头像链接
+  gender: number // 0女性 1男性
+}
 
 export type ReplyForm = {
-  body: string;
-  replay_to: number;
-  root_id: number;
-};
+  body: string
+  replay_to: number
+  root_id: number
+}
 
 export interface CommentsPayload extends BasePaginationResponse {
-  results: Array<SiteComment>;
+  results: SiteComment[]
 }
 
 export interface GetCommentsResponse extends BaseResponse {
-  data: CommentsPayload;
+  data: CommentsPayload
 }
-
-
 
 // 背景音乐
 export type BackGroundMusicResponse = {
-  musicId: number;
-  title: string;
-  name: string;
-  type: string;
-  url: string;
-  avatar: string;
-  is_used: boolean;
-};
+  musicId: number
+  title: string
+  name: string
+  type: string
+  url: string
+  avatar: string
+  is_used: boolean
+}
 
 // 友链
 export type FriendsLink = {
-  site: string;
-  title: string;
-  intro: string;
-  url: string;
-  cover: string;
-  author: User;
-  is_show: boolean;
-  updated: string;
-};
+  site: string
+  title: string
+  intro: string
+  url: string
+  cover: string
+  author: User
+  is_show: boolean
+  updated: string
+}
 
 export type FriendsLinkResponse = {
-  data: FriendsLink[];
-};
+  data: FriendsLink[]
+}
 
 // 更新日志
 
 export interface updateLogItem {
-  id: number;
-  update_content: string;
-  is_finish: boolean;
-  author: User;
-  repo_uri: string;
-  commit_message: string;
-  commit_id: string;
-  commit_content: string;
-  user_id: number;
-  user_name: string;
-  updated: string;
+  id: number
+  update_content: string
+  is_finish: boolean
+  author: User
+  repo_uri: string
+  commit_message: string
+  commit_id: string
+  commit_content: string
+  user_id: number
+  user_name: string
+  updated: string
 }
 
 export interface updateLogPayload {
   [year_month: string]: {
-    [day_weekday: string]: updateLogItem[];
-  };
+    [day_weekday: string]: updateLogItem[]
+  }
 }
 
 export interface updateLogResponse extends BaseResponse {
-  data: updateLogPayload;
+  data: updateLogPayload
 }
 
 // 对话框消息
 export interface ChatMessage {
-  type: "sender" | "receiver"; //sender在右边(客户端发送) receiver在左边（服务端响应）
-  content: string;
+  type: 'sender' | 'receiver' // sender在右边(客户端发送) receiver在左边（服务端响应）
+  content: string
 }
 
 // 背景图片
 
 export interface BackGroundImage {
-  id: number;
-  url: string;
-  is_used: boolean;
-  type: string;
+  id: number
+  url: string
+  is_used: boolean
+  type: string
 }
 
 export type BackGroundImageResponse = {
-  data: BackGroundImage[];
-};
+  data: BackGroundImage[]
+}
 
 export class Api extends ApiBase {
   // public baseUrl:string = import.meta.env.BASE_URL+"/api/v1/home";
@@ -145,9 +142,9 @@ export class Api extends ApiBase {
         method: SiteApis.home.getBackGroundImages.method,
         requiredLogin: SiteApis.home.getBackGroundImages.authenticated,
         ...params,
-      });
+      })
     },
-  };
+  }
 
   backMusic = {
     /**
@@ -160,7 +157,7 @@ export class Api extends ApiBase {
         url: SiteApis.home.getBackGroundMusic.url,
         ...params,
       }),
-  };
+  }
 
   siteComment = {
     /**
@@ -180,7 +177,7 @@ export class Api extends ApiBase {
       this.request({
         method: SiteApis.home.submitSiteComment.method,
         url: SiteApis.home.submitSiteComment.url,
-        data: data,
+        data,
         requiredLogin: SiteApis.home.submitSiteComment.authenticated,
         ...params,
       }),
@@ -197,15 +194,15 @@ export class Api extends ApiBase {
     /**
      * 回复评论
      */
-    postCommentReply: (commentId: number,replyForm:ReplyForm, params: RequestParams = {}) =>
+    postCommentReply: (commentId: number, replyForm: ReplyForm, params: RequestParams = {}) =>
       this.request<BaseResponse>({
         method: SiteApis.home.replyComment.method,
         url: SiteApis.home.replyComment.url(commentId),
         requiredLogin: SiteApis.home.replyComment.authenticated,
-        data:replyForm,
+        data: replyForm,
         ...params,
       }),
-  };
+  }
 
   friendLink = {
     /**
@@ -218,7 +215,7 @@ export class Api extends ApiBase {
         requiredLogin: SiteApis.home.getFriendLinks.authenticated,
         ...params,
       }),
-  };
+  }
 
   updateLog = {
     /**
@@ -231,7 +228,7 @@ export class Api extends ApiBase {
         requiredLogin: SiteApis.home.getSiteUpdateLog.authenticated,
         ...params,
       }),
-  };
+  }
 
   background = {
     /**
@@ -244,9 +241,9 @@ export class Api extends ApiBase {
         requiredLogin: SiteApis.home.getBackGroundImages.authenticated,
         ...params,
       }),
-  };
+  }
 }
 
-const HomeApi = new Api({});
+const HomeApi = new Api({})
 
-export { HomeApi };
+export { HomeApi }

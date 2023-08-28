@@ -1,5 +1,5 @@
 <!--
- * @Description: 
+ * @Description:
  * @email: 359066432@qq.com
  * @Author: lhj
  * @software: vscode
@@ -10,56 +10,51 @@
 -->
 <template>
   <div class="messa">
-    <add-message @update-comment="getMessList" :list="list"></add-message>
+    <add-message :list="list" @update-comment="getMessList" />
     <div class="mess-bg">
       <!--List传给message-list组件-->
-      <message-list :list="list" @submit="getMessList" ></message-list>
+      <message-list :list="list" @submit="getMessList" />
       <p class="next">
-        <span v-loading="loading" element-loading-text="拼命加载中"
-            element-loading-spinner="el-icon-loading"
-            element-loading-background="#f8f8f8" @click="next">
-            <i class="next-icon" :class="current_page==last_page?'el-icon-arrow-up':'el-icon-arrow-down'"></i>
+        <span
+          v-loading="loading"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="#f8f8f8"
+          @click="next"
+        >
+          <i class="next-icon" :class="current_page==last_page?'el-icon-arrow-up':'el-icon-arrow-down'" />
           {{ current_page == last_page ? '没有更多了！快去留言吧！^o^' : '点击查看更多' }}
-      </span>
+        </span>
       </p>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-  import AddMessage from 'src/components/home/AddMessage.vue'
-  import MessageList from 'src/components/home/MessageList.vue'
-  // import { reactive, ref,onBeforeMount } from 'vue';
+import AddMessage from 'src/components/home/AddMessage.vue'
+import MessageList from 'src/components/home/MessageList.vue'
+// import { reactive, ref,onBeforeMount } from 'vue';
 
-  import {
-      list,
-      current_page,
-      last_page,
-      loading,
-      getMessList,
-      next,
-  } from "src/pages/home/Message"
+import {
+  list,
+  current_page,
+  last_page,
+  loading,
+  getMessList,
+  next,
+} from 'src/pages/home/Message'
 
+const initMessList = async () => {
+  getMessList()
+  return list.value
+}
 
-  const initMessList = async () => {
-    getMessList()
-    return list.value
-  }
+initMessList() // create时获取 getMessage
 
-
-
-
-  initMessList() //create时获取 getMessage
-
-  // onBeforeMount(async () => {
-  //     await getMessList() //create时获取 getMessage
-  //   })
-  
-
-
-
+// onBeforeMount(async () => {
+//     await getMessList() //create时获取 getMessage
+//   })
 
 </script>
-
 
 <style lang="stylus" scoped>
 .messa
