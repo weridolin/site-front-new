@@ -107,6 +107,10 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error)
       }
     }
+    if (error.response.status == 403) {
+      ElMessage.error('当前登录的账号没有权限!')
+      return Promise.reject(error)
+    }
     return Promise.reject(error)
   },
 )

@@ -74,7 +74,7 @@
 <script setup lang="ts">
 import mine from "src/assets/mine.png";
 import { ref, computed } from "vue";
-import { login, register,status } from "src/pages/auth/login";
+import { login, register,status } from "src/pages/home/login";
 import type { loginFormOrRegisterForm } from "src/services/apis/auth";
 import { ElMessage } from "element-plus";
 

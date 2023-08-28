@@ -15,7 +15,7 @@
       <h1 class="mess-title blog-animation">
         <i class="el-icon-chat-line-square"></i>畅所欲言！
       </h1>
-      <new-comment class="blog-animation comment"></new-comment>
+      <new-comment @add-new-comment="onAddNewComment" class="blog-animation comment"></new-comment>
     </div>
     <span @click="next('#next')" class="screen-next iconfont"> &#xe623; </span>
   </div>
@@ -32,12 +32,20 @@ import {
   propList,
   next,
 } from "src/components/AddMessage";
+import {defineEmits,defineProps} from "vue"
 
 import type { SiteComment } from "src/services/apis/home";
+// import { emit } from "process";
 
 interface Props {
   list: SiteComment[];
 }
+const emit = defineEmits(['update-comment'])
+
+const onAddNewComment= ()=>{
+  console.log("emit add new comment event")
+  emit("update-comment")
+}  
 
 // 传参必须为 interface 类型
 const props = defineProps<Props>();

@@ -56,7 +56,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/login",
     name: "login",
-    component: () => import("./pages/auth/LoginPage.vue"),
+    component: () => import("./pages/home/LoginPage.vue"),
     meta: {
       keepAlive: false, // 需要被缓存
       title: "登录",

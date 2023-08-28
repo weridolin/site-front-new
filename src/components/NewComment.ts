@@ -1,12 +1,14 @@
-import { ref,reactive,computed } from 'vue';
+import { ref,reactive,computed,defineEmits } from 'vue';
 import {HomeApi} from 'src/services/apis/home'
 import type {
     SiteCommentSubmitForm
 } from 'src/services/apis/home'
-
+// import { ElMessage } from 'element-plus';
+// import { useAuthStore } from 'src/store/user';
+// import { emit } from 'process';
 
 const count = ref(0)
-
+const loading =ref(false)
 const commentSubmitFormData = reactive<SiteCommentSubmitForm>({
     body:"",
     name:"",
@@ -15,6 +17,7 @@ const commentSubmitFormData = reactive<SiteCommentSubmitForm>({
     address:"",  
     email:"" 
 })
+
 
 const show= ref(false)
 
@@ -59,7 +62,7 @@ function handleEmotion(i:string) {
     commentSubmitFormData.body += i;
 }
 
-function initCommentSubmitFormData(){
+export function initCommentSubmitFormData(){
     commentSubmitFormData.body="",
     commentSubmitFormData.name="",
     commentSubmitFormData.qq="",
@@ -67,20 +70,6 @@ function initCommentSubmitFormData(){
     commentSubmitFormData.address="",  
     commentSubmitFormData.email=""
 }
-
-async function post() {
-    // this.comment.type = "siteComment";
-    let res = await HomeApi.siteComment.submit(
-        commentSubmitFormData,
-        {
-            showingLoading:true,
-            timeout:3*60*1000
-        }
-    )
-    console.log(`>>> 提交网站留言结果${res}`)
-    initCommentSubmitFormData()
-}
-
 
   // 将匹配结果替换表情图片 TODO
 function passcallback() {
@@ -210,10 +199,11 @@ export {
     count,
     commentSubmitFormData,
     rules,
-    post,
+    // post,
     isLogin,
     isToken,
     countCount,
     emotion,
+    loading,
     handleEmotion
 }

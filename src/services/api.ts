@@ -17,6 +17,13 @@ export const SiteApis = {
       },
       authenticated: false,
     },
+    replyComment: {
+      method: "post",
+      url: (rootID: number) => {
+        return `/home/api/v1/comments/${rootID}/reply`;
+      },
+      authenticated: true,
+    },
     getFriendLinks: {
       method: "get",
       url: "/home/api/v1/friendslinks",

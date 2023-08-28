@@ -1,10 +1,17 @@
 <template>
-  <div class="valine_comment v" data-class="v">
-    <el-form :model="commentSubmitFormData" :rules="rules" >
+  <div
+    class="valine_comment v"
+    data-class="v"
+    v-loading="loading"
+    element-loading-text="评论提交中..."
+    :element-loading-spinner="svg"
+    element-loading-svg-view-box="-10, -10, 50, 50"
+    element-loading-background="rgba(122, 122, 122, 0.8)"
+  >
+    <el-form :model="commentSubmitFormData" :rules="rules">
       <div class="vpanel">
         <div class="vwrap">
-          
-          <div class="vheader item3" v-if="!isLogin">
+          <!-- <div class="vheader item3" v-if="!isLogin">
             <el-row>
               <el-col :md="8" :xs="8" :sm="8" >
                 <el-form-item prop="name">
@@ -35,23 +42,9 @@
                 </el-form-item>
               </el-col>
             </el-row>
-          </div>
+          </div> -->
 
           <div class="vedit" style="positon: relative">
-            <!--            <el-avatar-->
-            <!--              slot="reference"-->
-            <!--              :size="40"-->
-            <!--              style="position:absolute"-->
-            <!--              shape="square"-->
-            <!--              v-if="isLogin"-->
-            <!--              :src="isLogin.avatar_url"-->
-            <!--            >-->
-            <!--              <img-->
-            <!--                src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3656238279,115253853&fm=26&gp=0.jpg"-->
-            <!--              />-->
-            <!--            </el-avatar>-->
-
-            <!--            留言内容-->
             <el-form-item prop="content">
               <el-input
                 type="textarea"
@@ -73,12 +66,12 @@
                   class="vicon vemoji-btn"
                   trigger="hover"
                 >
-                  <div style="text-align: center; margin: 0">
+                  <!-- <div style="text-align: center; margin: 0">
                     <emoji-list
                       style="width 100%"
                       @emotion="handleEmotion"
                     ></emoji-list>
-                  </div>
+                  </div> -->
                   <svg
                     viewBox="0 0 1024 1024"
                     version="1.1"
@@ -105,51 +98,7 @@
                     />
                   </svg>
                 </el-popover>
-                <!--                预览留言-->
-                <!-- <span class="vicon vpreview-btn" @click="show = !show">
-                  <svg
-
-                    viewBox="0 0 1024 1024"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    p-id="17688"
-                    width="22"
-                    height="22"
-                    :class="{ isshow: show }"
-                  >
-                    <path
-                      d="M502.390154 935.384615a29.538462 29.538462 0 1 1 0 59.076923H141.430154C79.911385 994.461538 29.538462 946.254769 29.538462 886.153846V137.846154C29.538462 77.745231 79.950769 29.538462 141.390769 29.538462h741.218462c61.44 0 111.852308 48.206769 111.852307 108.307692v300.268308a29.538462 29.538462 0 1 1-59.076923 0V137.846154c0-26.899692-23.355077-49.230769-52.775384-49.230769H141.390769c-29.420308 0-52.775385 22.331077-52.775384 49.230769v748.307692c0 26.899692 23.355077 49.230769 52.775384 49.230769h360.999385z"
-                      p-id="17689"
-                    />
-                    <path
-                      d="M196.923077 216.615385m29.538461 0l374.153847 0q29.538462 0 29.538461 29.538461l0 0q0 29.538462-29.538461 29.538462l-374.153847 0q-29.538462 0-29.538461-29.538462l0 0q0-29.538462 29.538461-29.538461Z"
-                      p-id="17690"
-                    />
-                    <path
-                      d="M649.846154 846.769231a216.615385 216.615385 0 1 0 0-433.230769 216.615385 216.615385 0 0 0 0 433.230769z m0 59.076923a275.692308 275.692308 0 1 1 0-551.384616 275.692308 275.692308 0 0 1 0 551.384616z"
-                      p-id="17691"
-                    />
-                    <path
-                      d="M807.398383 829.479768m20.886847-20.886846l0 0q20.886846-20.886846 41.773692 0l125.321079 125.321079q20.886846 20.886846 0 41.773693l0 0q-20.886846 20.886846-41.773693 0l-125.321078-125.321079q-20.886846-20.886846 0-41.773693Z"
-                      p-id="17692"
-                    />
-                  </svg>
-                </span> -->
               </div>
-
-              <!-- <transition name="slide-left">
-                <div v-if="show" class="comment-header" id="write">
-                  <my-marked
-                    :imgView="false"
-                    :initialValue="
-                      commentSubmitFormData.message.replace(
-                        /\#[\u4E00-\u9FA5]{1,3}\;/gi,
-                        emotion
-                      )
-                    "
-                  ></my-marked>
-                </div>
-              </transition> -->
             </div>
           </div>
           <div class="vrow">
@@ -210,30 +159,66 @@
 
 
 <script setup lang="ts">
-  import EmojiList from "src/components/EmojiList.vue";
-  import MyMarked from "src/components/MyMarked.vue";
-  // import EmojiL 
-  import { ref } from 'vue';
-  import {
-      show,
-      count,
-      commentSubmitFormData,
-      rules,
-      post,
-      isLogin,
-      isToken,
-      countCount,
-      emotion,
-      handleEmotion
-  } from "src/components/NewComment"
+import EmojiList from "src/components/EmojiList.vue";
+import MyMarked from "src/components/MyMarked.vue";
+import { ElMessage } from "element-plus";
+import { useAuthStore } from "src/store/user";
+// import EmojiL
+import { ref } from "vue";
 
-  
+import {
+  commentSubmitFormData,
+  rules,
+  // post,
+  loading,
+  isLogin,
+  countCount,
+  initCommentSubmitFormData,
+} from "src/components/NewComment";
+import { HomeApi } from "src/services/apis/home";
+import { load } from "@amap/amap-jsapi-loader";
+
+const emit = defineEmits(["add-new-comment"]);
+
+const svg = `
+        <path class="path" d="
+          M 30 15
+          L 28 17
+          M 25.61 25.61
+          A 15 15, 0, 0, 1, 15 30
+          A 15 15, 0, 1, 1, 27.99 7.5
+          L 15 15
+        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
+      `;
+async function post() {
+  if (!useAuthStore().isLogin.value) {
+    ElMessage.error("请先登录！");
+    return;
+  }
+  // this.comment.type = "siteComment";
+  loading.value = true;
+  await HomeApi.siteComment
+    .submit(commentSubmitFormData, {
+      timeout: 3 * 60 * 1000,
+    })
+    .then((res) => {
+      ElMessage.success("提交成功!");
+      initCommentSubmitFormData();
+      emit("add-new-comment");
+    })
+    .catch((err) => {
+      ElMessage.error(`提交失败:${err}!`);
+      console.log(err);
+      // initCommentSubmitFormData()
+    }).finally(()=>{
+      loading.value = false;
+    });
+}
 </script>
 
 
 
 <style lang="stylus" scoped>
-
 .v>>>.el-textarea__inner {
   border: transparent;
   background: transparent;

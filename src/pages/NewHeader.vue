@@ -181,29 +181,6 @@ watch(
     align-itme: center;
     position: relative;
 
-    // .navbar-header-werido {
-    // width: 100%;
-    // display: flex;
-    // flex-flow: row wrap;
-    // justify-content: flex-start;
-    // align-items: center;
-
-    // .navbar-brand {
-    // display: flex;
-    // width: 110px;
-    // height: 40px;
-    // // background: url('~@/assets/logo.svg') no-repeat;
-    // text-indent: -9999rem;
-    // margin: 10px 0;
-    // text-decoration: none;
-    // flex-shrink: 0;
-
-    // .navbar-logo {
-    // height: 50px;
-    // margin: 5px;
-    // }
-    // }
-    // }
     .user-info {
       position: relative;
 
@@ -265,7 +242,7 @@ watch(
     }
 
     .navbar-nav_header a {
-      color: inherit;
+      color: white;
       display: inline-block;
       height: 100%;
       width: 90px;

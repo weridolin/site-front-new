@@ -10,7 +10,7 @@
 -->
 <template>
   <div class="messa">
-    <add-message @submit="getMessList" :list="list"></add-message>
+    <add-message @update-comment="getMessList" :list="list"></add-message>
     <div class="mess-bg">
       <!--List传给message-list组件-->
       <message-list :list="list" @submit="getMessList" ></message-list>

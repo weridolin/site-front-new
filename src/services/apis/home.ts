@@ -44,6 +44,12 @@ export type SiteComment = {
   gender: number; //0女性 1男性
 };
 
+export type ReplyForm = {
+  body: string;
+  replay_to: number;
+  root_id: number;
+};
+
 export interface CommentsPayload extends BasePaginationResponse {
   results: Array<SiteComment>;
 }
@@ -51,6 +57,8 @@ export interface CommentsPayload extends BasePaginationResponse {
 export interface GetCommentsResponse extends BaseResponse {
   data: CommentsPayload;
 }
+
+
 
 // 背景音乐
 export type BackGroundMusicResponse = {
@@ -86,18 +94,18 @@ export interface updateLogItem {
   update_content: string;
   is_finish: boolean;
   author: User;
-  repo_uri:string;
+  repo_uri: string;
   commit_message: string;
   commit_id: string;
   commit_content: string;
   user_id: number;
-  user_name: string
+  user_name: string;
   updated: string;
 }
 
 export interface updateLogPayload {
   [year_month: string]: {
-    [day_weekday: string] :updateLogItem[];
+    [day_weekday: string]: updateLogItem[];
   };
 }
 
@@ -184,6 +192,17 @@ export class Api extends ApiBase {
         method: SiteApis.home.getCommentReply.method,
         url: SiteApis.home.getCommentReply.url(commentId),
         requiredLogin: SiteApis.home.getCommentReply.authenticated,
+        ...params,
+      }),
+    /**
+     * 回复评论
+     */
+    postCommentReply: (commentId: number,replyForm:ReplyForm, params: RequestParams = {}) =>
+      this.request<BaseResponse>({
+        method: SiteApis.home.replyComment.method,
+        url: SiteApis.home.replyComment.url(commentId),
+        requiredLogin: SiteApis.home.replyComment.authenticated,
+        data:replyForm,
         ...params,
       }),
   };

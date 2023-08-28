@@ -1,6 +1,6 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "./src/**/*","src/pages/auth/*.vue"],
+  "include": ["env.d.ts", "./src/**/*"],
   "exclude": ["src/**/*.spec.ts", "src/***/*.spec.tsx"],
   "compilerOptions": {
     "baseUrl": ".",
