@@ -112,7 +112,7 @@ initUpdateLog();
   background-attachment: fixed;
   background-image: url("src/assets/route-bg.jpg");
   color: #c8c8c8;
-  margin-right: 2%;
+  /* margin-right: 2%; */
   /* margin-left: 20%;
   margin-right: 20%; */
 }
