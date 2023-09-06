@@ -91,6 +91,7 @@ export interface WebHookHistory {
   method: string;
   user_id: number;
   updated:string;
+  is_new:boolean
 }
 
 export interface GetWebhookHistoryResponse {

@@ -13,16 +13,18 @@
         />
       </el-header>
       <el-container>
-        <el-aside width="25%">
+        <el-aside width="25%" class="side">
           <div>
-            <div class="record-query">
-              <el-input
-                v-model="queryCondition"
-                class="w-50 m-2 record-query-input"
-                placeholder="输入查询条件"
-                :suffix-icon="Search"
-              />
-            </div>
+            <!-- <el-row> -->
+              <div class="record-query">
+                <el-input
+                  v-model="queryCondition"
+                  class="w-50 m-2 record-query-input"
+                  placeholder="输入查询条件"
+                  :suffix-icon="Search"
+                />
+              </div>
+            <!-- </el-row> -->
             <el-divider class="aside-divider"> </el-divider>
             <ul class="infinite-list">
               <el-card
@@ -32,10 +34,12 @@
                 class="infinite-list-item"
                 @click="showHistoryDetail(index)"
               >
-                <el-tag class="ml-2" type="success">{{
-                  history.method
-                }}</el-tag>
-                #{{ history.host }} - {{ history.updated }}
+                <el-badge value="new" class="new-tag" :hidden="!history.is_new">
+                  <el-tag class="ml-2" type="success">{{
+                    history.method
+                  }}</el-tag>
+                  #{{ history.host }} - {{ history.updated }}
+                </el-badge>
               </el-card>
             </ul>
             <div class="record-pagination">
@@ -59,8 +63,8 @@
           <div>
             <el-row :gutter="40">
               <!-- request info detail -->
-              <el-col :span="12"
-                ><div class="request-detail">
+              <el-col :span="12">
+                <div class="request-detail">
                   <el-row>
                     <el-col :span="12">
                       <el-text tag="b" class="request-detail-title"
@@ -93,6 +97,53 @@
                     <el-table-column prop="field" label="Field" />
                     <el-table-column prop="value" label="Value" />
                   </el-table>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-text tag="b" class="request-query-param"
+                        >Request QueryParams</el-text
+                      >
+                    </el-col>
+                  </el-row>
+                  <el-table
+                    :data="queryParams"
+                    :row-class-name="tableRowClassName"
+                    table-layout="fixed"
+                    border
+                    style="padding-top: 10px"
+                  >
+                    <el-table-column prop="field" label="Field" />
+                    <el-table-column prop="value" label="Value" />
+                  </el-table>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-text tag="b" class="request-form-data"
+                        >Request FormData</el-text
+                      >
+                    </el-col>
+                  </el-row>
+                  <el-table
+                    :data="formData"
+                    :row-class-name="tableRowClassName"
+                    table-layout="fixed"
+                    border
+                    style="padding-top: 10px"
+                  >
+                    <el-table-column prop="field" label="Field" />
+                    <el-table-column prop="value" label="Value" />
+                  </el-table>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-text tag="b" class="request-raw">Raw</el-text>
+                    </el-col>
+                  </el-row>
+                  <el-input
+                    v-model="raw"
+                    maxlength="30"
+                    placeholder="raw"
+                    readonly="true"
+                    show-word-limit
+                    type="textarea"
+                  />
                 </div>
               </el-col>
               <!-- request header -->
@@ -133,10 +184,13 @@ import { ThirdApis } from "src/services/apis/third";
 import type { WebHookHistory } from "src/services/apis/third";
 import { CopyDocument } from "@element-plus/icons-vue";
 import { CONFIG } from "src/config";
-import {setLocalStorageWithExpiration,getLocalStorageWithExpiration} from "src/store/local"
+import {
+  setLocalStorageWithExpiration,
+  getLocalStorageWithExpiration,
+} from "src/store/local";
 
-const uuid = ref("")
-const webhook_url = ref("")
+const uuid = ref("");
+const webhook_url = ref("");
 const queryCondition = ref("");
 const count = ref(0);
 const tableData = ref<WebHookHistory>();
@@ -154,6 +208,7 @@ const header = ref<TableDataItem[]>([]);
 const requestDetail = ref<TableDataItem[]>([]);
 const queryParams = ref<TableDataItem[]>([]);
 const formData = ref<TableDataItem[]>([]);
+const raw = ref("");
 
 /** function  */
 
@@ -201,7 +256,7 @@ function getWebHookCalledHistory(page: number) {
     uuid.value
   ).then((res) => {
     console.log("get call history", res);
-    if (res.items != null){
+    if (res.items != null) {
       historyList.value = res.items;
     }
     count.value = res.total;
@@ -214,6 +269,7 @@ function showHistoryDetail(index: number) {
   queryParams.value = [];
   formData.value = [];
   requestDetail.value = [];
+  raw.value = "";
   for (const key in historyList.value[index].header) {
     header.value.push({
       field: key,
@@ -232,6 +288,8 @@ function showHistoryDetail(index: number) {
       value: historyList.value[index].form_data[key],
     });
   }
+  raw.value = historyList.value[index].raw;
+  historyList.value[index].is_new = false;
   requestDetail.value.push(
     ...[
       {
@@ -250,30 +308,34 @@ function showHistoryDetail(index: number) {
         field: "url",
         value: webhook_url.value,
       },
-      {
-        field: "raw",
-        value: historyList.value[index].raw,
-      },
+      // {
+      //   field: "raw",
+      //   value: historyList.value[index].raw,
+      // },
     ]
   );
 }
 
 onMounted(() => {
   // 获取 uuid
-  let _uuid = getLocalStorageWithExpiration("webhook-uuid-key")
-  if (_uuid!=null){
-    console.log("get local uuid",_uuid)
-    uuid.value = _uuid
-  }else{
-    uuid.value = uuidv4()
-    console.log("set local uuid",uuid.value)
-    setLocalStorageWithExpiration("webhook-uuid-key",uuid.value,60*60*24*7)
+  let _uuid = getLocalStorageWithExpiration("webhook-uuid-key");
+  if (_uuid != null) {
+    console.log("get local uuid", _uuid);
+    uuid.value = _uuid;
+  } else {
+    uuid.value = uuidv4();
+    console.log("set local uuid", uuid.value);
+    setLocalStorageWithExpiration(
+      "webhook-uuid-key",
+      uuid.value,
+      60 * 60 * 24 * 7
+    );
   }
 
   webhook_url.value = `${CONFIG.API_HOST}/webhook/api/v1/${uuid.value}`;
   /**   ws ***/
-  let second_protocols  = uuid.value
-  WsClient = new WebSocket(`${CONFIG.WS_HOST}/webhook/ws`,second_protocols);
+  let second_protocols = uuid.value;
+  WsClient = new WebSocket(`${CONFIG.WS_HOST}/webhook/ws`, second_protocols);
   WsClient.onmessage = function (event) {
     console.log("Message from server ", event.data);
     const data = JSON.parse(event.data);
@@ -287,13 +349,14 @@ onMounted(() => {
       raw: data.raw,
       updated: data.updated_at,
       user_id: data.user_id,
+      is_new: true,
     };
     //直接将新的ws消息插入到列表第一条
     if (historyList.value.length < page_size.value) {
-      if (historyList.value ==null){
-        historyList.value = []
+      if (historyList.value == null) {
+        historyList.value = [];
       }
-      console.log("add history record", historyList.value,history)
+      console.log("add history record", historyList.value, history);
       historyList.value.unshift(history);
     } else {
       historyList.value.pop();
@@ -308,7 +371,6 @@ onMounted(() => {
   };
 
   getWebHookCalledHistory(1);
-
 });
 
 onUnmounted(() => {
@@ -330,6 +392,10 @@ onUnmounted(() => {
   font-size: 18px;
   line-height: 20px;
   /* display: flex; */
+}
+
+.side {
+
 }
 
 .copy-url {
