@@ -1,10 +1,6 @@
 import {HomeApi} from 'src/services/apis/home'
 import { ref } from 'vue';
 
-import bg1 from 'src/assets/site/bg1.jpg'
-import bg2 from 'src/assets/site/bg2.jpg'
-import bg3 from 'src/assets/site/bg3.jpg'
-
 function hello(){
     let content="H,e,l,l,o,!&nbsp;&nbsp;,W,e,l,c,o,m,e&nbsp;&nbsp;,t,o&nbsp;&nbsp;,m,y,&nbsp, s,i,t,e."
     return content.split(",");

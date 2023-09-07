@@ -7,9 +7,9 @@
         <div class="flex justify-center items-center h-screen">
           <div class="max-w-sm rounded overflow-hidden shadow-lg">
             <img
-              class="w-full"
+              class="w-full  link-cover"
               src="https://source.unsplash.com/random/1600x900"
-              alt="Sunset in the mountains"
+              alt="cover"
             />
             <div class="px-6 py-4">
               <div class="font-bold text-xl mb-2 title">{{link.title}}</div>
