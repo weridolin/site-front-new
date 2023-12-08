@@ -61,6 +61,8 @@ export interface ApiResource {
   id: number;
   created: string;
   updated: string;
+
+  
   last_run_time: string;
   name: string;
   script_path: string;
