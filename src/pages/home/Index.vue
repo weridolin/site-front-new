@@ -6,7 +6,7 @@
           <div class="index">
             <div
               class="index-bg"
-              :style="{ 'background-image': 'url('+item.img_url+')' }"
+              :style="{ 'background-image': 'url('+item.path+')' }"
             ></div>
             <div class="index-con">
               <!--                   首页增加 -->
@@ -60,10 +60,8 @@
 import scrollReveal from "scrollreveal";
 import  XRouteLink from "src/components/XRouteLink.vue"
 import {onMounted,ref} from 'vue';
-import {
-  hello,getBackGroundImages,imageList
-  } from "src/pages/home/Index"
-
+import {hello,getBackGroundImages,imageList} from "src/pages/home/Index"
+import type {CarouselBackGroundImage} from "src/pages/home/Index"
 
 const scroll = scrollReveal()
 
@@ -72,6 +70,10 @@ const daysOld = ref();
 const hrsOld  = ref();
 const minsOld = ref();
 const seconds =ref();
+
+// const ShowImageList = ref<CarouselBackGroundImage[]>([])
+
+
 
 onMounted(() => {
   setTimeout(() => {
@@ -186,7 +188,11 @@ onMounted(() => {
       : Math.floor((minsOld.value - e_minsold) * -60);
   }, 1000);
 
-  // getBackGroundImages()
+  // 每隔3S更新一次展示的图片列表
+  setInterval(()=>{
+    console.log("更新背景图片..")
+    getBackGroundImages()
+  },3000)
 
   console.log("bg list -> ",imageList,import.meta.url)
 },
@@ -199,8 +205,6 @@ onMounted(() => {
 
 
 <style lang="stylus" scoped>
-
-
 .el-row {
     margin-bottom: 50px;
     &:last-child {

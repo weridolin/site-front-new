@@ -120,9 +120,10 @@ export interface ChatMessage {
 
 export interface BackGroundImage {
   id: number
-  url: string
-  is_used: boolean
-  type: string
+  path: string
+  // is_used: boolean
+  // type: string
+  is_able:boolean
 }
 
 export type BackGroundImageResponse = {
