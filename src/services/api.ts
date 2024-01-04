@@ -36,12 +36,12 @@ export const SiteApis = {
     },
     getBackGroundImages: {
       method: "get",
-      url: "/home/api/v1/backgroundImages",
+      url: "/home/api/v1/backGroundImages",
       authenticated: false,
     },
     getBackGroundMusic: {
       method: "get",
-      url: "/home/api/v1/backgroundMusic",
+      url: "/home/api/v1/backGroundMusic",
       authenticated: false,
     },
   },
