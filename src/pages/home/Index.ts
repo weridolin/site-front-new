@@ -52,6 +52,7 @@ export function getBackGroundImages() {
       timeout: 2 * 60 * 1000,
     })
     .then((res) => {
+      imageList.value = [];
       for (let index = 0; index < 3; index++) {
         const element = res.data[Math.floor(Math.random() * res.data.length)];
         imageList.value.push({
