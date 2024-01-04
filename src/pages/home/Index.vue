@@ -192,7 +192,7 @@ onMounted(() => {
   setInterval(()=>{
     console.log("更新背景图片..")
     getBackGroundImages()
-  },3000)
+  },10000)
 
   console.log("bg list -> ",imageList,import.meta.url)
 },
