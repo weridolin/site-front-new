@@ -27,9 +27,7 @@
       </div>
       <div class="foot-row publicity">
         <span
-          ><a target="_blank" href="http://www.beian.miit.gov.cn/"
-            >粤ICP备2020119623号</a
-          ></span
+          ><a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2020119623号</a></span
         >
       </div>
       <div class="foot-row bottom">
