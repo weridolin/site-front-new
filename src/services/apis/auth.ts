@@ -133,7 +133,7 @@ export interface GetUserListResponse extends BasePaginationResponse {
 
 export class Apis extends ApiBase {
   public login(loginForm: loginFormOrRegisterForm, params: RequestParams = {}) {
-    const pwd = pwdEncrypt(loginForm.password);
+    const  pwd = pwdEncrypt(loginForm.password);
     const temForm = {
       count: loginForm.username,
       password: pwd,
@@ -143,6 +143,7 @@ export class Apis extends ApiBase {
     return this.request<loginResponse>({
       method: SiteApis.usercenter.login.method,
       url: SiteApis.usercenter.login.url,
+      // url:"https://www.weridolin.cn/usercenter/api/v1/login",
       requiredLogin: false,
       data: temForm,
       ...params,

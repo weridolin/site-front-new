@@ -29,14 +29,24 @@ export default defineConfig({
       proxy: {
         //配置自定义代理规则
         // 字符串简写写法
-        '/home': {
-          target: 'http://127.0.0.1:80/',
-          changeOrigin: true, //是否跨域
-          rewrite: path => path
-        }
+        // '/': {
+        //   target: 'http://127.0.0.1:8000/',
+        //   changeOrigin: true, //是否跨域
+        //   rewrite: path => path
+        // }
+        '/gpt': { // 这里的'/api'是匹配的路由前缀
+          target: 'http://127.0.0.1:8000', // 目标代理服务器地址
+          changeOrigin: true, // 是否允许跨域  
+          // rewrite: (path) => path, // 
+        },
+        '/sse': { // 这里的'/api'是匹配的路由前缀
+          target: 'http://127.0.0.1:8000', // 目标代理服务器地址
+          changeOrigin: true, // 是否允许跨域  
+          rewrite: (path) => path, // 重写路径，去掉/api前缀
+        },
       }
       // hmr: {
       //   overlay: false
       // }
-  }
+  },
 })

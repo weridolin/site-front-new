@@ -158,19 +158,70 @@ export const SiteApis = {
       url: "/usercenter/api/v1/refreshToken",
       authenticated: false,
     },
-		getMenus: {
-			method:"get",
-			url:"/usercenter/api/v1/rbac/menus",
-			authenticated:true
-		}
+    getMenus: {
+      method: "get",
+      url: "/usercenter/api/v1/rbac/menus",
+      authenticated: true,
+    },
   },
-  webhook:{
+  webhook: {
     queryHistory: {
-      method:"get",
+      method: "get",
       url: (uuid: string) => {
         return `/webhook/api/v1/${uuid}/history`;
       },
       authenticated: false,
-    }
-  }
+    },
+  },
+  gpt: {
+    getConversationsList: {
+      method: "get",
+      url: "/gpt/api/v1/conversation",
+      authenticated: true,
+    },
+    createConversation: {
+      method: "post",
+      url: "/gpt/api/v1/conversation",
+      authenticated: true,
+    },
+    deleteConversation: {
+      method: "delete",
+      url: (uuid: string) => {
+        return `/gpt/api/v1/conversation/${uuid}`;
+      },
+      authenticated: true,
+    },
+    updateConversation: {
+      method: "put",
+      url: (uuid: string) => {
+        return `/gpt/api/v1/conversation/${uuid}`;
+      },
+      authenticated: true,
+    },
+    getMessageList: {
+      method: "get",
+      url: "/gpt/api/v1/message",
+      authenticated: true,
+    },
+    createMessage: {
+      method: "post",
+      url: "/gpt/api/v1/message",
+      authenticated: true,
+    },
+    createMessageSSE: {
+      method: "post",
+      url: "/sse/gpt/api/v1/message",
+      authenticated: true,
+    },
+    stopMessageSSE: {
+      method: "post",
+      url: "/gpt/api/v1/message/stop-sse",
+      authenticated: true,
+    },
+    registerWebsocket: {
+      method: "post",
+      url: "/gpt/api/v1/conversation/register-websocket",
+      authenticated: true,
+    },
+  },
 };

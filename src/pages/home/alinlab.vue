@@ -87,9 +87,9 @@ const menus = ref([
   },
   {
     img: Robot,
-    title: 'chatGPT',
-    desc: 'chatGPT测试',
-    route: '/lab/chatGPT',
+    title: 'gpt',
+    desc: 'gpt测试',
+    route: '/lab/gpt',
   },
   {
     img: Webhook,

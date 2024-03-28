@@ -260,19 +260,19 @@ export const routes: RouteRecordRaw[] = [
           requireAdmin: false,
         },
       },
-      /** ************************ ChatGpt  ************************************* */
+      /** ************************ gpt  ************************************* */
       {
-        path: 'chatGPT',
-        name: 'chatGPT',
-        component: () => import('./pages/alinlab/chatGPT.vue'),
+        path: 'gpt',
+        name: 'gpt',
+        component: () => import('./pages/alinlab/gpt.vue'),
         meta: {
           keepAlive: true, // 需要被缓存
-          title: 'chatGPT',
+          title: 'gpt',
           // nav,
           // footer: true,
           // header: false,
-          requireAuth: true,
-          requireAdmin: true,
+          requireAuth: false,
+          requireAdmin: false,
         },
       },
       /** ************************ oauth *****************************/
@@ -440,6 +440,7 @@ const staticRoutesLength = getRouteArrayLength(routes)
 
 router.beforeEach(async (to, from, next) => {
   // Start progress bar
+  console.log(to,from,next)
   NProgress.start()
   if (to.meta.title) {
     document.title = to.meta.title as string

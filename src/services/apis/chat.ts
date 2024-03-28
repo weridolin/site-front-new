@@ -5,6 +5,7 @@ import type {
   BasePaginationResponse,
 } from "src/services/base";
 import type { User } from "src/services/apis/auth";
+import {SiteApis}  from  "src/services/api"
 
 //    { type: 'text', author: `bot`, data: { text: `现在是离线机器人,您可以输入对应的关键词,我会尽量回答的😊` } },
 export interface chatMessage {
@@ -20,8 +21,8 @@ export interface chatMessageReplyResponse extends BaseResponse {
   data: chatMessage[];
 }
 
-/**********************  ChatGPT  **************************/
-export enum ChatGPTWSType {
+/**********************  gpt  **************************/
+export enum gptWSType {
   "connect" = 1, //链接建立
   "disconnect" = 2, //链接断开
   "reply" = 3, //回复消息
@@ -29,106 +30,168 @@ export enum ChatGPTWSType {
   "error" = 5, //错误消息
 }
 
-export enum ChatGPTWSMessageRole {
+export enum gptWSMessageRole {
   "query" = 0, //消息为查询消息
   "reply" = 1, //消息为回复消息
 }
 
-export interface ChatGPTConversationItem {
-  id: number;
+export interface gptConversationItem {
   created: string;
   updated: string;
   title: string;
   uuid: string;
-  user: any;
+  user_id: number;
+  description: string;
+  platform: string;
+  model:string;
+  key:string
 }
 
-export interface ChatGPTMessageItem {
-  query_content?: string; //查询内容
-  parent_message_uuid: string; //上一条ID
-  reply_content?: string; //回复内容
-  uuid: string; //当前消息的UUID
-  conversation_id: number; //会话ID
-  content_type: string; //
-  role: ChatGPTWSMessageRole;
+export interface gptMessageItem {
+  uuid: string;
+  query_content: string; //查询内容
+  query_content_type: string; // text
+  reply_content: string; //回复内容
+  reply_content_type:string; // text
+  conversation_id: string; //会话ID
+  parent_message_uuid?: string; //父消息UUID
+  children_message_uuid?: string; //子消息UUID
+  reply_finished: boolean; //是否回复完成
+  user_id?: number; //用户ID
+  interrupt: boolean; //是否中断
+  interrupt_reason: string; //中断原因
+  websocket_id: string; //websocket ID
+  has_sended: boolean; //是否已发送
+  error: boolean; //是否错误
+  error_code:string; //错误代码
+  error_detail:string; //错误详情
   created?: string;
   updated?: string;
-  children_message_uuid?: string;
 }
 
-export interface ChatGPTWSMessage {
-  type: ChatGPTWSType;
-  data: ChatGPTMessageItem;
-  // reply:ChatGPTMessageItem
+export interface createConversationParams {
+  title: string;
+  description: string;
+  platform: string;
+  model:string;
 }
 
-interface ChatGPTPaginationResponse extends BasePaginationResponse {
-  results: ChatGPTConversationItem[];
+export interface createConversationResponse extends BaseResponse {
+  data: gptConversationItem;
 }
 
-interface GetConversationsResponse extends BaseResponse {
-  data: ChatGPTPaginationResponse;
+export interface getConversationsParams {
+  page?: number;
+  page_size?: number;
+  search?: string;
 }
 
-interface ChatGPTMessagePaginationResponse extends BasePaginationResponse {
-  results: ChatGPTMessageItem[];
-  conversation_id: number;
+export interface getConversationsPaginationResponse extends BasePaginationResponse {
+  results: gptConversationItem[];
 }
 
-interface GetChatGPTMessagePaginationResponse extends BaseResponse {
-  data: ChatGPTMessagePaginationResponse;
+export interface getConversationsResponse extends BaseResponse {
+  data: getConversationsPaginationResponse;
 }
 
-interface CreateConversationResponse extends BaseResponse {
-  data: ChatGPTConversationItem;
+export interface gptMessagePaginationResponse extends BasePaginationResponse {
+  results: gptMessageItem[];
+}
+
+export interface gptMessageResponse extends BaseResponse {
+  data: gptMessagePaginationResponse;
+}
+
+export interface queryMessageParams {
+  conversation_id: string;
+  query_content: string;
+  query_content_type: string;
+  parent_message_uuid: string;
+  children_message_uuid: string;
+  websocket_id: string;
+  platform: string;
+  model:string;
 }
 
 export class Apis extends ApiBase {
-  public getReply(query_content: string, params: RequestParams = {}) {
-    return this.get<chatMessageReplyResponse>({
-      url: `api/v2/blogs/articles`,
-      ...params, // TODO
+  public getReply(body: gptMessageItem, params: RequestParams = {}) {
+  
+    return this.request<chatMessageReplyResponse>({
+      url: SiteApis.gpt.createMessage.url,
+      method: SiteApis.gpt.createMessage.method,
+      requiredLogin: SiteApis.gpt.createMessage.authenticated,
+      data: body,
+      ...params,
     });
+
   }
 
-  /********* chatGPT 相关 ************/
-  public getConversations(query_params: any, params: RequestParams = {}) {
-    return this.get<GetConversationsResponse>({
-      url: `api/v1/third/chatGPT/conversation`,
-      requiredLogin: true,
-      params: query_params,
+  public getReplySSE(body: gptMessageItem, params: RequestParams = {}) {
+    return this.request<chatMessageReplyResponse>({
+      url: SiteApis.gpt.createMessageSSE.url,
+      method: SiteApis.gpt.createMessageSSE.method,
+      requiredLogin: SiteApis.gpt.createMessageSSE.authenticated,
+      data: body,
       ...params,
     });
   }
 
-  public createConversation(title: string, params: RequestParams = {}) {
-    return this.post<CreateConversationResponse>({
-      url: `api/v1/third/chatGPT/conversation`,
-      requiredLogin: true,
+  public stopGetMessageSSE(query_message_id:string,params: RequestParams = {}) {
+    return this.request<BaseResponse>({
+      url: SiteApis.gpt.stopMessageSSE.url,
+      method: SiteApis.gpt.stopMessageSSE.method,
+      requiredLogin: SiteApis.gpt.stopMessageSSE.authenticated,
       data: {
-        title: title,
+        query_message_id: query_message_id,
       },
       ...params,
     });
   }
 
-  public delConversation(pk: number = -1, params: RequestParams = {}) {
-    let url =
-      pk != -1
-        ? `api/v1/third/chatGPT/conversation/${pk}`
-        : `api/v1/third/chatGPT/conversation`;
-    return this.delete<BaseResponse>({
-      url: url,
-      requiredLogin: true,
+  /********* gpt 相关 ************/
+  public getConversations(query_params: any, params: RequestParams = {}) {
+    return this.request<getConversationsResponse>({
+      url: SiteApis.gpt.getConversationsList.url,
+      method: SiteApis.gpt.getConversationsList.method,
+      requiredLogin: SiteApis.gpt.getConversationsList.authenticated,
+      params: query_params,
       ...params,
     });
   }
 
-  public getChatMessage(query_params: any = {}, params: RequestParams = {}) {
-    return this.get<GetChatGPTMessagePaginationResponse>({
-      url: "api/v1/third/chatGPT/message",
-      requiredLogin: true,
-      params: query_params,
+  public createConversation(title: string,platform:string,model:string,description:string,key:string, params: RequestParams = {}) {
+    return this.request<createConversationResponse>({
+      url: SiteApis.gpt.createConversation.url,
+      method: SiteApis.gpt.createConversation.method,
+      requiredLogin: SiteApis.gpt.createConversation.authenticated,
+      data: {
+        title: title,
+        platform: platform,
+        model:model,
+        description: description,
+        key:key
+      },
+      ...params,
+    });
+  }
+
+  public deleteConversation(uuid:string, params: RequestParams = {}) {
+    return this.request<BaseResponse>({
+      method: SiteApis.gpt.deleteConversation.method,
+      url: SiteApis.gpt.deleteConversation.url(uuid),
+      requiredLogin: SiteApis.gpt.deleteConversation.authenticated,
+      ...params,
+    });
+  }
+
+  public getMessageList(conversation_uuid:string, params: RequestParams = {}) {
+    return this.request<gptMessageResponse>({
+      method: SiteApis.gpt.getMessageList.method,
+      url: SiteApis.gpt.getMessageList.url,
+      requiredLogin: SiteApis.gpt.getMessageList.authenticated,
+      params: {
+        conversation_id: conversation_uuid,
+      },
       ...params,
     });
   }
