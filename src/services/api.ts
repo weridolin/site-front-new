@@ -210,7 +210,7 @@ export const SiteApis = {
     },
     createMessageSSE: {
       method: "post",
-      url: "/sse/gpt/api/v1/message",
+      url: "/gpt/api/v1/message/gpt-sse",
       authenticated: true,
     },
     stopMessageSSE: {
