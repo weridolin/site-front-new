@@ -69,7 +69,7 @@ const loadingText = ref("生成回复中..."); //查询中显示文字
 const loadingMessage = ref(false);
 const creatingConversation = ref(false); //创建会话中？。。。
 const replying = ref(false); //回复中？。。。
-
+const websocket_id = ref(""); //websocket ID  
 export interface createConversationForm {
   platform: string;
   model: string;
@@ -91,6 +91,7 @@ export interface WebSocketMessageItem {
 function buildWsConn() {
   ChatApis.registerConversationWS().then((res) => {
     console.log("register ws, url ->", res.data.websocket_uri);
+    websocket_id.value = res.data.websocket_id;
     const gptWS = new WebSocket(res.data.websocket_uri);
     gptWS.onmessage = function (event) {
       console.log("get message from ws server ->", event.data);
@@ -397,6 +398,7 @@ function getMessageById(query_message_uuid: string) {
 function getReplyByWS(message: gptMessageItem) {
   let requestParam: { [key: string]: any } = {
     ...message,
+    websocket_id: websocket_id.value,
     model: currentOpenConversation.value?.model,
     platform: currentOpenConversation.value?.platform,
   };
