@@ -102,6 +102,13 @@ export interface gptMessageResponse extends BaseResponse {
   data: gptMessagePaginationResponse;
 }
 
+export interface registerWebsocketBaseResponse extends BaseResponse {
+  data: {
+    websocket_uri: string;
+  };
+
+}
+
 export interface queryMessageParams {
   conversation_id: string;
   query_content: string;
@@ -192,6 +199,15 @@ export class Apis extends ApiBase {
       params: {
         conversation_id: conversation_uuid,
       },
+      ...params,
+    });
+  }
+
+  public registerConversationWS(params: RequestParams = {}) {
+    return this.request<BaseResponse>({
+      method: SiteApis.gpt.registerWebsocket.method,
+      url: SiteApis.gpt.registerWebsocket.url,
+      requiredLogin: SiteApis.gpt.registerWebsocket.authenticated,
       ...params,
     });
   }

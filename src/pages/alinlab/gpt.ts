@@ -10,7 +10,7 @@ import {
 import { SiteApis } from "src/services/api";
 
 /***************** 变量    **********************/
-let gptWS: WebSocket;
+// var gptWS: WebSocket;
 
 // 会话列表
 const conversationList = ref<gptConversationItem[]>([]);
@@ -77,122 +77,54 @@ export interface createConversationForm {
   key: string;
 }
 
+
+export interface WebSocketMessageItem {
+  type: string;
+  conversation_id:string,
+  message_id:string,
+  content:string,
+  content_type:string,
+}
+
 /***********   WS method     *************/
-// function build() {
-//   let user_id = useAuthStore().userInfo?.profile.user.id;
-//   if (user_id == null) {
-//     ElMessage.error(`请先登录`);
-//     return;
-//   }
-//   gptWS = create_conn(`ws/thirdApi/gpt/${user_id}`);
-//   gptWS.onmessage = function (event) {
-//     console.log("get message from ws server ->", event.data);
-//     onMessage(event.data);
-//   };
-//   gptWS.onerror = function (event) {
-//     ElMessage.error(`ws链接出错`);
-//     console.log("ws on error", event);
-//     console.log("an error raise an in ws");
-//     querying.value = false;
-//   };
-//   gptWS.onopen = (event) => {
-//     ElMessage.success("链接已经建立");
-//   };
-//   gptWS.onclose = (event) => {
-//     console.log("后台ws关闭");
-//     ElMessage.error("后台WS服务关闭，请刷新页面!");
-//   };
-// }
+function buildWsConn() {
+  ChatApis.registerConversationWS().then((res) => {
+    console.log("register ws, url ->", res.data.websocket_uri);
+    const gptWS = new WebSocket(res.data.websocket_uri);
+    gptWS.onmessage = function (event) {
+      console.log("get message from ws server ->", event.data);
+      let data = JSON.parse(event.data);
+      if (data.type == "message") {
+        let messageItem: WebSocketMessageItem = data.data;
+        let currentMessage = getMessageById(messageItem.message_id);
+        if (currentMessage) {
+          currentMessage.reply_content += messageItem.content;
+          console.log("reply content ->", currentMessage.reply_content);
+        }
+      }
+    };
+    gptWS.onerror = function (event) {
+      ElMessage.error(`ws链接出错`);
+      console.log("ws on error", event);
+      console.log("an error raise an in ws");
+      querying.value = false;
+    };
+    gptWS.onopen = (event) => {
+      ElMessage.success("链接已经建立");
+    };
+    gptWS.onclose = (event) => {
+      console.log("后台ws关闭");
+      ElMessage.error("后台WS服务关闭，请刷新页面!");
+    };
+  }).catch((error) => {
+    console.log("register ws error", error);
+  });
 
-// function onMessage(data: string) {
-//   const _data: gptWSMessage = JSON.parse(data);
-//   switch (_data.type) {
-//     case gptWSType.connect: {
-//       console.log(">>> gpt ws connection build");
-//       break;
-//     }
-//     case gptWSType.error: {
-//       console.log(">>> gpt raise an error", _data);
-//       ElMessage.error("生成回复出错.请刷新页面重试.");
-//       querying.value = false;
-//       break;
-//     }
-//     case gptWSType.reply: {
-//       console.log("gpt get reply message", _data);
-//       querying.value = false;
-//       /**add chatMessageItem */
-//       let msg = _data.data;
-//       if (currentOpenConversationID.value == msg.conversation_id) {
-//         /**添加到当前的列表中 */
-//         chatMessageList.value.push(msg);
 
-//         /**添加到conversation-message-map列表中 */
-//         if (
-//           conversationMessageMap.value &&
-//           conversationMessageMap.value.has(msg.conversation_id)
-//         ) {
-//           conversationMessageMap.value
-//             .get(currentOpenConversationID.value)
-//             ?.push(msg);
-//         } else {
-//           /**conversation-message-map没有的话,生成对应的item */
-//           console.log(
-//             "conversationMessageMap 里面找不到对应conversation id",
-//             msg.conversation_id
-//           );
-//         }
-//       }
-//       break;
-//     }
-//     default:
-//       break;
-//   }
-// }
+}
 
-// function submit() {
-//   console.log(">>>send message");
-//   if (!gptWS) {
-//     ElMessage.error("请先打开一个会话");
-//     return;
-//   }
-//   if (currentOpenConversationID.value == -1) {
-//     ElMessage.error("请先新建一个会话~");
-//     return;
-//   }
-//   if (!queryContent.value) {
-//     ElMessage.error("请先输入咨询内容");
-//     return;
-//   }
-//   // 先获取上一条UUID,咨询肯定都是列表的最后一条
-//   let _list = conversationMessageMap.value?.get(
-//     currentOpenConversationID.value
-//   );
-//   let p_uuid: string;
-//   if (_list && _list.length > 0) {
-//     p_uuid = _list[_list.length - 1]?.uuid;
-//   } else {
-//     p_uuid = crypto.randomUUID();
-//   }
 
-//   let data = {
-//     type: gptWSType.query,
-//     data: {
-//       query_content: queryContent.value,
-//       parent_message_uuid: p_uuid,
-//       reply_content: "",
-//       uuid: crypto.randomUUID(),
-//       content_type: "text",
-//       role: gptWSMessageRole.query,
-//       conversation_id: currentOpenConversationID.value,
-//     },
-//   };
-//   /**将发送到消息添加到当前的消息列表里面 */
-//   _list?.push(data.data);
-//   chatMessageList.value.push(data.data);
-//   gptWS.send(JSON.stringify(data));
-//   querying.value = true;
-//   queryContent.value = "";
-// }
+
 
 /*************    HTTP METHODS                ************/
 
@@ -477,4 +409,5 @@ export {
   fetchAndHandleEvents,
   stopGetMessage,
   getMessageById,
+  buildWsConn
 };

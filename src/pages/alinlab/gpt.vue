@@ -249,6 +249,7 @@ import {
   creatingConversation,
   createDialogFormVisible,
   conversationMessageMap,
+  buildWsConn,
   type createConversationForm
 } from "src/pages/alinlab/gpt";
 import { Check, Delete, Edit, ChatDotRound } from "@element-plus/icons-vue";
@@ -266,6 +267,13 @@ const query = ref("");
 const chatWin = ref(null);
 const visiblePopover = ref(true);
 const handleOpen = (item:any) => {
+  if (querying.value) {
+    ElMessage({
+      message: "请先停止当前查询",
+      type: "error",
+    });
+    return;
+  }
   console.log(item,item.index);
   currentOpenConversationID.value = item.uuid;
   currentOpenConversation.value = item;
@@ -316,6 +324,9 @@ const modelOptions: { [key: string]: { value: string; label: string; }[] }  = {
     },
   ]
 }
+
+
+buildWsConn();
 
 function createCon() {
   console.log("create conversation ->", newConversationForm);
