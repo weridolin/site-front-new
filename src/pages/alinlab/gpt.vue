@@ -45,6 +45,9 @@
           <el-form-item label="密钥" >
             <el-input v-model="newConversationForm.key" autocomplete="off" />
           </el-form-item>
+          <!-- <el-form-item label="方式" >
+            <el-input v-model="newConversationForm.key" autocomplete="off" />
+          </el-form-item> -->
         </el-form>
         <div class="demo-drawer__footer">
           <el-button @click="cancelForm">取消</el-button>
@@ -240,6 +243,7 @@ import {
   queryContent,
   querying,
   loadingText,
+  getReplyByWS,
   fetchAndHandleEvents,
   currentOpenConversationID,
   currentGptMessageList,
@@ -250,6 +254,7 @@ import {
   createDialogFormVisible,
   conversationMessageMap,
   buildWsConn,
+  way,
   type createConversationForm
 } from "src/pages/alinlab/gpt";
 import { Check, Delete, Edit, ChatDotRound } from "@element-plus/icons-vue";
@@ -423,7 +428,12 @@ async function submit() {
     }
     currentGptMessageList.value.push(getMessageRequest);
     query.value = "";
-    await fetchAndHandleEvents(getMessageRequest)   
+    if(way.value == "ws"){
+      console.log("get reply by ws ->", getMessageRequest)
+      getReplyByWS(getMessageRequest)
+    }else{
+      await fetchAndHandleEvents(getMessageRequest)   
+    }
   }
 }
 

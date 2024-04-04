@@ -21,6 +21,7 @@ const conversationMessageMap = ref<Map<string, gptMessageItem[]>>(new Map()); //
 const currentOpenConversation = ref<gptConversationItem>(); //当前打开的会话
 const currentOpenConversationID = ref(""); //当前打开的会话ID
 const createDialogFormVisible = ref(false); //创建对话框是否显示
+const way = ref("ws");
 
 watch(currentOpenConversationID, (newValue, oldValue) => {
   loadingMessage.value = true;
@@ -255,7 +256,8 @@ export interface SSEMessageItem {
   query_message_id: string;
 }
 
-// 注意：这不是标准的SSE，仅作为模拟示例
+
+// SSE
 async function fetchAndHandleEvents(message: gptMessageItem) {
   const headers = new Headers();
   let requestParam: { [key: string]: any } = {
@@ -390,6 +392,31 @@ function getMessageById(query_message_uuid: string) {
   }
 }
 
+
+// 通过WS获取
+function getReplyByWS(message: gptMessageItem) {
+  let requestParam: { [key: string]: any } = {
+    ...message,
+    model: currentOpenConversation.value?.model,
+    platform: currentOpenConversation.value?.platform,
+  };
+  console.log("get reply by ws ->", requestParam);
+  replying.value = true;
+  ChatApis.getReply(requestParam)
+    .then((res) => {
+      console.log("get reply by ws success -> ", res);
+    })
+    .catch((error) => {
+      console.error("get reply by ws error -> ", error);
+    })
+    .finally(() => {
+      replying.value = false;
+    });
+
+}
+
+
+
 export {
   conversationList,
   currentOpenConversationID,
@@ -403,11 +430,13 @@ export {
   replying,
   creatingConversation,
   createDialogFormVisible,
+  way,
   delConversation,
   createConversation,
   getAllConversation,
   fetchAndHandleEvents,
   stopGetMessage,
   getMessageById,
+  getReplyByWS,
   buildWsConn
 };

@@ -121,8 +121,7 @@ export interface queryMessageParams {
 }
 
 export class Apis extends ApiBase {
-  public getReply(body: gptMessageItem, params: RequestParams = {}) {
-  
+  public getReply(body: any, params: RequestParams = {}) {
     return this.request<chatMessageReplyResponse>({
       url: SiteApis.gpt.createMessage.url,
       method: SiteApis.gpt.createMessage.method,
