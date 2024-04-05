@@ -94,9 +94,10 @@ function buildWsConn() {
     websocket_id.value = res.data.websocket_id;
     const gptWS = new WebSocket(res.data.websocket_uri);
     gptWS.onmessage = function (event) {
+      console.log("get message from ws server ->", event.data);
       let data = JSON.parse(event.data);
       if (data.type == "message") {
-        let messageItem: WebSocketMessageItem = data.data;
+        let messageItem: WebSocketMessageItem = data;
         console.log("get message from ws server ->", messageItem);
         let currentMessage = getMessageById(messageItem.message_id);
         if (currentMessage) {
