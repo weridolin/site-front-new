@@ -440,7 +440,6 @@ async function submit() {
 
 
 onMounted(() => {
-
   getAllConversation();
   console.log("conversation list ->", conversationList.value);
 });

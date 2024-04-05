@@ -8,6 +8,7 @@ import {
   ChatApis,
 } from "src/services/apis/chat";
 import { SiteApis } from "src/services/api";
+import { json } from "stream/consumers";
 
 /***************** 变量    **********************/
 // var gptWS: WebSocket;
@@ -22,6 +23,7 @@ const currentOpenConversation = ref<gptConversationItem>(); //当前打开的会
 const currentOpenConversationID = ref(""); //当前打开的会话ID
 const createDialogFormVisible = ref(false); //创建对话框是否显示
 const way = ref("ws");
+const ws = ref<WebSocket>();
 
 watch(currentOpenConversationID, (newValue, oldValue) => {
   loadingMessage.value = true;
@@ -93,6 +95,7 @@ function buildWsConn() {
     console.log("register ws, url ->", res.data.websocket_uri);
     websocket_id.value = res.data.websocket_id;
     const gptWS = new WebSocket(res.data.websocket_uri);
+    ws.value = gptWS;
     gptWS.onmessage = function (event) {
       // console.log("get message from ws server ->", event.data);
       let data = JSON.parse(event.data);
@@ -104,6 +107,14 @@ function buildWsConn() {
           currentMessage.reply_content += messageItem.content;
           console.log("reply content ->", currentMessage.reply_content);
         }
+      }else if (data.type == "error") {
+        ElMessage.error(`ws回复出错`);
+        console.log("ws on error", event);
+        querying.value = false;
+      }else if (data.type == "reply_finish") {
+        ElMessage.success(`ws回复完成`);
+        console.log("ws on finish", event);
+        querying.value = false;
       }
     };
     gptWS.onerror = function (event) {
@@ -126,7 +137,21 @@ function buildWsConn() {
 
 }
 
-
+function stopReplyByWS() {
+  if (ws.value) {
+    console.log("stop reply by ws");
+    ws.value.send(JSON.stringify(
+      { 
+        type: "stop",
+        websocket_id: websocket_id.value,
+        conversation_id: currentOpenConversationID.value,
+        // message_id: getMessageById(currentOpenConversationID.value)?.uuid
+      }));
+    querying.value = false;
+  }else {
+    ElMessage.error("ws 链接未建立");
+  }
+}
 
 
 /*************    HTTP METHODS                ************/
@@ -296,21 +321,9 @@ async function fetchAndHandleEvents(message: gptMessageItem) {
   let reader = response.body.getReader();
   let decoder = new TextDecoder();
 
-  // todo 中途中断
   while (true) {
     const result = await reader.read();
     if (result.done) {
-      // on_callback(reply_content,false,"","");
-      // console.log("get reply by sse success -> ", message.reply_content);
-      // let currentMessage = getMessageById(message.uuid);
-      // if (currentMessage) {
-      //   currentMessage.error = false;
-      //   currentMessage.error_code = "";
-      //   currentMessage.error_detail = "";
-      //   currentMessage.reply_content = reply_content;
-      //   currentMessage.reply_finished = true;
-      //   currentMessage.has_sended = true;
-      // }
       message.error = false;
       message.error_code = "";
       message.error_detail = "";
@@ -357,6 +370,9 @@ async function fetchAndHandleEvents(message: gptMessageItem) {
 }
 
 function stopGetMessage() {
+  if (way.value == "ws") {
+    return stopReplyByWS();
+  }
   // 关闭事件流
   // reader.cancel();
   let query_message_uuid = getMessageById(
@@ -440,5 +456,6 @@ export {
   stopGetMessage,
   getMessageById,
   getReplyByWS,
-  buildWsConn
+  buildWsConn,
+  stopReplyByWS
 };
