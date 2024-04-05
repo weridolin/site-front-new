@@ -94,7 +94,7 @@ function buildWsConn() {
     websocket_id.value = res.data.websocket_id;
     const gptWS = new WebSocket(res.data.websocket_uri);
     gptWS.onmessage = function (event) {
-      console.log("get message from ws server ->", event.data);
+      // console.log("get message from ws server ->", event.data);
       let data = JSON.parse(event.data);
       if (data.type == "message") {
         let messageItem: WebSocketMessageItem = data;
@@ -403,19 +403,18 @@ function getReplyByWS(message: gptMessageItem) {
     model: currentOpenConversation.value?.model,
     platform: currentOpenConversation.value?.platform,
   };
-  console.log("get reply by ws ->", requestParam);
+  // console.log("get reply by ws ->", requestParam);
   replying.value = true;
   ChatApis.getReply(requestParam)
     .then((res) => {
-      console.log("get reply by ws success -> ", res);
+      console.log("get reply by ws success ->", res);
     })
     .catch((error) => {
-      console.error("get reply by ws error -> ", error);
+      console.error("get reply by ws error ->", error);
     })
     .finally(() => {
       replying.value = false;
     });
-
 }
 
 
