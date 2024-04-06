@@ -411,6 +411,13 @@ function getMessageById(query_message_uuid: string) {
   }
 }
 
+function deleteMessageById(query_message_uuid: string) {
+  let index = currentGptMessageList.value.findIndex(
+    (item) => item.uuid == query_message_uuid
+  );
+  currentGptMessageList.value.splice(index, 1);
+}
+
 
 // 通过WS获取
 function getReplyByWS(message: gptMessageItem) {
@@ -431,6 +438,8 @@ function getReplyByWS(message: gptMessageItem) {
       ElMessage.error("生成回复失败!请稍后重试");
       console.error("get reply by ws error ->", error);
       querying.value = false;
+      // 从当前消息列表中删除对应的消息
+      deleteMessageById(message.uuid);
     })
 }
 
