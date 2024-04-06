@@ -289,6 +289,7 @@ async function fetchAndHandleEvents(message: gptMessageItem) {
   const headers = new Headers();
   let requestParam: { [key: string]: any } = {
     ...message,
+    websocket_id: websocket_id.value,
     model: currentOpenConversation.value?.model,
     platform: currentOpenConversation.value?.platform,
   };
@@ -424,13 +425,13 @@ function getReplyByWS(message: gptMessageItem) {
   ChatApis.getReply(requestParam)
     .then((res) => {
       console.log("get reply by ws success ->", res);
+      replying.value = false;
     })
     .catch((error) => {
+      ElMessage.error("生成回复失败!请稍后重试");
       console.error("get reply by ws error ->", error);
+      querying.value = false;
     })
-    .finally(() => {
-      replying.value = false;
-    });
 }
 
 
