@@ -1,5 +1,4 @@
 import { ElMessage, ElMessageBox } from "element-plus";
-import { create_conn } from "src/services/ws";
 import { useAuthStore } from "src/store/user";
 import { ref, reactive, watch } from "vue";
 import {
@@ -8,7 +7,6 @@ import {
   ChatApis,
 } from "src/services/apis/chat";
 import { SiteApis } from "src/services/api";
-import { json } from "stream/consumers";
 
 /***************** 变量    **********************/
 // var gptWS: WebSocket;
@@ -24,6 +22,7 @@ const currentOpenConversationID = ref(""); //当前打开的会话ID
 const createDialogFormVisible = ref(false); //创建对话框是否显示
 const way = ref("ws");
 const ws = ref<WebSocket>();
+const buttonLoading = ref(false);
 
 watch(currentOpenConversationID, (newValue, oldValue) => {
   loadingMessage.value = true;
@@ -306,6 +305,7 @@ async function fetchAndHandleEvents(message: gptMessageItem) {
     body: JSON.stringify(requestParam),
   });
 
+  buttonLoading.value = false;
   if (!response.ok) {
     console.error("get reply by sse error -> ", response);
     // on_callback("",true,"backend error",response.text);
@@ -321,7 +321,6 @@ async function fetchAndHandleEvents(message: gptMessageItem) {
   // 模拟事件流处理
   let reader = response.body.getReader();
   let decoder = new TextDecoder();
-
   while (true) {
     const result = await reader.read();
     if (result.done) {
@@ -433,11 +432,13 @@ function getReplyByWS(message: gptMessageItem) {
     .then((res) => {
       console.log("get reply by ws success ->", res);
       replying.value = false;
+      buttonLoading.value = false;
     })
     .catch((error) => {
       ElMessage.error("生成回复失败!请稍后重试");
       console.error("get reply by ws error ->", error);
       querying.value = false;
+      buttonLoading.value = false;
       // 从当前消息列表中删除对应的消息
       deleteMessageById(message.uuid);
     })
@@ -459,6 +460,7 @@ export {
   creatingConversation,
   createDialogFormVisible,
   way,
+  buttonLoading,
   delConversation,
   createConversation,
   getAllConversation,

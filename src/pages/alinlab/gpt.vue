@@ -218,7 +218,7 @@
                 >
                   {{currentOpenConversation?currentOpenConversation.model:"所用模型"}}
                 </el-tag>  
-                <el-button color="#626aef" plain round class="clear" @click="submit">
+                <el-button color="#626aef" plain round class="clear" @click="submit" :loading="buttonLoading">
                   {{querying?"停止":"发送"}}
                 </el-button>
             </div>
@@ -255,6 +255,7 @@ import {
   conversationMessageMap,
   buildWsConn,
   way,
+  buttonLoading,
   type createConversationForm
 } from "src/pages/alinlab/gpt";
 import { Check, Delete, Edit, ChatDotRound } from "@element-plus/icons-vue";
@@ -388,6 +389,7 @@ function showCreateDialog() {
 }
 
 async function submit() {
+  
   if (querying.value) {
     console.log("stop query ->", query.value);
     stopGetMessage()
@@ -410,6 +412,7 @@ async function submit() {
     }
     console.log("start query ->", query.value);
     querying.value = true;
+    buttonLoading.value = true;
     let getMessageRequest = { 
       uuid:uuidv4(),
       query_content: query.value, //查询内容
