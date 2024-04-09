@@ -102,6 +102,10 @@ export interface GetWebhookHistoryResponse {
 }
 
 
+export interface RegisterWebhookWebsocketResponse {
+  websocket_uri:string
+}
+
 export class Api extends ApiBase {
   /**
    * 获取短链接
@@ -185,6 +189,18 @@ export class Api extends ApiBase {
       method: SiteApis.webhook.queryHistory.method,
       url: SiteApis.webhook.queryHistory.url(uuid),
       requiredLogin: SiteApis.webhook.queryHistory.authenticated,
+      ...params,
+    });
+  }
+  /**
+   *  注册 websocket
+   */
+  public registerWebhookWebsocket(uuid:string,params: RequestParams = {}) {
+    console.log(">>> register websocket ");
+    return this.request<RegisterWebhookWebsocketResponse>({
+      method: SiteApis.webhook.registerWebsocket.method,
+      url: SiteApis.webhook.registerWebsocket.url(uuid),
+      requiredLogin: SiteApis.webhook.registerWebsocket.authenticated,
       ...params,
     });
   }

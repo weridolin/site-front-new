@@ -16,14 +16,14 @@
         <el-aside width="25%" class="side">
           <div>
             <!-- <el-row> -->
-              <div class="record-query">
-                <el-input
-                  v-model="queryCondition"
-                  class="w-50 m-2 record-query-input"
-                  placeholder="输入查询条件"
-                  :suffix-icon="Search"
-                />
-              </div>
+            <div class="record-query">
+              <el-input
+                v-model="queryCondition"
+                class="w-50 m-2 record-query-input"
+                placeholder="输入查询条件"
+                :suffix-icon="Search"
+              />
+            </div>
             <!-- </el-row> -->
             <el-divider class="aside-divider"> </el-divider>
             <ul class="infinite-list">
@@ -179,7 +179,7 @@
 import { Search, ArrowDown } from "@element-plus/icons-vue";
 import { v4 as uuidv4 } from "uuid";
 import { onMounted, onUnmounted, ref } from "vue";
-import { ElNotification } from "element-plus";
+import { ElMessage, ElNotification } from "element-plus";
 import { ThirdApis } from "src/services/apis/third";
 import type { WebHookHistory } from "src/services/apis/third";
 import { CopyDocument } from "@element-plus/icons-vue";
@@ -316,6 +316,13 @@ function showHistoryDetail(index: number) {
   );
 }
 
+// function registerWebsocket(uuid:string){
+//   ThirdApis.registerWebhookWebsocket(uuid).then((res) => {
+//     console.log("register websocket", res);
+
+//   });
+// }
+
 onMounted(() => {
   // 获取 uuid
   let _uuid = getLocalStorageWithExpiration("webhook-uuid-key");
@@ -331,46 +338,53 @@ onMounted(() => {
       60 * 60 * 24 * 7
     );
   }
-
   webhook_url.value = `${CONFIG.API_HOST}/webhook/api/v1/${uuid.value}`;
-  /**   ws ***/
-  let second_protocols = uuid.value;
-  WsClient = new WebSocket(`${CONFIG.WS_HOST}/webhook/ws`, second_protocols);
-  WsClient.onmessage = function (event) {
-    console.log("Message from server ", event.data);
-    const data = JSON.parse(event.data);
-    let history: WebHookHistory = {
-      uuid: data.uuid,
-      method: data.method,
-      host: data.host,
-      query_params: data.query_params,
-      form_data: data.form_data,
-      header: data.header,
-      raw: data.raw,
-      updated: data.updated_at,
-      user_id: data.user_id,
-      is_new: true,
-    };
-    //直接将新的ws消息插入到列表第一条
-    if (historyList.value.length < page_size.value) {
-      if (historyList.value == null) {
-        historyList.value = [];
-      }
-      console.log("add history record", historyList.value, history);
-      historyList.value.unshift(history);
-    } else {
-      historyList.value.pop();
-      historyList.value.unshift(history);
-    }
-  };
-  WsClient.onclose = function (event) {
-    console.log("websocket close", event);
-  };
-  WsClient.onerror = function (event) {
-    console.log("websocket error", event);
-  };
-
   getWebHookCalledHistory(1);
+  /**   ws ***/
+  // register websocket
+  ThirdApis.registerWebhookWebsocket(_uuid)
+    .then((res) => {
+      console.log("register websocket", res);
+      WsClient = new WebSocket(res.websocket_uri);
+      WsClient.onmessage = function (event) {
+        console.log("Message from server ", event.data);
+        const data = JSON.parse(event.data);
+        let history: WebHookHistory = {
+          uuid: data.uuid,
+          method: data.method,
+          host: data.host,
+          query_params: data.query_params,
+          form_data: data.form_data,
+          header: data.header,
+          raw: data.raw,
+          updated: data.updated_at,
+          user_id: data.user_id,
+          is_new: true,
+        };
+        //直接将新的ws消息插入到列表第一条
+        if (historyList.value.length < page_size.value) {
+          if (historyList.value == null) {
+            historyList.value = [];
+          }
+          console.log("add history record", historyList.value, history);
+          historyList.value.unshift(history);
+        } else {
+          historyList.value.pop();
+          historyList.value.unshift(history);
+        }
+      };
+      WsClient.onclose = function (event) {
+        console.log("websocket close", event);
+      };
+      WsClient.onerror = function (event) {
+        console.log("websocket error", event);
+      };
+    })
+    .catch((err) => {
+      console.log("register websocket error", err);
+      ElMessage.error("链接建立失败，请刷新页面重试");
+      webhook_url.value = "链接建立失败，请刷新页面重试";
+    });
 });
 
 onUnmounted(() => {
@@ -395,7 +409,6 @@ onUnmounted(() => {
 }
 
 .side {
-
 }
 
 .copy-url {

@@ -172,6 +172,13 @@ export const SiteApis = {
       },
       authenticated: false,
     },
+    registerWebsocket:{
+      method: "get",
+      url:(uuid:string) => {
+          return "/webhook/api/v1/register-websocket?uuid="+uuid
+        },
+      authenticated: false,
+    }
   },
   gpt: {
     getConversationsList: {
