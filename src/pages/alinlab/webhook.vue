@@ -326,7 +326,7 @@ function showHistoryDetail(index: number) {
 onMounted(() => {
   // 获取 uuid
   let _uuid = getLocalStorageWithExpiration("webhook-uuid-key");
-  if (_uuid != null) {
+  if (_uuid != null && _uuid != "" && _uuid != undefined && _uuid != "null") {
     console.log("get local uuid", _uuid);
     uuid.value = _uuid;
   } else {
