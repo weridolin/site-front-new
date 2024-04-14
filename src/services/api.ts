@@ -90,17 +90,17 @@ export const SiteApis = {
     dataPreUpload: {
       method: "post",
       url: "/dataFaker/api/v1/",
-      authenticated: false,
+      authenticated: true,
     },
     searchDataFaker: {
       method: "get",
       url: "/dataFaker/api/v1/search/",
-      authenticated: false,
+      authenticated: true,
     },
     downloadDataFaker: {
       method: "get",
       url: "/dataFaker/api/v1/",
-      authenticated: false,
+      authenticated: true,
     },
   },
   shortUrl: {
