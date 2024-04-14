@@ -99,7 +99,9 @@ export const SiteApis = {
     },
     downloadDataFaker: {
       method: "get",
-      url: "/dataFaker/api/v1/",
+      url: (download_code: string) => {
+        return `/dataFaker/api/v1/?${download_code}`;
+      },
       authenticated: true,
     },
   },

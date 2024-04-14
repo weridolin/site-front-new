@@ -57,6 +57,7 @@ export class Api extends ApiBase {
         return this.request<fileDownInfoResponse>({
             method:SiteApis.dataFaker.searchDataFaker.method,
             url:`${SiteApis.dataFaker.searchDataFaker.url}${downCode}`,
+            requiredLogin:SiteApis.dataFaker.dataPreUpload.authenticated,
             ...params
         })
     }
@@ -65,6 +66,7 @@ export class Api extends ApiBase {
         return this.request<initFileInfoResponse>({
             method:SiteApis.dataFaker.dataPreUpload.method,
             url:SiteApis.dataFaker.dataPreUpload.url,
+            requiredLogin:SiteApis.dataFaker.dataPreUpload.authenticated,
             data:dataForm,
             ...params
         })
@@ -73,7 +75,8 @@ export class Api extends ApiBase {
     public downFile(downCode:string,params: RequestParams = {}){
         return this.request<initFileInfoResponse>({
             method:SiteApis.dataFaker.downloadDataFaker.method,
-            url:SiteApis.dataFaker.downloadDataFaker.url,
+            url:SiteApis.dataFaker.downloadDataFaker.url(downCode),
+            requiredLogin:SiteApis.dataFaker.dataPreUpload.authenticated,
         })
     }
 }
