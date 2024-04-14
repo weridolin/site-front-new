@@ -16,7 +16,8 @@ import {SiteApis} from "src/services/api"
 
 export interface initFileInfo {
     "key": string,
-    "is_exist": boolean
+    "is_exist": boolean,
+    "websocket_url":string
 }
 export interface initFileInfoResponse extends BaseResponse {
     data:initFileInfo

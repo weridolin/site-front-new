@@ -255,27 +255,27 @@ const ws_url:string = ""
 
 /** method                                  */
 
-function build_conn(){
-    let ws_url = "ws://127.0.0.1:8000"
-    // HTMLFormControlsCollection
-    if (process.env.NODE_ENV == "production"){
-        // ws_url = "wss://www.weridolin.cn"  // another way
-        ws_url = "wss://127.0.0.1"  // another way
+function build_conn(url:string){
+    // let ws_url = "ws://127.0.0.1:8000"
+    // // HTMLFormControlsCollection
+    // if (process.env.NODE_ENV == "production"){
+    //     // ws_url = "wss://www.weridolin.cn"  // another way
+    //     ws_url = "wss://127.0.0.1"  // another way
 
-    }
-    console.log(">>>>>>>>ws url",ws_url,process.env.NODE_ENV )
-    ws_conn = new WebSocket(`${ws_url}/dataFaker/ws/${key.value}`)
+    // }
+    console.log("data faker ws url ->",url)
+    ws_conn = new WebSocket(`${url}`)
     ws_conn.onmessage = function(event) {
-        console.log("get message from ws server >>>",event.data);
+        console.log("file faker  get message from ws server >>>",event.data);
         handleWsData(event.data)
     }
     ws_conn.onopen = function(event) {
-        console.log("ws successfully connect to server",event)
+        console.log("file faker ws successfully connect to server",event)
         const payload = {
             "type":1,
             "record_key":key.value
         }
-        console.log(">>> ws send message",payload)
+        console.log("file faker  ws send message",payload)
         ws_conn.send(JSON.stringify(payload))
     }
     ws_conn.onerror = function(event){
@@ -426,17 +426,13 @@ function initInfo(){
     dataFakerApis.initDataInfo(data,{
         timeout:2*69*1000
     }).then(function (res) {
-        //  {
-        // "key": "879baf8bbdee4f06adbc7c3cbb9581c9",
-        // "is_exist": false
-        // }
         state.is_generating=true
         console.log(res,"GET FILE UPLOAD INFO");
         if (res.data.is_exist){
             console.log(">>> is already exist!" ,res)
         }else{
             key.value = res.data.key  
-            build_conn() 
+            build_conn(res.data.websocket_url) 
             startGenerateFakeData()
         }
     })
