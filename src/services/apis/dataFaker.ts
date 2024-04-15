@@ -56,8 +56,8 @@ export class Api extends ApiBase {
     public getFileInfoByDownCode(downCode:string,params: RequestParams = {}){
         return this.request<fileDownInfoResponse>({
             method:SiteApis.dataFaker.searchDataFaker.method,
-            url:`${SiteApis.dataFaker.searchDataFaker.url}${downCode}`,
-            requiredLogin:SiteApis.dataFaker.dataPreUpload.authenticated,
+            url:SiteApis.dataFaker.searchDataFaker.url(downCode),
+            requiredLogin:SiteApis.dataFaker.searchDataFaker.authenticated,
             ...params
         })
     }

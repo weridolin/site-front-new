@@ -94,13 +94,15 @@ export const SiteApis = {
     },
     searchDataFaker: {
       method: "get",
-      url: "/dataFaker/api/v1/search/",
+      url: (download_code: string) => {
+        return `/dataFaker/api/v1/search/${download_code}`;
+      },
       authenticated: true,
     },
     downloadDataFaker: {
       method: "get",
       url: (download_code: string) => {
-        return `/dataFaker/api/v1/?${download_code}`;
+        return `/dataFaker/api/v1/?download_code=${download_code}`;
       },
       authenticated: true,
     },
