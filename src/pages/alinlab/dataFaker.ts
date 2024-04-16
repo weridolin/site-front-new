@@ -473,11 +473,11 @@ function downFile(){
      */  
 
     if (process.env.NODE_ENV == "production"){
-        el.href =`${CONFIG.API_HOST}${SiteApis.dataFaker.downloadDataFaker.url}?download_code=${downForm.down_code}`;
+        el.href =`${CONFIG.API_HOST}${SiteApis.dataFaker.downloadDataFaker.url(downForm.down_code)}`;
     }
     downForm.down_fileName && el.setAttribute('download', downForm.down_fileName);
-    el.href =`${CONFIG.API_HOST}${SiteApis.dataFaker.downloadDataFaker.url}?download_code=${downForm.down_code}`;
-    console.log(el);
+    el.href =`${CONFIG.API_HOST}${SiteApis.dataFaker.downloadDataFaker.url(downForm.down_code)}`;
+    console.log(el.href);
     document.body.appendChild(el);
     el.click();
     document.body.removeChild(el);
