@@ -45,7 +45,7 @@
               type="success"
               center
               description="只需在下面按自己的需求选择字段和类型,选择对应的生成的数据的条数,后台生成后会返回一个下载码,即可下载对应的数据,默认为CSV格式"
-            />glv
+            />
           </div>
         </el-header>
         <el-main>

@@ -515,7 +515,7 @@ function downloadFile() {
         const objectUrl = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = objectUrl;
-        a.download = `${downForm.down_fileName}.csv`;
+        a.download = `fake-data.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
