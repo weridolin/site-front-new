@@ -3,6 +3,7 @@ import { ref,reactive } from 'vue'
 import {dataFakerApis} from 'src/services/apis/dataFaker'
 import { CONFIG } from 'src/config'
 import {SiteApis} from 'src/services/api'
+import { useAuthStore } from 'src/store/user'
 
 const formLabelWidth =ref("120px")
 
@@ -459,11 +460,23 @@ function downFile(){
         });
         return
     }
+
+
+    
     // let that = this
     // const downCode = this.downForm.down_code
     const el = document.createElement('a');
     el.style.display = 'none';
     el.setAttribute('target', '_blank');
+
+    // let headers = { 
+    //     "Authorization": `Bearer ${useAuthStore().tokens?.accessToken}`,
+    // }
+
+    // el.setAttribute('data-Authorization', `Bearer ${useAuthStore().tokens?.accessToken}`)
+
+
+
     // console.log(">>>>",process.env.VITE_API_HOST)
 /**
      * download的属性是HTML5新增的属性
@@ -482,6 +495,38 @@ function downFile(){
     el.click();
     document.body.removeChild(el);
 }
+
+
+function downloadFile() {
+    // 创建一个 fetch 请求
+    let url = `${CONFIG.API_HOST}${SiteApis.dataFaker.downloadDataFaker.url(downForm.down_code)}`;
+    let headers = {
+        "Authorization": `Bearer ${useAuthStore().tokens?.accessToken}`,
+    }
+    fetch(url, {
+        headers: headers
+    })
+    .then(response => {
+        // 将响应转换为 Blob 对象
+        return response.blob();
+    })
+    .then(blob => {
+        // 创建一个临时链接并触发下载
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = objectUrl;
+        a.download = downForm.down_fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
+    })
+    .catch(error => {
+        console.error("Error downloading file:", error);
+    });
+}
+
+
 function handleWsData(data:string){
         // start = 1
         // stop = 2
@@ -563,4 +608,5 @@ export {
     startGenerateFakeData,
     getFileInfoByDownCode,
     downFile,
+    downloadFile,
 }

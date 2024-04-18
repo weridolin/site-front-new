@@ -29,7 +29,7 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" style="width:50%;" class="downButton" @click="downFile">
+              <el-button type="primary" style="width:50%;" class="downButton" @click="downloadFile">
                 下载
               </el-button>
             </el-form-item>
@@ -45,7 +45,7 @@
               type="success"
               center
               description="只需在下面按自己的需求选择字段和类型,选择对应的生成的数据的条数,后台生成后会返回一个下载码,即可下载对应的数据,默认为CSV格式"
-            />
+            />glv
           </div>
         </el-header>
         <el-main>
@@ -183,6 +183,7 @@ import {
   initInfo,
   startGenerateFakeData,
   downFile,
+  downloadFile
 } from 'src/pages/alinlab/dataFaker'
 if (window.screen.availWidth < 768) {
   // 移动端
